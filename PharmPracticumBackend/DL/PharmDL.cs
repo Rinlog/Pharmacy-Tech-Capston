@@ -20,14 +20,13 @@ namespace PharmPracticumBackend.DL
     public class PharmDL
     {
 
-        private readonly IConfiguration _configuration;
+        //private readonly IConfiguration _configuration;
 
         private readonly string _connectionString;
 
         public PharmDL(IConfiguration configuration)
         {
-            _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("DefaultConnectionRemoteServer");
+            _connectionString = configuration.GetConnectionString("DefaultConnectionRemoteServer");
         }
 
         //Opens connection
@@ -52,9 +51,9 @@ namespace PharmPracticumBackend.DL
         }
 
         //Close Connection
-        public void DisposeConnection(SqlConnection connection)
+        public void Disconnect(SqlConnection connection)
         {
-            connection?.Dispose();
+            connection.Close();
         }
 
         //db connection test
