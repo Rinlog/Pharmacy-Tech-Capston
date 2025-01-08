@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { SanitizeEmail, SanitizeName, SanitizeDate, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
+import { SanitizeEmail, SanitizeName, SanitizeDate, SanitizeInput } from "@components/datasanitization/sanitization";
 
 
 const AddDrugModal = ({ isOpen, onClose}) => {
@@ -14,14 +14,14 @@ const AddDrugModal = ({ isOpen, onClose}) => {
                 alert("DIN must be an 8 digit number");
                 return;
             }
-            let din = SanitizeLength(SanitizeInput(document.getElementById('DIN').value));
-            let name = SanitizeLength(SanitizeInput(document.getElementById('drugName').value));
-            let dosage = SanitizeLength(SanitizeInput(document.getElementById('dosage').value));
-            let strength = SanitizeLength(SanitizeInput(document.getElementById('strength').value));
-            let manufacturer = SanitizeLength(SanitizeInput(document.getElementById('manufacturer').value));
-            let concentration = SanitizeLength(SanitizeInput(document.getElementById('concentration').value));
-            let referenceBrand = SanitizeLength(SanitizeInput(document.getElementById('referenceBrand').value));
-            let containerSize = SanitizeLength(SanitizeInput(document.getElementById('containerSize').value));
+            let din = SanitizeInput(document.getElementById('DIN').value);
+            let name = SanitizeInput(document.getElementById('drugName').value);
+            let dosage = SanitizeInput(document.getElementById('dosage').value);
+            let strength = SanitizeInput(document.getElementById('strength').value);
+            let manufacturer = SanitizeInput(document.getElementById('manufacturer').value);
+            let concentration = SanitizeInput(document.getElementById('concentration').value);
+            let referenceBrand = SanitizeInput(document.getElementById('referenceBrand').value);
+            let containerSize = SanitizeInput(document.getElementById('containerSize').value);
 
         try {
             // Call the API

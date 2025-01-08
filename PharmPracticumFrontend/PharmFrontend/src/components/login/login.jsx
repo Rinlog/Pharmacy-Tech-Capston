@@ -105,6 +105,7 @@ function Login() {
                     body: JSON.stringify({ Email: email }),
                 });
                 const data = await response.json();
+                console.log(data.message);
                 if (data.message == "Password reset email sent") alert(data.message);
                 else alert(data.message);
                 return;

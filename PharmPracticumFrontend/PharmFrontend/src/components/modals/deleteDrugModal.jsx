@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
+const DeleteDrugModal = ({ isOpen, onClose, drugToDelete}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
@@ -17,8 +17,6 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
 
     const handleCancelDelete = () => {
         setSecondModalOpen(false);
-        // And we will close this modal as well
-        handleClose();
     }
 
     const DeleteDrug = async () => {
@@ -37,8 +35,6 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
 
             if (response.ok) {
                 alert("Drug deleted successfully");
-                // Clear the drugToDelete
-                setDrugToDelete({ "DIN": null, selected: false });
                 onClose();
             }
             else{
@@ -57,7 +53,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
     }
 
     useEffect(() => {
-        // No-op to just wait for the drugToDelete to be set
+        // No-op
     }, [drugToDelete]);
 
 

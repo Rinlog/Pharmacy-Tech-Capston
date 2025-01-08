@@ -79,6 +79,8 @@ const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
                     };
                 });
 
+                console.log(transformedData);
+
                 setData(transformedData);
                 const keys = Object.keys(transformedData[0]);
 

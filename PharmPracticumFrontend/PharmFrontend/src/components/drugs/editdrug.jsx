@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import he from 'he';
 
 // Sanitization import
-import { SanitizeInput, SanitizeLength } from '@components/datasanitization/sanitization';
+import { SanitizeInput } from '@components/datasanitization/sanitization';
 
 
 function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
@@ -46,14 +46,14 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
         
         //create drug object
         let editedDrug = {
-            din: din, 
-            name: SanitizeLength(SanitizeInput(drugName), 255),
-            dosage: SanitizeLength(SanitizeInput(dosage), 255),
-            strength: SanitizeLength(SanitizeInput(strength), 255),
-            manufacturer: SanitizeLength(SanitizeInput(manufacturer), 255),
-            concentration: SanitizeLength(SanitizeInput(concentration), 255),
-            referenceBrand: SanitizeLength(SanitizeInput(referenceBrand), 255),
-            containerSize: SanitizeLength(SanitizeInput(containerSize), 255)          
+            din: din,
+            name: SanitizeInput(drugName),
+            dosage: SanitizeInput(dosage),
+            strength: SanitizeInput(strength),
+            manufacturer: SanitizeInput(manufacturer),
+            concentration: SanitizeInput(concentration),
+            referenceBrand: SanitizeInput(referenceBrand),
+            containerSize: SanitizeInput(containerSize)            
         }
 
         try{

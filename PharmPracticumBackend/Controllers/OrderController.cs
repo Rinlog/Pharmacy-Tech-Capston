@@ -54,6 +54,9 @@ namespace PharmPracticumBackend.Controllers
             order.StartTime = _sanitization.SanitizeTime(order.StartTime);
             order.Comments = _sanitization.SanitizeComments(order.Comments);
 
+            Console.WriteLine(order.PPR);
+            Console.WriteLine(order.DIN);
+            Console.WriteLine(order.PhysicianID);
 
             //Insert
             bool result = await _pharmDL.AddOrder(order);
@@ -66,35 +69,6 @@ namespace PharmPracticumBackend.Controllers
             {
                 return Ok(new { message = "Order could not be created." });
             }
-
-        }
-
-        [HttpPost("getmyorders")]
-        public async Task<IActionResult> GetMyOrders([FromBody] string user)
-        {
-            
-            List<ordersDTO> orders = new List<ordersDTO>();
-
-            if (user != null)
-            {
-                orders = await _pharmDL.GetMyOrders(user);
-            }
-            else return Ok(new { data = "Invalid User" });
-
-            return Ok(new { data = orders });
-
-        }
-
-        [HttpPost("editorder")]
-        public async Task<IActionResult> EditOrder([FromBody] ordersDTO order)
-        {
-
-
-            //DL
-            bool result = await _pharmDL.AmendOrder(order);
-
-            if (result) return Ok(new { message = "Order successfuly amended." });
-            else return Ok(new { message = "Order could not be amended." });
 
         }
 

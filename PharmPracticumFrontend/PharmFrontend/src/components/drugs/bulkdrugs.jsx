@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 // Other imports
 import readXlsxFile from 'read-excel-file';
-import { SanitizeInput, SanitizeLength } from '@components/datasanitization/sanitization';
+import { SanitizeInput } from '@components/datasanitization/sanitization';
 
 function BulkDrugs({setDisplay}) {
 
@@ -80,19 +80,8 @@ function BulkDrugs({setDisplay}) {
                     // Use the mapping to get the changed key names
                     let key = headerMapping[keys[j]];
 
-
                     // Convert the values to strings because type coercion is the devil
                     rawData[i][j] = String(rawData[i][j]);
-
-                    // Cut the length of the data to the max for the database (255 for all fields except DIN)
-                    if (key == "DIN" && !/^\d{8}$/.test(rawData[i][j])) {
-                        // If the DIN is not 8 digits, send an error
-                        alert(`DIN must be an 8 digit number at row ${i + 1}, column ${j + 1}`);
-                        return;
-                    }
-                    else {
-                        rawData[i][j] = SanitizeLength(rawData[i][j], 255);
-                    }
 
                     // Sanitize the input
                     let sanitized = SanitizeInput(rawData[i][j]);

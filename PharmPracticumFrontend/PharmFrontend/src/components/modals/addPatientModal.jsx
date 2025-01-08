@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { SanitizeName, SanitizeDate, SanitizeEmail, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
+import { SanitizeName, SanitizeDate, SanitizeEmail, SanitizeInput} from "@components/datasanitization/sanitization";
 
 const AddPatientModal = ({ isOpen, onClose}) => {
 
@@ -8,17 +8,17 @@ const AddPatientModal = ({ isOpen, onClose}) => {
     const AddPatient = async () => {
 
         // Sanitize the inputs
-        let fName = SanitizeLength(SanitizeInput(document.getElementById('firstName').value));
-        let lName = SanitizeLength(SanitizeInput(document.getElementById('lastName').value));
-        let dob = SanitizeLength(SanitizeInput(document.getElementById('dob').value));
-        let sex = SanitizeLength(SanitizeInput(document.getElementById('sex').value));
-        let address = SanitizeLength(SanitizeInput(document.getElementById('address').value));
-        let city = SanitizeLength(SanitizeInput(document.getElementById('city').value));
-        let hospital = SanitizeLength(SanitizeInput(document.getElementById('hospital').value));
-        let room = SanitizeLength(SanitizeInput(document.getElementById('room').value));
-        let unit = SanitizeLength(SanitizeInput(document.getElementById('unit').value));
-        let allergies = SanitizeLength(SanitizeInput(document.getElementById('allergies').value));
-        let conditions = SanitizeLength(SanitizeInput(document.getElementById('conditions').value));
+        let fName = SanitizeInput(document.getElementById('firstName').value);
+        let lName = SanitizeInput(document.getElementById('lastName').value);
+        let dob = SanitizeInput(document.getElementById('dob').value);
+        let sex = SanitizeInput(document.getElementById('sex').value);
+        let address = SanitizeInput(document.getElementById('address').value);
+        let city = SanitizeInput(document.getElementById('city').value);
+        let hospital = SanitizeInput(document.getElementById('hospital').value);
+        let room = SanitizeInput(document.getElementById('room').value);
+        let unit = SanitizeInput(document.getElementById('unit').value);
+        let allergies = SanitizeInput(document.getElementById('allergies').value);
+        let conditions = SanitizeInput(document.getElementById('conditions').value);
 
         try {
             // Call the API

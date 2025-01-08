@@ -153,6 +153,7 @@ function Signup() {
                         Password: password, Email: email, Campus: campus }),
                 });
                 const data = await response.json();
+                console.log(data.message);
     
                 // Redirect to login page if successful
                 if (data.message === 'User added successfully') {

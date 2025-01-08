@@ -27,6 +27,7 @@ function Confirmation() {
 
             // Get the response from the server
             const data = await response.json();
+            console.log(data);
 
             // If the account was confirmed successfully, redirect the user to the login page (returned OK status code)
             if (response.status === 200) {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SanitizeName } from "@components/datasanitization/sanitization";
 
-import { SanitizeInput, SanitizeLength } from "@components/datasanitization/sanitization";
+import { SanitizeInput } from "@components/datasanitization/sanitization";
 
 
 const AddPhysicianModal = ({ isOpen, onClose}) => {
@@ -11,9 +11,9 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
     const AddPhysician = async () => {
 
         // Sanitize the inputs
-        let fName = SanitizeLength(SanitizeInput(document.getElementById('firstName').value));
-        let lName = SanitizeLength(SanitizeInput(document.getElementById('lastName').value));
-        let city = SanitizeLength(SanitizeInput(document.getElementById('city').value));
+        let fName = SanitizeInput(document.getElementById('firstName').value);
+        let lName = SanitizeInput(document.getElementById('lastName').value);
+        let city = SanitizeInput(document.getElementById('city').value);
         let province = SanitizeInput(document.getElementById('province').value);
 
         try {

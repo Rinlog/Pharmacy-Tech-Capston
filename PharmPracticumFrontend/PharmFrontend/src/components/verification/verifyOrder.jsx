@@ -113,6 +113,9 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
             UserID: document.cookie.split('; ').find(row => row.startsWith('user=')).split('=')[1]
         }
 
+        console.log("verify");
+        console.log(verify);
+
         try{
 
             //api call

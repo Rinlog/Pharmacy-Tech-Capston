@@ -576,7 +576,7 @@ GO
         -- Purpose: Set the status of an order
         -- Parameters:
         --      @userID - the ID of the user
-        --      @rxNum - the ID of the order
+        --      @orderID - the ID of the order
         --      @status - the status to set
         -- Returns: None
         -- Notes: This procedure will be called IN the amendOrder so it doesn't need logic for that
@@ -605,12 +605,9 @@ GO
                 RETURN;
             END;
 
-            -- Make sure the user exists and isnt the initiator of the order if the status isn't 'Amended'
+            -- Make sure the user exists and isnt the initiator of the order
             IF NOT EXISTS (SELECT * FROM UserTable WHERE userID = @userID)
-                OR (
-                    (SELECT initiator FROM OrderTable WHERE rxNum = @rxNum) = @userID
-                    AND @status != 'Amended'
-                )
+                OR (SELECT initiator FROM OrderTable WHERE rxNum = @rxNum) = @userID
             BEGIN
                 RETURN;
             END;
@@ -1514,7 +1511,7 @@ GO
         --      @comments - any comments on the order
         --      @imagePath - the path to the image of the order
         -- Returns: None
-        -- Notes: This procedure calls the setOrderStatus, setOrderImage, and generateLog procedures
+        -- Notes: This procedure calls the setOrderStatus procedure to set the status of the order
         @userID char(6),
         @rxNum int,
         @PPR char(6),
@@ -1541,9 +1538,9 @@ GO
             END;
 
             -- Make sure the patient, drug, and physician exist
-            IF NOT EXISTS (SELECT * FROM PatientTable WHERE PPR = @PPR)
-                OR NOT EXISTS (SELECT * FROM DrugTable WHERE DIN = @DIN)
-                OR NOT EXISTS (SELECT * FROM PhysicianTable WHERE physicianID = @physicianID)
+            IF NOT EXISTS (SELECT * FROM PatientTable WHERE PPR = @PPR 
+                AND EXISTS (SELECT * FROM DrugTable WHERE DIN = @DIN)
+                AND EXISTS (SELECT * FROM PhysicianTable WHERE physicianID = @physicianID))
             BEGIN
                 RETURN;
             END;
@@ -1578,9 +1575,6 @@ GO
 
             -- Update the image path of the order
             EXEC setOrderImage @rxNum, @imagePath;
-
-            -- Log the amendment
-            EXEC generateLog @userID, @rxNum, 'Amended';
         END;
         GO
 

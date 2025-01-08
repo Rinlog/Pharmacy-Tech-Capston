@@ -163,15 +163,11 @@ function Drugs() {
 
     // Update the data when the modals are closed
     useEffect(() => {
-        const fetchData = async () => {
-            if (!isAddModalOpen && !isDeleteModalOpen) {
-                // If both modals are closed, fetch the data
-                await GetDrugs();
-            }
-        };
-
-        fetchData();
-    }, [isAddModalOpen, isDeleteModalOpen]);
+        if (!isAddModalOpen && !isDeleteModalOpen) {
+            // If both modals are closed, fetch the data
+            GetDrugs();
+        }
+    }, [isAddModalOpen, isDeleteModalOpen, display]);
 
     const ChangeDisplay = (e) => {
         let select = e.target.id;
@@ -227,7 +223,6 @@ function Drugs() {
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)} 
                             drugToDelete={selectedDrug}
-                            setDrugToDelete={setSelectedDrug}
                         />
                     <br/><br/>
                     <i>&nbsp;&nbsp;*For editing or deleting a drug, select a drug from the table below, then click the corresponding button.</i>
@@ -243,36 +238,34 @@ function Drugs() {
 
             {/* Displays when data has been obtained */}
             {dataObtained && (
-                <div className='scroll-table'>
-                    <table>
-                        <thead>
-                            <tr>
-                                {/* Empty column for radio buttons */}
-                                <th></th>
+                <table>
+                    <thead>
+                        <tr>
+                            {/* Empty column for radio buttons */}
+                            <th></th>
+                            {tableHeaders.map(header => (
+                                <th key={header}>{header}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredData.map((item, index) => (
+                            <tr key={index}>
+                                <td>
+                                    <input 
+                                        type="radio" 
+                                        name="selectedRow" 
+                                        checked={selectedDrug.selected && item["DIN"] === selectedDrug["DIN"]}
+                                        onChange={e => handleRadioChange(e, item)}
+                                    />
+                                </td>
                                 {tableHeaders.map(header => (
-                                    <th key={header}>{header}</th>
+                                    <td key={header}>{item[header]}</td>
                                 ))}
                             </tr>
-                        </thead>
-                        <tbody>
-                            {filteredData.map((item, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        <input 
-                                            type="radio" 
-                                            name="selectedRow" 
-                                            checked={selectedDrug.selected && item["DIN"] === selectedDrug["DIN"]}
-                                            onChange={e => handleRadioChange(e, item)}
-                                        />
-                                    </td>
-                                    {tableHeaders.map(header => (
-                                        <td key={header}>{item[header]}</td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
 

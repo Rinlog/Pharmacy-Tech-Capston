@@ -70,6 +70,8 @@ function AddOrder(){
 
         }
 
+        console.log(order);
+
         //API call 
         try {
 
@@ -81,6 +83,7 @@ function AddOrder(){
                 body: JSON.stringify(order)
             });
             const data = await response.json();
+            console.log(data);
             alert(data.message);
             return;
 

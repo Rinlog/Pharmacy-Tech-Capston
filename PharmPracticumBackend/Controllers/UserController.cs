@@ -151,6 +151,8 @@ namespace PharmPracticumBackend.Controllers
         [HttpPost("resetrequest")]
         public async Task<IActionResult> ResetRequest([FromBody] resetRequestDTO resetRequest)
         {
+            Console.WriteLine("Password reset request recieved");
+
             // Get the email from the DTO
             string email = resetRequest.Email;
 
@@ -163,6 +165,8 @@ namespace PharmPracticumBackend.Controllers
             // Call the DL to get the ID
             string id = await _pharmDL.GetIDByEmailAsync(email);
 
+            Console.WriteLine("ID gotten from email: " +  id);
+
             // Make sure we actually got an ID back
             if(id == "")
             {
@@ -171,6 +175,8 @@ namespace PharmPracticumBackend.Controllers
 
             // Generate a code for password reset
             string code = await _pharmDL.CreateCode(id, "Reset");
+
+            Console.WriteLine("Code generated: " + code);
 
             // Make sure nothing went wrong with generating and inserting the code
             if (code != null)
@@ -181,7 +187,7 @@ namespace PharmPracticumBackend.Controllers
             }
             else
             {
-                return BadRequest(new { message = "Unable to complete request"});
+                return BadRequest(new { message = "Something just happened.. "});
             }
         }
 
