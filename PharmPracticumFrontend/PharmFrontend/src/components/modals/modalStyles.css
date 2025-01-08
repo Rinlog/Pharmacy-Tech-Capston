@@ -1,0 +1,87 @@
+/* CSS for modal */
+.modal label {
+    color: black;
+}
+.modal span {
+    color: black;
+}
+.modal h3 {
+    color: black;
+}
+.modal {
+    display: none;
+    position: fixed; 
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); 
+}
+
+    .modal.isOpen {
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+    }
+
+/* CSS for modal content */
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto; 
+    min-height: 200px; 
+}
+
+/* CSS for close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+/* CSS for table */
+.modal table {
+    border-collapse: collapse;
+}
+
+    .modal table th, table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .modal table th {
+        background-color: #f2f2f2;
+    }
+
+    .modal table tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    .modal table tr:hover {
+        background-color: #f5f5f5;
+    }
+    .modal table tr.selected{
+        background-color: #7bc09a;
+    }
+    .modal table tr.selected-red{
+        background-color: #db3d37;
+    }
+
+.modal textarea {
+    resize: none;
+    border: 2px inset black;
+}
