@@ -52,9 +52,9 @@ namespace PharmPracticumBackend.DL
         }
 
         //Close Connection
-        public void DisposeConnection(SqlConnection connection)
+        public void Disconnect(SqlConnection connection)
         {
-            connection?.Dispose();
+            connection.Close();
         }
 
         //db connection test
