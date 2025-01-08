@@ -20,14 +20,13 @@ namespace PharmPracticumBackend.DL
     public class PharmDL
     {
 
-        private readonly IConfiguration _configuration;
+        //private readonly IConfiguration _configuration;
 
         private readonly string _connectionString;
 
         public PharmDL(IConfiguration configuration)
         {
-            _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("DefaultConnectionRemoteServer");
+            _connectionString = configuration.GetConnectionString("DefaultConnectionRemoteServer");
         }
 
         //Opens connection
