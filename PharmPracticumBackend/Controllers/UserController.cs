@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PharmPracticumBackend.DL;
 using PharmPracticumBackend.DTO;
 using PharmPracticumBackend.Sanitization;
@@ -270,7 +271,7 @@ namespace PharmPracticumBackend.Controllers
             bool allow = await _pharmDL.AllowPassSet(UserID);
             Console.WriteLine("Check resulted in " + allow);
             return Ok(new { data = allow });
-
+            
         }
 
     }

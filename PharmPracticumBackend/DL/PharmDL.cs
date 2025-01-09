@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Mail;
 using System.Net;
 using PharmPracticumBackend.DTO;
-using PharmPracticumBackend.DTO;
 using System.Numerics;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.AspNetCore.Mvc;
@@ -42,19 +41,7 @@ namespace PharmPracticumBackend.DL
             return connection;
         }
 
-        //used for creating commands
-        public SqlCommand CreateCommand(SqlConnection connection, SqlTransaction transaction)
-        {
-            var command = connection.CreateCommand();
-            command.Transaction = transaction;
-            return command;
-        }
-
-        //Close Connection
-        public void Disconnect(SqlConnection connection)
-        {
-            connection.Close();
-        }
+       
 
         //db connection test
         public async Task<string> CanIConnect()
@@ -326,6 +313,7 @@ namespace PharmPracticumBackend.DL
                 Console.Write(ex.Message);
                 return id;
             }
+            
 
         }
 
