@@ -96,7 +96,7 @@ CREATE TABLE DrugTable (
     DIN varchar(8) PRIMARY KEY NOT NULL,            -- Drug Identification Number (Numeric)
     drugName varchar(255) NOT NULL,                 -- Name of Medication
     dosage varchar(255) NOT NULL,                   -- Dosage of Medication (e.g. 10mg)
-    strength varchar(255) NOT NULL                  -- Strength of Medication
+    strength varchar(255) NOT NULL,                  -- Strength of Medication
     manufacturer varchar(255) NOT NULL,             -- Manufacturer
     concentration varchar(255) NOT NULL,            -- Concentration
     referenceBrand varchar(255),                    -- Reference Brand name if any (e.g. Tylenol, Advil, etc.)

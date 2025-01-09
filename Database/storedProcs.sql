@@ -1637,7 +1637,7 @@ GO
             WHERE u.userID = @userID;
         END;
         GO
-
+        
     IF NOT EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'generateLog')
     CREATE PROCEDURE generateLog
         -- Procedure: generateLog
@@ -1684,3 +1684,5 @@ GO
 			dateLastChanged, dateVerified, SIG, SIGDescription, form, route, prescribedDose, frequency,
 			duration, quantity, startDate, startTime, comments from OrderTable where initiator = @userId
         END;
+        GO
+
