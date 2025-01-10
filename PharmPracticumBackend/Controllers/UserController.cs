@@ -39,7 +39,6 @@ namespace PharmPracticumBackend.Controllers
 
             //run DL command
             authUserDTO user = await _pharmDL.ValidateUserAsync(email, login.Password);
-
             //if we don't get a real user, we return that info
             if (user.UserId == "") return Ok(new { message = "Could not validate an active acount with entered information." });
             else return Ok(new { data = user });

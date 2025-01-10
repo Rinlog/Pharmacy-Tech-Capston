@@ -131,7 +131,6 @@ namespace PharmPracticumBackend.DL
                 //grab the ID using email
                 string userID = await GetIDByEmailAsync(email);
 
-                Console.WriteLine(userID);
 
                 //if this returns a valid userID, check if active
                 if (userID != "")
@@ -140,8 +139,7 @@ namespace PharmPracticumBackend.DL
                     //check if user is active
                     bool active = await IsUserActive(userID);
 
-                    Console.WriteLine(active.ToString());   
-
+                    Console.WriteLine(active.ToString());
                     //if not, return
                     if (!active)
                     {
@@ -163,7 +161,6 @@ namespace PharmPracticumBackend.DL
                         {
 
                             string dbHash = reader["password"].ToString();
-
                             //if we don't get one, send back an empty user
                             if (string.IsNullOrEmpty(dbHash))
                             {
@@ -174,7 +171,8 @@ namespace PharmPracticumBackend.DL
                             PasswordHasher<object> hasher = new PasswordHasher<object>();
 
                             PasswordVerificationResult verified = hasher.VerifyHashedPassword(null, dbHash, pass);
-
+                            
+                            Console.WriteLine("Is my password ok: " + verified);
                             switch (verified)
                             {
 
@@ -469,7 +467,6 @@ namespace PharmPracticumBackend.DL
 
             try
             {
-
                 //SQL
                 using var connection = GetOpenConnection();
 
@@ -480,8 +477,6 @@ namespace PharmPracticumBackend.DL
                 returnParameter.Direction = ParameterDirection.ReturnValue;
 
                 //are they active?
-                cmd.ExecuteNonQuery();
-
                 await cmd.ExecuteNonQueryAsync();
                 int result = (int)returnParameter.Value;
 
