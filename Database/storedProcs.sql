@@ -2,7 +2,7 @@
     -- This file contains all the stored procedures for the Pharmacy Tech Database
     -- And is designed to be able to be run all at once to create all the procedures if needed
 
-
+use pharmtechDB;
 -- Drop the procedures if they exist
 
     -- Inserts
@@ -1623,7 +1623,7 @@ GO
             BEGIN
                 SET @DIN = NULL;
             END;
-
+            
             -- Return the names
             SELECT u.fName as userFName, u.lName as userLName, p.fName as patientFName, p.lName as patientLName,
             ph.fName as physicianFName, ph.lName as physicianLName, d.drugName as drugName
@@ -1637,9 +1637,19 @@ GO
             WHERE u.userID = @userID;
         END;
         GO
-        
-    IF NOT EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'generateLog')
-    CREATE PROCEDURE generateLog
+
+    
+    -- Drop the stored procedure if it already exists
+    IF EXISTS (
+    SELECT *
+        FROM INFORMATION_SCHEMA.ROUTINES
+    WHERE SPECIFIC_SCHEMA = 'dbo'
+        AND SPECIFIC_NAME = 'generateLog'
+    )
+    DROP PROCEDURE dbo.generateLog
+    GO
+    -- Create the stored procedure in the specified schema
+    CREATE PROCEDURE dbo.generateLog
         -- Procedure: generateLog
         -- Purpose: Generate a log for an action
         -- Parameters:
@@ -1653,20 +1663,19 @@ GO
         @actorID char(6),
         @affectedOrder int,
         @actionLogged varchar(255)
-        AS
+    AS
+        -- Just make sure everything checks out
+        IF NOT EXISTS (SELECT * FROM UserTable WHERE userID = @actorID)
+            OR NOT EXISTS (SELECT * FROM OrderTable WHERE rxNum = @affectedOrder)
         BEGIN
-            -- Just make sure everything checks out
-            IF NOT EXISTS (SELECT * FROM UserTable WHERE userID = @actorID)
-                OR NOT EXISTS (SELECT * FROM OrderTable WHERE rxNum = @affectedOrder)
-            BEGIN
-                RETURN;
-            END;
-
-            -- Looks like things are up to code, time to log
-            INSERT INTO LogTable (actorID, affectedOrder, actionLogged, timeLogged)
-            VALUES (@actorID, @affectedOrder, @actionLogged, GETDATE());
+            RETURN;
         END;
-        GO
+                
+
+        -- Looks like things are up to code, time to log
+        INSERT INTO LogTable (actorID, affectedOrder, actionLogged, timeLogged)
+        VALUES (@actorID, @affectedOrder, @actionLogged, GETDATE());
+    GO
 
     CREATE PROCEDURE getMyOrders
         -- Procedure: getMyOrders
