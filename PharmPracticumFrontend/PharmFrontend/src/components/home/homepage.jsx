@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 function Home() {
-
 
     return (
 
@@ -10,7 +9,7 @@ function Home() {
             <h1>Home</h1>
             <hr/>
 
-        </div>
+        </div> 
 
     )
 

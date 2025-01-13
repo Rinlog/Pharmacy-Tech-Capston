@@ -6,7 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 
 //page/function imports
-import { NullCheck, CheckEmail } from '@components/validation/basicValidation.jsx';
+import { NullCheck, CheckEmail, PassRequirements } from '@components/validation/basicValidation.jsx';
 import { SanitizeEmail } from '@components/datasanitization/sanitization.jsx'; 
 
 
@@ -15,6 +15,8 @@ function Login() {
     //states and react methods
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     const navigate = useNavigate();
 
@@ -23,28 +25,41 @@ function Login() {
     //validation
     //failures increase error count
     //form is not submitted unless there are no errors
+    //validation
     const Validation = () => {
-
         let errors = 0;
 
         //null checks
-        if (!NullCheck(email)) errors++;
-        if (!NullCheck(password)) errors++;
+        if (!NullCheck(email)) {
+            setEmailError('Email is required');
+            errors++;
+        } else if (!CheckEmail(email)) {
+            setEmailError('Invalid email format');
+            errors++;
+        } else {
+            setEmailError('');
+        }
+
+        if (!NullCheck(password)) {
+            setPasswordError('Password is required');
+            errors++;
+        } else if (!PassRequirements(password)) {
+            setPasswordError('Password incorrect');
+            errors++;
+        } else {
+            setPasswordError('');
+        }
 
         return errors;
-        
     }
 
     //form submission
     const handleSubmit = async (e) => {
 
         e.preventDefault();
-
         //validation check
         if (Validation() > 0) {
-
             return;
-
         }
         
         //sanitize email
@@ -60,12 +75,18 @@ function Login() {
                 body: JSON.stringify({ Email: email, Password: password}),
             });
             const data = await response.json();
-            if (data.message === "Could not validate an active acount with entered information.") alert(data.message);
+            if (data.message === "Wrong email or password entered.") {
+                alert(data.message)
+            }
+            //updated new message to display if something comes back wrong
+            else if (data.message) {
+                alert(data.message)
+            }
             else{
                 alert("Login successful, redirecting.");
                 setCookie('user', data.data.userId, {path: '/', sameSite: 'none', secure: true });
                 setCookie('admin', data.data.admin, {path: '/', sameSite: 'none', secure: true });
-                navigate('/signup');
+                navigate('/home');
             }
             return;
 
@@ -121,42 +142,37 @@ function Login() {
         }
 
 
-    return (
-
-        <div>
-
-            <form className='regular-form' onSubmit={handleSubmit}>
-
-                <h1>Welcome to the PharmTech System!</h1>
-                <h3>Please login to continue</h3>
-                <br></br><br></br>
-                <label className='input-label'>Email:</label>
+        return (
+            <div>
+                <form className='regular-form' onSubmit={handleSubmit}>
+                    <h1>Welcome to the PharmTech System!</h1>
+                    <h3>Please login to continue</h3>
+                    <br></br><br></br>
+                    <label className='input-label'>Email:</label>
                     <input
                         className="text-input"
                         type="text"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}>
-                    </input>
-                <br></br><br></br>
-                <label className='input-label'>Password:</label>
+                        onChange={(e) => setEmail(e.target.value)} />
+                    {emailError && <div style={{ color: 'red', fontSize: '12px' }}>{emailError}</div>}
+                    <br></br><br></br>
+                    <label className='input-label'>Password:</label>
                     <input
                         className="text-input"
                         type="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}>
-                </input>
-                <br></br><br></br>
-                <button className="button" type="submit">Login</button>
-
-            </form>
-            
-            <form className='regular-form'>
-            <h3>Don't have an account? <button className="button" onClick={() => navigate('/signup')}>Sign Up</button></h3>
-            <h3>Forgot your password? <button className="button" onClick={handleForgotPassword}>Reset Password</button></h3>
-            </form>
-        </div>
-
-    );
+                        onChange={(e) => setPassword(e.target.value)} />
+                    {passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{passwordError}</div>}
+                    <br></br><br></br>
+                    <button className="button" type="submit">Login</button>
+                </form>
+    
+                <form className='regular-form'>
+                    <h3>Don't have an account? <button className="button" onClick={() => navigate('/signup')}>Sign Up</button></h3>
+                    <h3>Forgot your password? <button className="button" onClick={handleForgotPassword}>Reset Password</button></h3>
+                </form>
+            </div>
+        );
 
 
 }

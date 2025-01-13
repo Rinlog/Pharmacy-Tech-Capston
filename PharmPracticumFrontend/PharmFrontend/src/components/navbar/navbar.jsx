@@ -18,12 +18,14 @@ function Navbar() {
     };
 
     const Logout = () => {
-
         cookies.remove('user');
         cookies.remove('admin');
         navigate("/login");
-
+        //added reload for bug
+        window.location.reload();
     }
+
+    
 
     return(
 
