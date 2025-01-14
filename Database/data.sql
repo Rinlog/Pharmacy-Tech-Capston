@@ -37,7 +37,7 @@
         -- In the log table, the actorID will be set to this user if the user who performed the action is deleted but the name will be kept for reference
 
 
-
+use pharmtechDB;
 
 
 
@@ -50,7 +50,8 @@ DELETE FROM SigTable;
 DELETE FROM drugTable;
 DELETE FROM PatientTable;
 
--- Insert some patients
+--Insert some patients
+--note that you will need to comment these pluse the DELETE FROM PatientTable out in order to get orders in the ordertabel
 INSERT INTO PatientTable (fName, lName, DOB, sex, address, city, hospitalName, roomNumber, unitNumber, allergies, conditions)
 VALUES ('John', 'Doe', '1990-01-01', 'M', '123 Main St.', 'Fredericton', 'NBCC Lab', '123', '456', 'Peanuts', 'Asthma');
 
@@ -139,7 +140,7 @@ VALUES ('FRJJ00', 'Jane', 'Janeson', 'jane@nbcc.ca', 'password', 'Fredericton', 
 
 -- Insert some nothing orders
 INSERT INTO OrderTable (PPR, DIN, physicianID, status, initiator, verifier, dateSubmitted, dateLastChanged, dateVerified, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, startTime, comments)
-VALUES ('1024', '123456', 'JS0000', 'Submitted', 'FRBB00', 'FRBB01', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '100ml', GETDATE(), '12:00', 'No Comments');
+VALUES ('1016', '123456', 'JS0000', 'Submitted', 'FRBB00', 'FRBB01', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '100ml', GETDATE(), '12:00', 'No Comments');
 
 INSERT INTO OrderTable (PPR, DIN, physicianID, status, initiator, verifier, dateSubmitted, dateLastChanged, dateVerified, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, startTime,  comments)
-VALUES ('1025', '123457', 'JS0001', 'Submitted', 'FRBB01', 'FRBB00', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '30 Tablets' , GETDATE(), '12:00', 'No Comments');
+VALUES ('1017', '123457', 'JS0001', 'Submitted', 'FRBB01', 'FRBB00', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '30 Tablets' , GETDATE(), '12:00', 'No Comments');
