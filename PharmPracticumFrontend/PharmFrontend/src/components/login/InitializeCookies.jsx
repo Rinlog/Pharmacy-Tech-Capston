@@ -12,8 +12,8 @@ const InitializeCookies = ({ children }) => {
         if (!cookies.admin) {
             setCookie('admin', '', { path: '/', sameSite: 'none', secure: true });
         }
-    }, [cookies, setCookie]); // Add a check to avoid unnecessary re-renders
-
+    }, [cookies]); // Add a check to avoid unnecessary re-renders
+            //removed setCookie
     return children; // Render children components
 };
 

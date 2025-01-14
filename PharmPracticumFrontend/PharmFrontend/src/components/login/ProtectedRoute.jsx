@@ -9,15 +9,15 @@ const ProtectedRoute = ({ component: Component, adminRequired = false }) => {
 
     const { loggedIn, isAdmin } = authState;
 
-    // Check if the user is not logged in
-    if (!loggedIn) {
-        return <Navigate to="/login" replace />;
-    }
+    // // Check if the user is not logged in
+    // if (!loggedIn) {
+    //     return <Navigate to="/login" replace />;
+    // }
 
-    // Check if admin access is required and if the user is not an admin
-    if (adminRequired && !isAdmin) {
-        return <Navigate to="/home" replace />;
-    }
+    // // Check if admin access is required and if the user is not an admin
+    // if (adminRequired && !isAdmin) {
+    //     return <Navigate to="/home" replace />;
+    // }
 
     // Render the passed component
     return <Component />;
@@ -25,3 +25,5 @@ const ProtectedRoute = ({ component: Component, adminRequired = false }) => {
 };
 
 export default ProtectedRoute;
+
+

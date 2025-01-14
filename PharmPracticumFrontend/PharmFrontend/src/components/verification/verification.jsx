@@ -176,7 +176,7 @@ function Verification() {
 
         // Cleanup function
         return () => clearInterval(interval);
-    }, []); // Empty dependency array to run the effect once on mount
+    }, [dataObtained]); // Empty dependency array to run the effect once on mount  dataObtained
 
     // Filter order data on search box input
     useEffect(() => {
@@ -205,7 +205,7 @@ function Verification() {
                 setContent(<VerifyOrder setDisplay={setDisplay} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder}/>);
                 break;
         }
-    }, [display, setContent]);
+    }, [display]); //remove setContent
     
     return(
 
