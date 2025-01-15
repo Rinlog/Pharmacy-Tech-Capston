@@ -839,7 +839,35 @@ namespace PharmPracticumBackend.DL
         }
 
         //DRUG METHODS
+        public drugsDTO GetDrugByID(String DIN)
+        {
+            drugsDTO drugsDTO = new drugsDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.getDrugInfo",conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@DIN",DIN);
 
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    drugsDTO.DIN = reader["DIN"].ToString();
+                    drugsDTO.Name = reader["drugName"].ToString();
+                    drugsDTO.Dosage = reader["dosage"].ToString();
+                    drugsDTO.Strength = reader["strength"].ToString();
+                    drugsDTO.Manufacturer = reader["manufacturer"].ToString();
+                    drugsDTO.Concentration = reader["concentration"].ToString();
+                    drugsDTO.ReferenceBrand = reader["referenceBrand"].ToString();
+                    drugsDTO.ContainerSize = reader["containerSize"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return drugsDTO;
+        }
         public async Task<List<drugsDTO>> GetAllDrugs()
         {
             List<drugsDTO> drugs = new List<drugsDTO>();
@@ -992,6 +1020,40 @@ namespace PharmPracticumBackend.DL
 
 
         //PATIENT METHODS
+        public patientsDTO GetPatientbyID(String PPR)
+        {
+            patientsDTO patient = new patientsDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.getPatientInfo", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PPR", PPR);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    patient.PPR = reader["PPR"].ToString();
+                    patient.FName = reader["fName"].ToString();
+                    patient.LName = reader["lName"].ToString();
+                    patient.DOB = reader["DOB"].ToString();
+                    patient.Sex = reader["sex"].ToString();
+                    patient.Address = reader["address"].ToString();
+                    patient.City = reader["city"].ToString();
+                    patient.HospitalName = reader["hospitalName"].ToString();
+                    patient.RoomNumber = reader["roomNumber"].ToString();
+                    patient.UnitNumber = reader["unitNumber"].ToString();
+                    patient.Allergies = reader["allergies"].ToString();
+                    patient.Conditions = reader["conditions"].ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return patient;
+        }
         public async Task<List<patientsDTO>> GetAllPatients()
         {
             List<patientsDTO> patients = new List<patientsDTO>();
@@ -1304,7 +1366,48 @@ namespace PharmPracticumBackend.DL
         }
 
         //ORDER METHODS
-
+        public ordersDTO GetOrderByID(String RxNum)
+        {
+            ordersDTO dbOrders = new ordersDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetOrderInfo",conn);
+                cmd.CommandType= CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@rxNum", RxNum);
+                
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    dbOrders.RxNum = reader["rxNum"].ToString();
+                    dbOrders.PPR = reader["PPR"].ToString();
+                    dbOrders.DIN = reader["DIN"].ToString();
+                    dbOrders.PhysicianID = reader["physicianID"].ToString();
+                    dbOrders.Status = reader["status"].ToString();
+                    dbOrders.Initiator = reader["initiator"].ToString();
+                    dbOrders.Verifier = reader["verifier"].ToString();
+                    dbOrders.DateSubmitted = reader["dateSubmitted"].ToString();
+                    dbOrders.DateLastChanged = reader["dateLastChanged"].ToString();
+                    dbOrders.DateVerified = reader["dateVerified"].ToString();
+                    dbOrders.SIG = reader["SIG"].ToString();
+                    dbOrders.SIGDescription = reader["SIGDescription"].ToString();
+                    dbOrders.Form = reader["form"].ToString();
+                    dbOrders.Route = reader["route"].ToString();
+                    dbOrders.PrescribedDose = reader["prescribedDose"].ToString();
+                    dbOrders.Frequency = reader["frequency"].ToString();
+                    dbOrders.Duration = reader["duration"].ToString();
+                    dbOrders.Quantity = reader["quantity"].ToString();
+                    dbOrders.StartDate = reader["startDate"].ToString();
+                    dbOrders.StartTime = reader["startTime"].ToString();
+                    dbOrders.Comments = reader["comments"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return dbOrders;
+        }
         public async Task<List<ordersDTO>> GetAllOrders()
         {
             List<ordersDTO> orders = new List<ordersDTO>();

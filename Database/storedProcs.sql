@@ -1329,8 +1329,7 @@ GO
         -- Purpose: Gets all information about a single order
         -- Parameters:
         --      @rxNum - the ID of the order
-        -- Returns: rxNum, PPR, DIN, physicianID, SIG, SIGDescription, form, route, prescribedDose, frequency,
-        --          duration, quantity, startDate, startTime, comments, dateLastChanged, status, initiator, verifier, imagePath
+        -- Returns: All Info
         -- Notes: None
         @rxNum int
         AS
@@ -1342,8 +1341,7 @@ GO
             END;
 
             -- Return the order information
-            SELECT o.rxNum, o.PPR, o.DIN, o.physicianID, o.SIG, o.SIGDescription, o.form, o.route, o.prescribedDose,
-                o.frequency, o.duration, o.quantity, o.startDate, o.startTime, o.comments, o.dateLastChanged, o.status, o.initiator, o.verifier, i.imagePath
+            SELECT *
             FROM OrderTable o
             LEFT JOIN ImageTable i
             ON o.rxNum = i.rxNum

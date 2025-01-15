@@ -1,26 +1,38 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using PharmPracticumBackend.DL;
-using System.Reflection.Metadata;
-using PdfSharp;
 using System.Drawing.Printing;
 using System.Runtime.Versioning;
 using System.Drawing;
-using System.Runtime.CompilerServices;
-using PdfSharp.Snippets.Drawing;
+using PharmPracticumBackend.DTO;
 namespace PharmPracticumBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PrinterController : Controller
     {
+        readonly PharmDL _PharmDL;
+        static Bitmap? fileToPrint;
+        public PrinterController(PharmDL pharmDL) {
+            _PharmDL = pharmDL;
+        }
 
         [SupportedOSPlatform("windows")]
-        [HttpGet("Test")]
-        public IActionResult TestPrint()
+        [HttpPost("PrintOrder")]
+        public IActionResult PrintOrder([FromBody] String OrderID)
+        {
+            ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
+            Bitmap img = CreateOrderImage(ordersDTO);
+            return StartPrint(img);
+        }
+
+        //MAIN METHOD FOR PRINTING, Should be called by an api method
+        [SupportedOSPlatform("windows")]
+        private IActionResult StartPrint(Bitmap file)
         {
             try
             {
+                fileToPrint = file;
                 //If printer will not print but it is visible on network make sure to update printer IP in Windows Printer Properties on the Ports Tab
                 PageSettings pageSettings = new PageSettings();
                 Margins mg = new Margins(0, 0, 0, 0);
@@ -46,7 +58,7 @@ namespace PharmPracticumBackend.Controllers
                 PrintDocument pd = new PrintDocument();
                 pd.PrinterSettings.PrinterName = ExpectedPrinter;
                 pd.DefaultPageSettings = pageSettings;
-                pd.PrintPage += Pd_PrintPageTEST;//sends the file to be printed when we run the Print() command
+                pd.PrintPage += Pd_PrintPage;//sends the file to be printed when we run the Print() command
                 if (pd.PrinterSettings.IsValid)
                 {
                     pd.Print();
@@ -64,15 +76,114 @@ namespace PharmPracticumBackend.Controllers
                 return BadRequest("Failed to Print");
             }
         }
-    
-        
 
+        //handles the Print() commmand sending the file to print
         [SupportedOSPlatform("windows")]
-        private void Pd_PrintPageTEST(object sender, PrintPageEventArgs e)
+        private void Pd_PrintPage(object sender, PrintPageEventArgs e)
         {
-            Bitmap bitmap = new Bitmap(@"C:\Users\Sadik\Desktop\TestJPG.jpg");
-            Image img = (Image)bitmap;
+            Image img = (Image)fileToPrint;
             e.Graphics.DrawImage(img, e.MarginBounds);//e.MarginBounds makes sure the image stays within the label margins set in Page Settings
+        }
+
+        //creates an image from all the order information that we can then print
+        [SupportedOSPlatform("windows")]
+        private Bitmap CreateOrderImage(ordersDTO order)
+        {
+            patientsDTO patient = _PharmDL.GetPatientbyID(order.PPR);
+            drugsDTO drug = _PharmDL.GetDrugByID(order.DIN);
+
+            Bitmap img = DrawImage(patient,drug,order);
+            return img;
+        }
+        [SupportedOSPlatform("windows")]
+        private Bitmap DrawImage(patientsDTO patient, drugsDTO drug, ordersDTO order)
+        {
+            Bitmap bitmap = new Bitmap(600,400);
+            Graphics drawing = Graphics.FromImage(bitmap);
+            drawing.Clear(Color.White);
+            Brush textBrush = new SolidBrush(Color.Black);
+            int NumberOfLinesToDraw = 18;
+            Font font = new Font("Arial", 15);
+            Font BoldFont = new Font("Arial", 15, FontStyle.Bold);
+
+            for (int i = 0; i < NumberOfLinesToDraw; i++)
+            {
+                PointF StartingPoint = new PointF(2, i*20);
+                PointF RightSideTextPoint = new PointF(295, i * 20); //use this if the first letter is a character
+                PointF RightSideNumberPoint = new PointF(292, i * 20); //use this if the first letter is a number
+                switch (i)
+                {
+                    case 0:
+                        drawing.DrawString(patient.UnitNumber + " " + patient.RoomNumber, font, textBrush, StartingPoint);
+                        drawing.DrawString(patient.HospitalName, BoldFont, textBrush, RightSideTextPoint);
+                        break;
+                    case 1:
+                    case 9:
+                    case 16:
+                        drawing.DrawString(patient.LName + ", " + patient.FName, font, textBrush, StartingPoint);
+                        drawing.DrawString(patient.PPR, font, textBrush, RightSideNumberPoint);
+                        break;
+                    case 2:
+                    case 11:
+                        drawing.DrawString(drug.Name, font, textBrush, StartingPoint);
+                        break;
+                    case 3:
+                    case 12:
+                        drawing.DrawString(drug.Dosage, font, textBrush, StartingPoint);
+                        break;
+                    case 4:
+                    case 15:
+                        drawing.DrawString(".....................................................................................................", font, textBrush, StartingPoint);
+                        break;
+                    case 5:
+                        drawing.DrawString(drug.DIN, font, textBrush, StartingPoint);
+                        drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
+                        break;
+                    case 6:
+                        drawing.DrawString("Printing:1", font, textBrush, StartingPoint);
+                        drawing.DrawString("FILL BY: " + order.Initiator, font, textBrush, RightSideTextPoint);
+                        break;
+                    case 7:
+                        Pen BarCodePen = new Pen(textBrush,2f);
+                        PointF StartingPointCopy = StartingPoint;
+                        StartingPointCopy.X += 10f;
+                        StartingPointCopy.Y += 5f;
+                        PointF EndPoint = StartingPoint;
+                        EndPoint.X += 10f;
+                        EndPoint.Y += 35f;
+                        for (int j = 0; j < 40; j++)
+                        {
+                            drawing.DrawLine(BarCodePen, StartingPointCopy,EndPoint);
+                            EndPoint.X += +5f;
+                            StartingPointCopy.X += 5f;
+                        }
+                        break;
+                    case 8:
+                        drawing.DrawString("CHECK BY: " + order.Verifier, font, textBrush, RightSideTextPoint);
+                        break;
+                    case 10:
+                    case 17:
+                        drawing.DrawString(patient.UnitNumber + " " + patient.RoomNumber, font, textBrush, StartingPoint);
+                        drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
+                        break;
+                    case 13:
+                        drawing.DrawString(drug.DIN, font, textBrush, StartingPoint);
+                        break;
+                    case 14:
+                        drawing.DrawString("FILL BY:" + order.Initiator + " " + order.DateSubmitted.Substring(0,9),font,textBrush,StartingPoint);
+                        drawing.DrawString("CHECK BY:" + order.Verifier + " " + order.DateVerified.Substring(0,9), font, textBrush, RightSideTextPoint);
+                        break;
+
+                }
+                
+            }
+
+
+            drawing.Save();
+
+            textBrush.Dispose();
+            drawing.Dispose();
+            return bitmap;
         }
     }
 }
