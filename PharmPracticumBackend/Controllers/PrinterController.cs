@@ -38,8 +38,8 @@ namespace PharmPracticumBackend.Controllers
 
         }
         [SupportedOSPlatform("windows")]
-        [HttpGet("PrintToPDF")]
-        public IActionResult PrintToPDF([FromQuery] String OrderID)
+        [HttpPost("PrintToPDF")]
+        public IActionResult PrintToPDF([FromBody] String OrderID)
         {
             try
             {
