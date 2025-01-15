@@ -24,9 +24,18 @@ namespace PharmPracticumBackend.Controllers
         [HttpPost("PrintOrder")]
         public IActionResult PrintOrder([FromBody] String OrderID)
         {
-            ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
-            Bitmap img = CreateOrderImage(ordersDTO);
-            return StartPrint(img);
+            try
+            {
+                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
+                Bitmap img = CreateOrderImage(ordersDTO);
+                return StartPrint(img);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("Could not print... please try again later");
+            }
+
         }
         [SupportedOSPlatform("windows")]
         [HttpPost("PrintToPDF")]
