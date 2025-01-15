@@ -5,6 +5,9 @@ using System.Drawing.Printing;
 using System.Runtime.Versioning;
 using System.Drawing;
 using PharmPracticumBackend.DTO;
+using PdfSharp;
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
 namespace PharmPracticumBackend.Controllers
 {
     [Route("api/[controller]")]
@@ -25,7 +28,38 @@ namespace PharmPracticumBackend.Controllers
             Bitmap img = CreateOrderImage(ordersDTO);
             return StartPrint(img);
         }
+        [SupportedOSPlatform("windows")]
+        [HttpPost("PrintToPDF")]
+        public IActionResult PrintToPDF([FromBody] String OrderID)
+        {
+            try
+            {
+                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
+                Bitmap img = CreateOrderImage(ordersDTO);
+                img.Save("PrintTOPDF.jpg"); //saves the image we dynamically generate
 
+                PdfDocument pdfDocument = new PdfDocument();
+                pdfDocument.Info.Title = "PDF Copy of Order " + ordersDTO.RxNum;
+                PdfPage page = pdfDocument.AddPage();
+                XGraphics gfx = XGraphics.FromPdfPage(page);
+
+                var Ximg = XBitmapImage.FromFile("PrintTOPDF.jpg"); //reads the image to insert it into the pdf
+                gfx.DrawImage(Ximg, 50, 50);
+
+                gfx.Save();
+                pdfDocument.Save("PrintedPDF.pdf"); //saves the pdf so we can send it back to the frontend
+                using (var stream = new FileStream(@"PrintedPDF.pdf", FileMode.Open))
+                {
+                    return File(stream, "application/pdf", "Order Number " + ordersDTO.RxNum + "PDF copy");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("Failed to print to pdf");
+            }
+
+        }
         //MAIN METHOD FOR PRINTING, Should be called by an api method
         [SupportedOSPlatform("windows")]
         private IActionResult StartPrint(Bitmap file)
@@ -98,92 +132,100 @@ namespace PharmPracticumBackend.Controllers
         [SupportedOSPlatform("windows")]
         private Bitmap DrawImage(patientsDTO patient, drugsDTO drug, ordersDTO order)
         {
-            Bitmap bitmap = new Bitmap(600,400);
-            Graphics drawing = Graphics.FromImage(bitmap);
-            drawing.Clear(Color.White);
-            Brush textBrush = new SolidBrush(Color.Black);
-            int NumberOfLinesToDraw = 18;
-            Font font = new Font("Arial", 15);
-            Font BoldFont = new Font("Arial", 15, FontStyle.Bold);
-
-            for (int i = 0; i < NumberOfLinesToDraw; i++)
+            try
             {
-                PointF StartingPoint = new PointF(2, i*20);
-                PointF RightSideTextPoint = new PointF(295, i * 20); //use this if the first letter is a character
-                PointF RightSideNumberPoint = new PointF(292, i * 20); //use this if the first letter is a number
-                switch (i)
+                Bitmap bitmap = new Bitmap(600, 400);
+                Graphics drawing = Graphics.FromImage(bitmap);
+                drawing.Clear(Color.White);
+                Brush textBrush = new SolidBrush(Color.Black);
+                int NumberOfLinesToDraw = 18;
+                Font font = new Font("Arial", 15);
+                Font BoldFont = new Font("Arial", 15, FontStyle.Bold);
+
+                for (int i = 0; i < NumberOfLinesToDraw; i++)
                 {
-                    case 0:
-                        drawing.DrawString(patient.UnitNumber + " " + patient.RoomNumber, font, textBrush, StartingPoint);
-                        drawing.DrawString(patient.HospitalName, BoldFont, textBrush, RightSideTextPoint);
-                        break;
-                    case 1:
-                    case 9:
-                    case 16:
-                        drawing.DrawString(patient.LName + ", " + patient.FName, font, textBrush, StartingPoint);
-                        drawing.DrawString(patient.PPR, font, textBrush, RightSideNumberPoint);
-                        break;
-                    case 2:
-                    case 11:
-                        drawing.DrawString(drug.Name, font, textBrush, StartingPoint);
-                        break;
-                    case 3:
-                    case 12:
-                        drawing.DrawString(drug.Dosage, font, textBrush, StartingPoint);
-                        break;
-                    case 4:
-                    case 15:
-                        drawing.DrawString(".....................................................................................................", font, textBrush, StartingPoint);
-                        break;
-                    case 5:
-                        drawing.DrawString(drug.DIN, font, textBrush, StartingPoint);
-                        drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
-                        break;
-                    case 6:
-                        drawing.DrawString("Printing:1", font, textBrush, StartingPoint);
-                        drawing.DrawString("FILL BY: " + order.Initiator, font, textBrush, RightSideTextPoint);
-                        break;
-                    case 7:
-                        Pen BarCodePen = new Pen(textBrush,2f);
-                        PointF StartingPointCopy = StartingPoint;
-                        StartingPointCopy.X += 10f;
-                        StartingPointCopy.Y += 5f;
-                        PointF EndPoint = StartingPoint;
-                        EndPoint.X += 10f;
-                        EndPoint.Y += 35f;
-                        for (int j = 0; j < 40; j++)
-                        {
-                            drawing.DrawLine(BarCodePen, StartingPointCopy,EndPoint);
-                            EndPoint.X += +5f;
-                            StartingPointCopy.X += 5f;
-                        }
-                        break;
-                    case 8:
-                        drawing.DrawString("CHECK BY: " + order.Verifier, font, textBrush, RightSideTextPoint);
-                        break;
-                    case 10:
-                    case 17:
-                        drawing.DrawString(patient.UnitNumber + " " + patient.RoomNumber, font, textBrush, StartingPoint);
-                        drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
-                        break;
-                    case 13:
-                        drawing.DrawString(drug.DIN, font, textBrush, StartingPoint);
-                        break;
-                    case 14:
-                        drawing.DrawString("FILL BY:" + order.Initiator + " " + order.DateSubmitted.Substring(0,9),font,textBrush,StartingPoint);
-                        drawing.DrawString("CHECK BY:" + order.Verifier + " " + order.DateVerified.Substring(0,9), font, textBrush, RightSideTextPoint);
-                        break;
+                    PointF StartingPoint = new PointF(2, i * 20);
+                    PointF RightSideTextPoint = new PointF(295, i * 20); //use this if the first letter is a character
+                    PointF RightSideNumberPoint = new PointF(292, i * 20); //use this if the first letter is a number
+                    switch (i)
+                    {
+                        case 0:
+                            drawing.DrawString(patient.UnitNumber + " " + patient.RoomNumber, font, textBrush, StartingPoint);
+                            drawing.DrawString(patient.HospitalName, BoldFont, textBrush, RightSideTextPoint);
+                            break;
+                        case 1:
+                        case 9:
+                        case 16:
+                            drawing.DrawString(patient.LName + ", " + patient.FName, font, textBrush, StartingPoint);
+                            drawing.DrawString(patient.PPR, font, textBrush, RightSideNumberPoint);
+                            break;
+                        case 2:
+                        case 11:
+                            drawing.DrawString(drug.Name, font, textBrush, StartingPoint);
+                            break;
+                        case 3:
+                        case 12:
+                            drawing.DrawString(drug.Dosage, font, textBrush, StartingPoint);
+                            break;
+                        case 4:
+                        case 15:
+                            drawing.DrawString(".....................................................................................................", font, textBrush, StartingPoint);
+                            break;
+                        case 5:
+                            drawing.DrawString(drug.DIN, font, textBrush, StartingPoint);
+                            drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
+                            break;
+                        case 6:
+                            drawing.DrawString("Printing:1", font, textBrush, StartingPoint);
+                            drawing.DrawString("FILL BY: " + order.Initiator, font, textBrush, RightSideTextPoint);
+                            break;
+                        case 7:
+                            Pen BarCodePen = new Pen(textBrush, 2f);
+                            PointF StartingPointCopy = StartingPoint;
+                            StartingPointCopy.X += 10f;
+                            StartingPointCopy.Y += 5f;
+                            PointF EndPoint = StartingPoint;
+                            EndPoint.X += 10f;
+                            EndPoint.Y += 35f;
+                            for (int j = 0; j < 40; j++)
+                            {
+                                drawing.DrawLine(BarCodePen, StartingPointCopy, EndPoint);
+                                EndPoint.X += +5f;
+                                StartingPointCopy.X += 5f;
+                            }
+                            break;
+                        case 8:
+                            drawing.DrawString("CHECK BY: " + order.Verifier, font, textBrush, RightSideTextPoint);
+                            break;
+                        case 10:
+                        case 17:
+                            drawing.DrawString(patient.UnitNumber + " " + patient.RoomNumber, font, textBrush, StartingPoint);
+                            drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
+                            break;
+                        case 13:
+                            drawing.DrawString(drug.DIN, font, textBrush, StartingPoint);
+                            break;
+                        case 14:
+                            drawing.DrawString("FILL BY:" + order.Initiator + " " + order.DateSubmitted.Substring(0, 9), font, textBrush, StartingPoint);
+                            drawing.DrawString("CHECK BY:" + order.Verifier + " " + order.DateVerified.Substring(0, 9), font, textBrush, RightSideTextPoint);
+                            break;
+
+                    }
 
                 }
-                
+
+
+                drawing.Save();
+
+                textBrush.Dispose();
+                drawing.Dispose();
+                return bitmap;
             }
-
-
-            drawing.Save();
-
-            textBrush.Dispose();
-            drawing.Dispose();
-            return bitmap;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return null;
         }
     }
 }
