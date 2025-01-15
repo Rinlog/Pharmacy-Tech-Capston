@@ -38,8 +38,8 @@ namespace PharmPracticumBackend.Controllers
 
         }
         [SupportedOSPlatform("windows")]
-        [HttpPost("PrintToPDF")]
-        public IActionResult PrintToPDF([FromBody] String OrderID)
+        [HttpGet("PrintToPDF")]
+        public IActionResult PrintToPDF([FromQuery] String OrderID)
         {
             try
             {
@@ -57,10 +57,9 @@ namespace PharmPracticumBackend.Controllers
 
                 gfx.Save();
                 pdfDocument.Save("PrintedPDF.pdf"); //saves the pdf so we can send it back to the frontend
-                using (var stream = new FileStream(@"PrintedPDF.pdf", FileMode.Open))
-                {
-                    return File(stream, "application/pdf", "Order Number " + ordersDTO.RxNum + "PDF copy");
-                }
+                var stream = new FileStream(@"PrintedPDF.pdf", FileMode.Open);
+                return File(stream, "application/pdf","PDF Copy of Order" + ordersDTO.RxNum);
+
             }
             catch (Exception ex)
             {
