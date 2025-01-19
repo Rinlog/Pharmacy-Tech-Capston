@@ -1,73 +1,88 @@
-import { Link } from 'react-router-dom';
-import { Cookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
-import { CheckAuth } from '@components/login/CheckAuth';
-
+import { Link, useLocation } from "react-router-dom";
+import { Cookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import { CheckAuth } from "@components/login/CheckAuth";
+import "./Navbar.css";
 
 function Navbar() {
+  const authState = CheckAuth();
+  const navigate = useNavigate();
+  const cookies = new Cookies();
+  const location = useLocation(); // Get the current route
 
-    const authState = CheckAuth();
+  const Logout = () => {
+    cookies.remove("user");
+    cookies.remove("admin");
+    navigate("/login");
+    window.location.reload();
+  };
 
-    const navigate = useNavigate();
+  // Check if the current path is the home page
+  const isHomePage = location.pathname === "/home";
 
-    const cookies = new Cookies();
+  return (
+    <nav className="navbar">
+      <div className="navbar-brand">
+        <img
+          src="/images/logo-NBCC.jpg"
+          alt="NBCC Logo"
+          className="home-logo"
+          style={{ height: "30px" }}
+        />
+      </div>
 
-    const toggleNavbar = () => {
-        const navbarMenu = document.getElementById('navbarMenu');
-        navbarMenu.classList.toggle('hide');
-    };
+      <div className="navbar-menu" id="navbarMenu">
+        <div className="navbar-links">
+          {!isHomePage && authState.loggedIn && (
+            <>
+            <Link to="/home" className="navbar-item">
+                Home
+              </Link>
+              <Link to="/drugs" className="navbar-item">
+                Drugs
+              </Link>
+              <Link to="/physicians" className="navbar-item">
+                Physicians
+              </Link>
+              <Link to="/patients" className="navbar-item">
+                Patients
+              </Link>
+              <Link to="/orders" className="navbar-item">
+                Orders
+              </Link>
+              <Link to="/verification" className="navbar-item">
+                Verification
+              </Link>
 
-    const Logout = () => {
-        cookies.remove('user');
-        cookies.remove('admin');
-        navigate("/login");
-        //added reload for bug
-        window.location.reload();
-    }
-
-    
-
-    return(
-
-        <nav className="navbar-class" id="navbar">
-
-            <div className="navbar-brand">
-                <Link to="/" className="navbar-item">NBCC Pharm Tech System</Link>
-                <button className="navbar-toggler" onClick={toggleNavbar}>
-                    <span className="navbar-toggler-icon">&#9776;</span>
-                </button>
+              {authState.loggedIn && authState.isAdmin && (
+                <>
+                  <Link to="/usermanagement" className="navbar-item">
+                    User Management
+                  </Link>
+                  <Link to="/logs" className="navbar-item">
+                    Logs
+                  </Link>
+                </>
+              )}
+              <button className="navbar-button" onClick={Logout}>
+              Logout
+            </button>
+            </>
+          )}
+          {authState.loggedIn && isHomePage && (
+            <div className="logout-container" >
+                <div className="navbar-hometext">
+                Welcome to the NBCC Pharmaceutical Tech System!
+            <button className="navbar-button" onClick={Logout}>
+              Logout
+            </button>
             </div>
-
-            <div className="navbar-menu" id="navbarMenu">
-
-                <div className="navbar-end">
-                    { authState.loggedIn && (
-                        <>
-                            <Link to="/home" className="navbar-item">Home</Link> &nbsp;
-                            <Link to="/drugs" className="navbar-item">Drugs</Link> &nbsp;
-                            <Link to="/physicians" className="navbar-item">Physicians</Link> &nbsp;
-                            <Link to="/patients" className="navbar-item">Patients</Link> &nbsp;
-                            <Link to="/orders" className="navbar-item">Orders</Link> &nbsp;
-                            <Link to="/verification" className="navbar-item">Verification</Link> &nbsp;
-                        
-                        { authState.loggedIn && authState.isAdmin && (
-                            <>
-                            <Link to="/usermanagement" className="navbar-item">User Management</Link> &nbsp;
-                            <Link to="/logs" className="navbar-item">Logs</Link>
-                            </>
-                        )}
-                        <button className="navbar-button" onClick={Logout}>Logout</button>
-                        </>
-                    )}
-                </div>
-
             </div>
-
-        </nav>
-
-    )
-
-    
+          )}
+        </div>
+      </div>
+    </nav>
+  );
 }
 
 export default Navbar;
