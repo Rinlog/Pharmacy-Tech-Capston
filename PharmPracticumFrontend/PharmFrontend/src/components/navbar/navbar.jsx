@@ -14,7 +14,7 @@ function Navbar() {
     cookies.remove("user");
     cookies.remove("admin");
     navigate("/login");
-    window.location.reload();
+    //window.location.reload(); //commented this out testing to see if i need it still
   };
 
   // Check if the current path is the home page
