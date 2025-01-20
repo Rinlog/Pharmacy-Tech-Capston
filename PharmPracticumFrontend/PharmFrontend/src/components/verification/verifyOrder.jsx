@@ -125,7 +125,7 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
             });
 
             if (response.ok) {
-                alert("Order verified successfully");
+                window.location.replace("printorder?OrderID=" + selectedOrder["Rx Number"]);
             }
             else{
                 // Alert out the message sent from the API

@@ -12,6 +12,7 @@ import Drugs from '@components/drugs/drugs.jsx';
 import UserManagement from '@components/userManagement/userManagement.jsx';
 import Logs from '@components/logs/logs.jsx';
 import Verification from '@components/verification/verification.jsx';
+import printOrder from './components/printorder/printorder';
 //css import
 import './App.css';
 //React imports
@@ -77,7 +78,8 @@ function App() {
                                     <Route path="/physicians" element={<ProtectedRoute component={Physicians} />} />
                                     <Route path="/drugs" element={<ProtectedRoute component={Drugs} />} />
                                     <Route path="/verification" element={<ProtectedRoute component={Verification} />} />
-                                    
+                                    <Route path="/printorder" element={<ProtectedRoute component={printOrder}/>} />
+
                                     {/* Admin routes */}
                                     <Route path="/usermanagement" element={<ProtectedRoute component={UserManagement} />} adminRequired />
                                     <Route path="/logs" element={<ProtectedRoute component={Logs} adminRequired />} />

@@ -8,6 +8,7 @@ using PharmPracticumBackend.DTO;
 using PdfSharp;
 using PdfSharp.Pdf;
 using PdfSharp.Drawing;
+using System.Text.Json.Serialization;
 namespace PharmPracticumBackend.Controllers
 {
     [Route("api/[controller]")]
@@ -27,6 +28,7 @@ namespace PharmPracticumBackend.Controllers
             try
             {
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
+                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
                 Bitmap img = CreateOrderImage(ordersDTO);
                 return StartPrint(img);
             }
@@ -38,12 +40,13 @@ namespace PharmPracticumBackend.Controllers
 
         }
         [SupportedOSPlatform("windows")]
-        [HttpPost("PrintToPDF")]
-        public IActionResult PrintToPDF([FromBody] String OrderID)
+        [HttpGet("PrintToPDF")]
+        public IActionResult PrintToPDF([FromQuery] String OrderID)
         {
             try
             {
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
+                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
                 Bitmap img = CreateOrderImage(ordersDTO);
                 img.Save("PrintTOPDF.jpg"); //saves the image we dynamically generate
 
@@ -54,7 +57,7 @@ namespace PharmPracticumBackend.Controllers
 
                 var Ximg = XBitmapImage.FromFile("PrintTOPDF.jpg"); //reads the image to insert it into the pdf
                 gfx.DrawImage(Ximg, 50, 50);
-
+                Console.WriteLine("Made it to back end");
                 gfx.Save();
                 pdfDocument.Save("PrintedPDF.pdf"); //saves the pdf so we can send it back to the frontend
                 var stream = new FileStream(@"PrintedPDF.pdf", FileMode.Open);
@@ -107,15 +110,15 @@ namespace PharmPracticumBackend.Controllers
                 }
                 else
                 {
-                    return BadRequest("No Valid Printer Detected");
+                    return BadRequest("No valid printers detected");
                 }
 
-                return Ok("This Should Print");
+                return Ok("Succefullly Printed Label");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return BadRequest("Failed to Print");
+                return BadRequest("Failed to print");
             }
         }
 
@@ -131,10 +134,18 @@ namespace PharmPracticumBackend.Controllers
         [SupportedOSPlatform("windows")]
         private Bitmap CreateOrderImage(ordersDTO order)
         {
-            patientsDTO patient = _PharmDL.GetPatientbyID(order.PPR);
-            drugsDTO drug = _PharmDL.GetDrugByID(order.DIN);
+            Bitmap img = null;
+            try
+            {
+                patientsDTO patient = _PharmDL.GetPatientbyID(order.PPR);
+                drugsDTO drug = _PharmDL.GetDrugByID(order.DIN);
 
-            Bitmap img = DrawImage(patient,drug,order);
+                img = DrawImage(patient, drug, order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             return img;
         }
         [SupportedOSPlatform("windows")]
