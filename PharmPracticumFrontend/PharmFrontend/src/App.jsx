@@ -11,6 +11,11 @@ import Drugs from '@components/drugs/drugs.jsx';
 import UserManagement from '@components/userManagement/userManagement.jsx';
 import Logs from '@components/logs/logs.jsx';
 import Verification from '@components/verification/verification.jsx';
+<<<<<<< Updated upstream
+=======
+import printOrder from './components/printorder/printorder.jsx';
+//css import
+>>>>>>> Stashed changes
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
