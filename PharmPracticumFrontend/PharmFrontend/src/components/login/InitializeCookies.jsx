@@ -12,9 +12,9 @@ const InitializeCookies = ({ children }) => {
         if (!cookies.admin) {
             setCookie('admin', '', { path: '/', sameSite: 'none', secure: true });
         }
-    }, [cookies]); // Add a check to avoid unnecessary re-renders
-            //removed setCookie
-    return children; // Render children components
+    }, [cookies.user, cookies.admin, setCookie]); //use individual cookie values as dependencies
+
+    return children;
 };
 
 export default InitializeCookies;
