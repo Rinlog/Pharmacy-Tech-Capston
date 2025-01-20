@@ -11,11 +11,8 @@ import Drugs from '@components/drugs/drugs.jsx';
 import UserManagement from '@components/userManagement/userManagement.jsx';
 import Logs from '@components/logs/logs.jsx';
 import Verification from '@components/verification/verification.jsx';
-<<<<<<< Updated upstream
-=======
 import printOrder from './components/printorder/printorder.jsx';
-//css import
->>>>>>> Stashed changes
+
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
@@ -42,6 +39,7 @@ function App() {
                             <Route path="/orders" element={<ProtectedRoute component={Orders} />} />
                             <Route path="/physicians" element={<ProtectedRoute component={Physicians} />} />
                             <Route path="/drugs" element={<ProtectedRoute component={Drugs} />} />
+                            <Route path="/printorder" element={<ProtectedRoute component={printOrder}/>} />
                             <Route path="/verification" element={<ProtectedRoute component={Verification} />} />
                             <Route path="/usermanagement" element={<ProtectedRoute component={UserManagement} adminRequired />} />
                             <Route path="/logs" element={<ProtectedRoute component={Logs} adminRequired />} />

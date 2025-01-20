@@ -12,7 +12,7 @@ function printOrder(){
 
     document.body.style = 'background-color: #007599';//setting this to get rid of bootstraps default background color
     const [show, setShow] = useState(false);
-    const [PrinterOption, setPrinterOption] = useState("Print To PDF"); 
+    const [PrinterOption, setPrinterOption] = useState("Print To PDF");
 
     const [searchParams, setSearchParams] = useSearchParams(); //used to get the url Query String
     const [OrderID, setOrderID] = useState(searchParams.get("OrderID")); //sets the order id into a variable we can use anywhere
