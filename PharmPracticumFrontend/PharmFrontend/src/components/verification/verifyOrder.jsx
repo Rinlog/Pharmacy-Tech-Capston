@@ -125,7 +125,7 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
             });
 
             if (response.ok) {
-                window.location.replace("printorder?OrderID=" + selectedOrder["Rx Number"]);
+                window.location.replace("printorder/" + selectedOrder["Rx Number"]);
             }
             else{
                 // Alert out the message sent from the API

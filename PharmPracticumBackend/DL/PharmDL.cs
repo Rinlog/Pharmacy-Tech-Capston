@@ -864,6 +864,7 @@ namespace PharmPracticumBackend.DL
             }
             catch (Exception ex)
             {
+                drugsDTO.DIN = null;
                 Console.WriteLine(ex.Message);
             }
             return drugsDTO;
@@ -1050,6 +1051,7 @@ namespace PharmPracticumBackend.DL
             }
             catch (Exception ex)
             {
+                patient.PPR = null;
                 Console.WriteLine(ex.Message);
             }
             return patient;
@@ -1404,7 +1406,8 @@ namespace PharmPracticumBackend.DL
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                dbOrders.RxNum = null;
+                Console.WriteLine("This is an error message: "+ex);
             }
             return dbOrders;
         }

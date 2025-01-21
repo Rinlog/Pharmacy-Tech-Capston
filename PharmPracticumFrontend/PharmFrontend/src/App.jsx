@@ -41,7 +41,7 @@ function App() {
                             <Route path="/orders" element={<ProtectedRoute component={Orders} />} />
                             <Route path="/physicians" element={<ProtectedRoute component={Physicians} />} />
                             <Route path="/drugs" element={<ProtectedRoute component={Drugs} />} />
-                            <Route path="/printorder" element={<ProtectedRoute component={printOrder}/>} />
+                            <Route path="/printorder/:OrderID" element={<ProtectedRoute component={printOrder}/>} />
                             <Route path="/verification" element={<ProtectedRoute component={Verification} />} />
                             
                             {/*admin routes*/}
