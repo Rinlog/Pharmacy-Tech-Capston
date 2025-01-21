@@ -125,7 +125,7 @@ function printOrder(){
                     <h1>Order {OrderID} has been successfully verified</h1>
                 </div>
                 <div className="DisplayText">
-                    <img src="../images/GreenVerified.png" alt="Verification checkmark" className="VerifiedImage"></img>
+                    <img src="/images/GreenVerified.png" alt="Verification checkmark" className="VerifiedImage"></img>
                 </div>
                 <div className="Buttons">
                     <button type="button" id="Home" className="RegularButton"><a href="/home">Home</a></button>
