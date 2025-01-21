@@ -140,7 +140,7 @@ VALUES ('FRJJ00', 'Jane', 'Janeson', 'jane@nbcc.ca', 'password', 'Fredericton', 
 
 -- Insert some nothing orders
 INSERT INTO OrderTable (PPR, DIN, physicianID, status, initiator, verifier, dateSubmitted, dateLastChanged, dateVerified, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, startTime, comments)
-VALUES ('1016', '123456', 'JS0000', 'Submitted', 'FRBB00', 'FRBB01', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '100ml', GETDATE(), '12:00', 'No Comments');
+VALUES ('2001', '123456', 'JS0000', 'Submitted', 'FRBB00', 'FRBB01', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '100ml', GETDATE(), '12:00', 'No Comments');
 
 INSERT INTO OrderTable (PPR, DIN, physicianID, status, initiator, verifier, dateSubmitted, dateLastChanged, dateVerified, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, startTime,  comments)
-VALUES ('1017', '123457', 'JS0001', 'Submitted', 'FRBB01', 'FRBB00', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '30 Tablets' , GETDATE(), '12:00', 'No Comments');
+VALUES ('2002', '123457', 'JS0001', 'Submitted', 'FRBB01', 'FRBB00', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '30 Tablets' , GETDATE(), '12:00', 'No Comments');

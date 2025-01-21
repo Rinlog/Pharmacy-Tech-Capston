@@ -6,7 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import Dropdown from "react-bootstrap/Dropdown";
 import './printorder.css';
 import { DropdownButton } from "react-bootstrap";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 function printOrder(){
     //this displays the print order page
 
@@ -14,8 +14,7 @@ function printOrder(){
     const [show, setShow] = useState(false);
     const [PrinterOption, setPrinterOption] = useState("Print To PDF");
 
-    const [searchParams, setSearchParams] = useSearchParams(); //used to get the url Query String
-    const [OrderID, setOrderID] = useState(searchParams.get("OrderID")); //sets the order id into a variable we can use anywhere
+    const {OrderID} = useParams(); //used to get the url Query String
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -36,7 +35,12 @@ function printOrder(){
                 }
             }
             catch(ex){
-                alert(ex.responseText);
+                if (ex.responseText != undefined){
+                    alert(ex.responseText);
+                }
+                else{
+                    alert("Could not connect to backend servers")
+                }
             }
         }
         //this will print to printer
@@ -60,7 +64,12 @@ function printOrder(){
                 }
             }
             catch(ex){
-                alert(ex.responseText);
+                if (ex.responseText != undefined){
+                    alert(ex.responseText);
+                }
+                else{
+                    alert("Could not connect to backend servers")
+                }
             }
             
         }
@@ -113,10 +122,10 @@ function printOrder(){
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossOrigin="anonymous"/>
                 {PrintModal}
                 <div className="Header">
-                    <h1>Order has been successfully verified</h1>
+                    <h1>Order {OrderID} has been successfully verified</h1>
                 </div>
                 <div className="DisplayText">
-                    <img src="images/GreenVerified.png" alt="Verification checkmark" className="VerifiedImage"></img>
+                    <img src="../images/GreenVerified.png" alt="Verification checkmark" className="VerifiedImage"></img>
                 </div>
                 <div className="Buttons">
                     <button type="button" id="Home" className="RegularButton"><a href="/home">Home</a></button>
