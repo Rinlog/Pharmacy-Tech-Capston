@@ -34,6 +34,8 @@ function App() {
                             <Route path="/confirmation/" element={<Navigate to="/home" replace />} />
                             <Route path="/passwordreset/:code/:userID" element={<PasswordReset />} />
                             <Route path="/passwordreset/" element={<Navigate to="/home" replace />} />
+
+                            {/*Logged in sections*/}
                             <Route path="/home" element={<ProtectedRoute component={Home} />} />
                             <Route path="/patients" element={<ProtectedRoute component={Patients} />} />
                             <Route path="/orders" element={<ProtectedRoute component={Orders} />} />
@@ -41,6 +43,8 @@ function App() {
                             <Route path="/drugs" element={<ProtectedRoute component={Drugs} />} />
                             <Route path="/printorder" element={<ProtectedRoute component={printOrder}/>} />
                             <Route path="/verification" element={<ProtectedRoute component={Verification} />} />
+                            
+                            {/*admin routes*/}
                             <Route path="/usermanagement" element={<ProtectedRoute component={UserManagement} adminRequired />} />
                             <Route path="/logs" element={<ProtectedRoute component={Logs} adminRequired />} />
                         </Routes>
