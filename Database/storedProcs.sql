@@ -1172,7 +1172,28 @@ GO
             SELECT email FROM UserTable WHERE userID = @userID;
         END;
         GO
+    CREATE PROCEDURE getUserInfo
+        -- Procedure: getUserInfo
+        -- Purpose: Gets all information about a single user (except password)
+        -- Parameters:
+        --      @userID - the ID of the user
+        -- Returns: userID, fName, lName, email, admin, active, campus, createdDate, expirationDate
+        -- Notes: None
+        @userID char(6)
+        AS
+        BEGIN
+            -- Check if the user exists
+            IF NOT EXISTS (SELECT * FROM UserTable WHERE userID = @userID)
+            BEGIN
+                RETURN NULL;
+            END;
 
+            -- Return the user information
+            SELECT userID, fName, lName, email, admin, active, campus, createdDate, expirationDate
+            FROM UserTable
+            WHERE userID = @userID;
+        END;
+        GO
     CREATE PROCEDURE getPatientInfo
         -- Procedure: getPatientInfo
         -- Purpose: Gets all information about a single patient
