@@ -7,11 +7,12 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Image from "react-bootstrap/Image"
 import './printorder.css';
 import { DropdownButton } from "react-bootstrap";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
-function printOrder(){
-    //this displays the print order page
+function reprintOrder(){
+    //this displays the reprint order page
 
+    //CURRENTLY INCOMPLETE AS INSURE OF SPECIFICATIONS
     //setting some default css
     document.body.style = 'background-color: #007599';
     $(document).ready(function(){
@@ -79,7 +80,6 @@ function printOrder(){
                 return;
             }
             else{
-                console.log(ex);
                 alert("could not connect to backend servers");
                 return;
             }
@@ -93,6 +93,7 @@ function printOrder(){
                     let result = await $.get("https://localhost:7172/api/printer/PrintToPDF?OrderID="+OrderID,function(data){
                         window.location = "https://localhost:7172/api/printer/PrintToPDF?OrderID="+OrderID;
                     });
+
                 }
                 else{
                     alert("No order id Provided");
@@ -119,7 +120,7 @@ function printOrder(){
                             "Content-Type":"application/json"
                         },
                         success:function(data){
-                            alert(data)
+                            alert(data);
                         }
                     });
                 }
@@ -209,4 +210,4 @@ function printOrder(){
     )
 }
 
-export default printOrder;
+export default reprintOrder;

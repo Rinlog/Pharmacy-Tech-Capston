@@ -16,9 +16,11 @@ namespace PharmPracticumBackend.Controllers
     public class PrinterController : Controller
     {
         readonly PharmDL _PharmDL;
+        readonly String _PrinterName;
         static Bitmap? fileToPrint;
-        public PrinterController(PharmDL pharmDL) {
+        public PrinterController(PharmDL pharmDL, IConfiguration configuration) {
             _PharmDL = pharmDL;
+            _PrinterName = configuration.GetSection("PrinterName")["ZebraPrinter"];
         }
 
         [HttpPost("VerifyUser")]
@@ -54,6 +56,9 @@ namespace PharmPracticumBackend.Controllers
             {
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
                 if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
+
+                //update print status in db
+                _PharmDL.updateOrderPrintStatus(OrderID, "5");
                 Bitmap img = CreateOrderImage(ordersDTO);
                 return StartPrint(img);
             }
@@ -91,6 +96,10 @@ namespace PharmPracticumBackend.Controllers
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
                 if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
 
+                //update order status in db
+                _PharmDL.updateOrderPrintStatus(OrderID, "1");
+
+                //Print to pdf
                 PdfDocument pdfDocument = new PdfDocument();
                 pdfDocument.Info.Title = "PDF Copy of Order " + ordersDTO.RxNum;
                 PdfPage page = pdfDocument.AddPage();
@@ -128,7 +137,7 @@ namespace PharmPracticumBackend.Controllers
                 printerResolution.Y = 203;
                 pageSettings.PrinterResolution = printerResolution;
 
-                String ExpectedPrinter = "ZDesigner ZT231-203dpi ZPL";
+                String ExpectedPrinter = _PrinterName;
                 foreach (String PrinterList in PrinterSettings.InstalledPrinters)
                 {
                     Console.Write(PrinterList);

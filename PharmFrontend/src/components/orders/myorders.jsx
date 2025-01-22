@@ -11,7 +11,7 @@ import PatientLookupModal from '@components/modals/patientLookupModal.jsx';
 import PhysicianLookupModal from '@components/modals/physicianLookupModal.jsx';
 
 function MyOrders(){
-
+    console.log("Test");
     // UseStates for data
     const [data, setData] = useState([]);
     const [tableHeaders, setTableHeaders] = useState([]);
