@@ -32,24 +32,32 @@ AS
     END;
 go
 
+--Trigger: log_order_print
+--When a regular order gets printed we will log when it was printed
 
---THIS DOESN"T FULLY WORK YET JUST MADE IT INSERTABLE
--- Trigger: log_order_amend
-    -- When an order is amended, a log entry is created for that order
-    -- This does not include status changes, those are logged separately
-CREATE OR ALTER TRIGGER log_order_amend
-ON OrderTable
-AFTER UPDATE
+Create OR Alter TRIGGER log_order_print
+On OrderTable
+After UPDATE
 AS
-    Begin
-        DECLARE @actorID char(6);
-        DECLARE @affectedOrder int;
+    BEGIN
+        if (UPDATE(PrintStatusID))
+            Begin
+                DECLARE @STATUSID int;
+                DECLARE @actorID char(6);
+                DECLARE @affectedOrder int;
+                DECLARE @PrintMessage varchar(50);
+                DECLARE @PrintType varchar(50);
 
-        select @actorID = initiator from inserted;
-        select @affectedOrder = rxNum from inserted;
+                select @actorID = verifier from inserted;
+                select @affectedOrder = rxNum from inserted;
+                select @STATUSID = PrintStatusID from inserted;
 
-        INSERT INTO LogTable (timeLogged, actorID, affectedOrder, actionLogged)
-        VALUES (GETDATE(), @actorID, @affectedOrder, 'Amend');
-        --initiator is the userId for the Technition sending in the original order, rxNum is the orderID for the order.
+                select @PrintMessage = PrintMessage from PrintStatusTable where PrintStatusID = @STATUSID;
+                select @PrintType = PrintType from PrintStatusTable where PrintStatusID = @STATUSID;
+
+                INSERT INTO LogTable (timeLogged, actorID, affectedOrder, actionLogged)
+                VALUES (GETDATE(), @actorID, @affectedOrder,@PrintType + ' - ' + @PrintMessage);
+            end;
+        
     end;
-GO
+go

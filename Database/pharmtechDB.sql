@@ -17,8 +17,17 @@ DROP TABLE IF EXISTS LabelTable;
 DROP TABLE IF EXISTS LogTable;
 DROP TABLE IF EXISTS ConfirmationCodeTable;
 DROP TABLE IF EXISTS PasswordResetCodeTable;
+DROP TABLE IF EXISTS PrintStatusTable;
 
 
+-- Create the table in the specified schema
+CREATE TABLE PrintStatusTable
+(
+    PrintStatusID INT NOT NULL PRIMARY KEY, -- primary key column
+    PrintType VARCHAR(50) NOT NULL,
+    PrintMessage VARCHAR(50) NOT NULL
+    -- specify more columns here
+)
 
 
 -- Create User Table
@@ -160,26 +169,19 @@ CREATE TABLE OrderTable (
     startDate datetime NOT NULL,                    -- Date the medication should be started
     startTime varchar(255) NOT NULL,                -- Time the medication should be started
 
+    PrintStatusID int,
     comments varchar(500),                          -- Comments on the order
 
     FOREIGN KEY (PPR) REFERENCES PatientTable(PPR),
     FOREIGN KEY (DIN) REFERENCES DrugTable(DIN),
     FOREIGN KEY (physicianID) REFERENCES PhysicianTable(physicianID),
     FOREIGN KEY (initiator) REFERENCES UserTable(userID),
-    FOREIGN KEY (verifier) REFERENCES UserTable(userID)
+    FOREIGN KEY (verifier) REFERENCES UserTable(userID),
+    FOREIGN KEY (PrintStatusID) REFERENCES PrintStatusTable(PrintStatusID)
 )
 
 
 
-
--- Create Image Table
-CREATE TABLE ImageTable (
-    imageID int IDENTITY(1,1) PRIMARY KEY NOT NULL, -- Image ID (Auto Incremented)
-    rxNum int NOT NULL,                             -- Prescription Number
-    imagePath varchar(500) NOT NULL,                -- Path to the image on the server (e.g. Assets/Images/image.jpg)
-
-    FOREIGN KEY (rxNum) REFERENCES OrderTable(rxNum)
-)
 
 
 

@@ -19,8 +19,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS setUserActiveStatus; 
     DROP PROCEDURE IF EXISTS setUserPassword; 
     DROP PROCEDURE IF EXISTS setOrderStatus; 
-    DROP PROCEDURE IF EXISTS setOrderImage; 
-
+    DROP PROCEDURE IF EXISTS updateOrderPrintStatus;
     -- Updates (Whole Row Updates)
     DROP PROCEDURE IF EXISTS updateUser; 
     DROP PROCEDURE IF EXISTS updatePatient; 
@@ -47,7 +46,6 @@ use pharmtechDB;
     -- Retrievals (Single Column)
     DROP PROCEDURE IF EXISTS getIDByEmail; 
     DROP PROCEDURE IF EXISTS getEmailByID; 
-    DROP PROCEDURE IF EXISTS getImagePathByOrderID; 
 
     -- Retrievals (Whole Row)
     DROP PROCEDURE IF EXISTS getUserInfo; 
@@ -307,7 +305,6 @@ GO
         --      @startDate - the start date of the treatment
         --      @startTime - the time the treatment should start
         --      @comments - any comments on the order
-        --      @imagePath - the path to the image of the order
         -- Returns: None
         -- Notes: rxNum and status will be an auto generated ID and 'Submitted' respectively
         --        dateSubmitted and dateLastChanged will be the current date and time
@@ -326,8 +323,7 @@ GO
         @quantity varchar(255),
         @startDate date,
         @startTime varchar(255),
-        @comments varchar(500),
-        @imagePath varchar(255)
+        @comments varchar(500)
         AS
         BEGIN
             -- Create some variables for the various date fields
@@ -351,16 +347,13 @@ GO
                 RETURN;
             END;
 
-            -- Insert the order and get the rxNum so we can insert the image
+            -- Insert the order and get the rxNum so we can insert the
             INSERT INTO OrderTable (PPR, DIN, physicianID, initiator, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, startTime, comments, status, dateSubmitted, dateLastChanged, verifier, dateVerified)
             VALUES (@PPR, @DIN, @physicianID, @initiator, @SIG, @SIGDescription, @form, @route, @prescribedDose, @frequency, @duration, @quantity, @startDate, @startTime, @comments, 'Submitted', @dateSubmitted, @dateLastChanged, NULL, @dateVerified);
 
             -- Return the rxNum of the order
             SELECT SCOPE_IDENTITY() AS rxNum;
 
-            -- Insert the image with the rxNum we just got
-            INSERT INTO ImageTable (rxNum, imagePath)
-            VALUES (SCOPE_IDENTITY(), @imagePath);
         END;
         GO
 
@@ -643,30 +636,6 @@ GO
         END;
         GO
 
-    CREATE PROCEDURE setOrderImage
-        -- Procedure: setOrderImage
-        -- Purpose: Set the image path of an order
-        -- Parameters:
-        --      @orderID - the ID of the order
-        --      @imagePath - the path to the image
-        -- Returns: None
-        -- Notes: None
-        @orderID int,
-        @imagePath varchar(255)
-        AS
-        BEGIN
-            -- Make sure the order exists
-            IF NOT EXISTS (SELECT * FROM OrderTable WHERE rxNum = @orderID)
-            BEGIN
-                RETURN;
-            END;
-
-            -- Set the image path of the order
-            UPDATE ImageTable
-            SET imagePath = @imagePath
-            WHERE rxNum = @orderID;
-        END;
-        GO
 
 -- Updates (Whole Row Updates)
     CREATE PROCEDURE updateUser
@@ -1027,7 +996,7 @@ GO
         -- Parameters:
         --      @userID - the ID of the user
         -- Returns: None
-        -- Notes: This procedure will also delete any associated orders, images, labels, confirmation codes, and reset codes
+        -- Notes: This procedure will also delete any associated orders, labels, confirmation codes, and reset codes
         --        It also deletes logs associated with the orders
         @userID char(6)
         AS
@@ -1041,16 +1010,13 @@ GO
             -- Now this is where it gets complicated
             -- We need to delete any orders with the user's ID as the initiator
             -- And set the verifier to 'Deleted' (ID '000000') if the user is the verifier
-            -- Which means we need to delete any images or labels for those orders
+            -- Which means we need to delete any labels for those orders
             -- And we also need to delete any confirmation codes or reset codes associated with the user
 
             -- First, we need to get all the orders the user initiated
             DECLARE @ordersToDelete TABLE (orderID int);
             INSERT INTO @ordersToDelete
             SELECT rxNum FROM OrderTable WHERE initiator = @userID;
-
-            -- Now we need to delete any images associated with those orders
-            DELETE FROM ImageTable WHERE rxNum IN (SELECT orderID FROM @ordersToDelete);
 
             -- We also need to delete any labels associated with those orders (if they exist)
             DELETE FROM LabelTable WHERE rxNum IN (SELECT orderID FROM @ordersToDelete);
@@ -1145,7 +1111,7 @@ GO
         -- Parameters:
         --      @orderID - the ID of the order
         -- Returns: None
-        -- Notes: This procedure will also delete any associated images, labels, and logs
+        -- Notes: This procedure will also delete any labels, and logs
         --        It is worth noting this procedure is NOT called in deleteUser, deletion is handled separately in that procedure
         @orderID int
         AS
@@ -1155,9 +1121,6 @@ GO
             BEGIN
                 RETURN;
             END;
-
-            -- Delete any images associated with the order
-            DELETE FROM ImageTable WHERE rxNum = @orderID;
 
             -- Delete any labels associated with the order
             DELETE FROM LabelTable WHERE rxNum = @orderID;
@@ -1207,51 +1170,6 @@ GO
 
             -- Get the email of the user
             SELECT email FROM UserTable WHERE userID = @userID;
-        END;
-        GO
-
-    CREATE PROCEDURE getImagePathByOrderID
-        -- Procedure: getImagePathByOrderID
-        -- Purpose: Get the image path of an order by its ID
-        -- Parameters:
-        --      @rxNum - the ID of the order
-        -- Returns: the image path of the order if it exists, NULL if it does not
-        -- Notes: None
-        @rxNum int
-        AS
-        BEGIN
-            -- Check if the order exists
-            IF NOT EXISTS (SELECT * FROM ImageTable WHERE rxNum = @rxNum)
-            BEGIN
-                RETURN NULL;
-            END;
-
-            -- Get the image path of the order
-            SELECT imagePath FROM ImageTable WHERE rxNum = @rxNum;
-        END;
-        GO
-
--- Retrievals (Whole Row)
-    CREATE PROCEDURE getUserInfo
-        -- Procedure: getUserInfo
-        -- Purpose: Gets all information about a single user (except password)
-        -- Parameters:
-        --      @userID - the ID of the user
-        -- Returns: userID, fName, lName, email, admin, active, campus, createdDate, expirationDate
-        -- Notes: None
-        @userID char(6)
-        AS
-        BEGIN
-            -- Check if the user exists
-            IF NOT EXISTS (SELECT * FROM UserTable WHERE userID = @userID)
-            BEGIN
-                RETURN NULL;
-            END;
-
-            -- Return the user information
-            SELECT userID, fName, lName, email, admin, active, campus, createdDate, expirationDate
-            FROM UserTable
-            WHERE userID = @userID;
         END;
         GO
 
@@ -1343,8 +1261,6 @@ GO
             -- Return the order information
             SELECT *
             FROM OrderTable o
-            LEFT JOIN ImageTable i
-            ON o.rxNum = i.rxNum
             WHERE o.rxNum = @rxNum;
         END;
         GO
@@ -1437,16 +1353,14 @@ GO
         -- Purpose: Gets info about all orders
         -- Parameters: none
         -- Returns: rxNum, PPR, DIN, physicianID, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, 
-        --          startTime, comments, dateSubmitted, dateVerified, dateLastChanged, status, initiator, verifier of each as well as the imagePath of the order
-        -- Notes: Returns all info of each order and it's associated image in DB
+        --          startTime, comments, dateSubmitted, dateVerified, dateLastChanged, status, initiator, verifier of each as well as the of the order
+        -- Notes: Returns all info of each order
         AS
         BEGIN
-            -- Select from a join of OrderTable and ImageTable so we can get the image path
+            -- Gets everything from orders
             SELECT o.rxNum, o.PPR, o.DIN, o.physicianID, o.SIG, o.SIGDescription, o.form, o.route, o.prescribedDose, o.frequency, o.duration, o.quantity, o.startDate, 
-                o.startTime, o.comments, o.dateSubmitted, o.dateVerified, o.dateLastChanged, o.status, o.initiator, o.verifier, i.imagePath
+                o.startTime, o.comments, o.dateSubmitted, o.dateVerified, o.dateLastChanged, o.status, o.initiator, o.verifier, o.PrintStatusID
             FROM OrderTable o
-            LEFT JOIN ImageTable i
-            ON o.rxNum = i.rxNum
         END;
         GO
 
@@ -1510,9 +1424,8 @@ GO
         --      @startDate - the start date of the treatment
         --      @startTime - the time the treatment should start
         --      @comments - any comments on the order
-        --      @imagePath - the path to the image of the order
         -- Returns: None
-        -- Notes: This procedure calls the setOrderStatus, setOrderImage, and generateLog procedures
+        -- Notes: This procedure calls the setOrderStatus, and generateLog procedures
         @userID char(6),
         @rxNum int,
         @PPR char(6),
@@ -1528,8 +1441,7 @@ GO
         @quantity varchar(255),
         @startDate date,
         @startTime time,
-        @comments varchar(500),
-        @imagePath varchar(255)
+        @comments varchar(500)
         AS
         BEGIN
             -- Make sure the order exists
@@ -1573,9 +1485,6 @@ GO
 
             -- Update the status of the order
             EXEC setOrderStatus @userID, @rxNum, 'Amended';
-
-            -- Update the image path of the order
-            EXEC setOrderImage @rxNum, @imagePath;
 
             -- Log the amendment
             EXEC generateLog @userID, @rxNum, 'Amended';
@@ -1681,7 +1590,7 @@ GO
         -- Parameters:
         --      @userId - the ID of the user
         -- Returns: rxNum, PPR, DIN, physicianID, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, 
-        --          startTime, comments, dateSubmitted, dateVerified, dateLastChanged, status, initiator, verifier of each as well as the imagePath of the order
+        --          startTime, comments, dateSubmitted, dateVerified, dateLastChanged, status, initiator, verifier
         -- Notes: None
 		@userId char(6)
         AS
@@ -1692,4 +1601,21 @@ GO
 			duration, quantity, startDate, startTime, comments from OrderTable where initiator = @userId
         END;
         GO
+    CREATE PROCEDURE updateOrderPrintStatus
+        --updates print status for an order, tying the print status with some sort of print
+
+        @orderID INT,
+        @statusID int
+        AS
+            BEGIN
+                --checks to make sure info entered is valid
+                if not exists(select * from OrderTable where rxNum = @orderID)
+                    or not exists (select * from PrintStatusTable where PrintStatusID = @statusID)
+                begin
+                    return;
+                end;
+                
+                update OrderTable set PrintStatusID = @statusID where rxNum = @orderID;
+            end;
+    go
 
