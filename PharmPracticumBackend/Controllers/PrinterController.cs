@@ -61,7 +61,7 @@ namespace PharmPracticumBackend.Controllers
                 gfx.Save();
                 pdfDocument.Save("PrintedPDF.pdf"); //saves the pdf so we can send it back to the frontend
                 var stream = new FileStream(@"PrintedPDF.pdf", FileMode.Open);
-                return File(stream, "application/pdf","PDF Copy of Order" + ordersDTO.RxNum);
+                return File(stream, "application/pdf","PDF Copy of Order " + ordersDTO.RxNum);
 
             }
             catch (Exception ex)

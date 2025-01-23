@@ -24,7 +24,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-brand">
         <img
-          src="/images/logo-NBCC.jpg"
+          src="/images/logo-NBCC.png"
           alt="NBCC Logo"
           className="home-logo"
           style={{ height: "30px" }}
