@@ -2,12 +2,17 @@ import React from "react";
 import $ from 'jquery';
 import {useState} from 'react';
 import './Orders.css';
+// HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
+import he from 'he';
 function AllOrders(){
     const [OrdersGotten,setOrdersGotten] = useState(false);
     const [onlyOne,setonlyOne] = useState(1);
 
+    const [ApprovedOrder, setApprovedOrders] = useState([])
+    const [RejectedOrder, setRejectedOrders] = useState([])
+    const [OtherOrder, setOtherOrders] = useState([])
     $(document).ready(async function(){
-        setonlyOne(onlyOne+1); //using this because for some reason the page gets called multiple times??? this reduces it to only twice
+        setonlyOne(onlyOne+1);
         if (onlyOne == 1){
             try{
                 let Data = await $.ajax({
@@ -44,17 +49,43 @@ function AllOrders(){
                             "Content-Type":"application/json"
                         },
                         success:function(data){
-                            console.log(data);
+
                         }});
                     //Now that we have all the data we will output it
+                    let CurrentOrder = (
+                        <tr>
+                            <td>{he.decode(Order.rxNum)}</td>
+                            <td>{he.decode(Order.ppr)}</td>
+                            <td>{he.decode(NamedData.patientLName)}</td>
+                            <td>{he.decode(NamedData.patientFName)}</td>
+                            <td>{he.decode(NamedData.din)}</td>
+                            <td>{he.decode(NamedData.drugName)}</td>
+                            <td>{he.decode(NamedData.physicianID)}</td>
+                            <td>{he.decode(NamedData.physicianLName)}</td>
+                            <td>{he.decode(Order.status)}</td>
+                            <td>{he.decode(Order.dateSubmitted)}</td>
+                            <td>{he.decode(Order.sig)}</td>
+                            <td>{he.decode(Order.sigDescription)}</td>
+                            <td>{he.decode(Order.form)}</td>
+                            <td>{he.decode(Order.route)}</td>
+                            <td>{he.decode(Order.prescribedDose)}</td>
+                            <td>{he.decode(Order.frequency)}</td>
+                            <td>{he.decode(Order.duration)}</td>
+                            <td>{he.decode(Order.quantity)}</td>
+                            <td>{he.decode(Order.startDate)}</td>
+                            <td>{he.decode(Order.startTime)}</td>
+                            <td>{he.decode(Order.comments)}</td>
+                        </tr>
+
+                    )
                     if (Order.status == "Approved"){
-                        
+                        ApprovedOrder.push(CurrentOrder);
                     }
                     else if (Order.status == "Rejected"){
-
+                        RejectedOrder.push(CurrentOrder)
                     }
                     else{
-
+                        OtherOrder.push(CurrentOrder);
                     }
                 });
             }
@@ -72,8 +103,7 @@ function AllOrders(){
     const PageHeaders = (
         <thead>
             <tr>
-                <th></th>
-                <th>RxNum</th>
+                <th>Rx Number</th>
                 <th>Patient ID</th>
                 <th>Last Name</th>
                 <th>First Name</th>
@@ -99,37 +129,32 @@ function AllOrders(){
     )
     const PageContent = (
         <div>
-            <h1>Rejected</h1>
+            <h2>Rejected</h2>
             <div className="scroll-table">
                 <table>
                     
                         {PageHeaders}
                     
-                    <tbody id="Approved">
-                        <tr>
-
-                        </tr>
+                    <tbody id="Rejected">
+                        {RejectedOrder}
                     </tbody>
                 </table>
             </div>
-            <h1>Approved</h1>
+            <h2>Approved</h2>
             <div className="scroll-table">
                 <table>
                     {PageHeaders}
-                    <tbody id="Rejected">
-                        <tr>
-                        </tr>
+                    <tbody id="Approved">
+                        {ApprovedOrder}
                     </tbody>
                 </table>
             </div>
-            <h1>Other</h1>
+            <h2>Other</h2>
             <div className="scroll-table">
                 <table>
                     {PageHeaders}
                     <tbody id="Other">
-                            <tr>
-                            
-                            </tr>
+                        {OtherOrder}
                     </tbody>
                 </table>
             </div>
@@ -137,9 +162,9 @@ function AllOrders(){
     );
     return(
 
-        <span>
-            {OrdersGotten ? PageContent : "Fetching Orders..."}
-        </span>
+        <div>
+            {OrdersGotten ? PageContent : "Fetching Data..."}
+        </div>
     )
 
 }

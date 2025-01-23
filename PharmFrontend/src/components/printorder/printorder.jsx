@@ -89,10 +89,7 @@ function printOrder(){
         if (PrinterOption.toLowerCase() === "print to pdf"){
             try{
                 if (OrderID != null){
-                    //i run this on top to first check if the order exists, only if it exists will we download it
-                    let result = await $.get("https://localhost:7172/api/printer/PrintToPDF?OrderID="+OrderID,function(data){
-                        window.location = "https://localhost:7172/api/printer/PrintToPDF?OrderID="+OrderID;
-                    });
+                    window.location = "https://localhost:7172/api/printer/PrintToPDF?OrderID="+OrderID;   
                 }
                 else{
                     alert("No order id Provided");
