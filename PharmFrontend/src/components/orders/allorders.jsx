@@ -23,7 +23,6 @@ function AllOrders(){
                     },
                     success:function(data){
                         setOrdersGotten(true);
-                        console.log(data)
                     }});
                 Data = Data.data; //a weird line because of how the previous team wrote code... too late to change structure
                 
@@ -94,7 +93,8 @@ function AllOrders(){
                     alert(ex.responseText);
                 }
                 else{
-                    alert(ex);
+                    alert("Failed to get orders")
+                    return;
                 }
             }
         }
