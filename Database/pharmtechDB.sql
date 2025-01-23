@@ -182,7 +182,14 @@ CREATE TABLE OrderTable (
 
 
 
+-- Create Image Table
+CREATE TABLE ImageTable (
+    imageID int IDENTITY(1,1) PRIMARY KEY NOT NULL, -- Image ID (Auto Incremented)
+    rxNum int NOT NULL,                             -- Prescription Number
+    imagePath varchar(500) NOT NULL,                -- Path to the image on the server (e.g. Assets/Images/image.jpg)
 
+    FOREIGN KEY (rxNum) REFERENCES OrderTable(rxNum)
+)
 
 
 
