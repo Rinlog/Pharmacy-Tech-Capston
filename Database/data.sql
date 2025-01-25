@@ -37,7 +37,7 @@
         -- In the log table, the actorID will be set to this user if the user who performed the action is deleted but the name will be kept for reference
 
 
-
+use pharmtechDB;
 
 
 
@@ -49,8 +49,20 @@ DELETE FROM PhysicianTable;
 DELETE FROM SigTable;
 DELETE FROM drugTable;
 DELETE FROM PatientTable;
+DELETE FROM PrintStatusTable;
 
--- Insert some patients
+--Insert Print Statuses
+Insert Into PrintStatusTable(PrintStatusID,PrintType,PrintMessage) values(1,'Print To PDF', 'Printed');
+Insert Into PrintStatusTable(PrintStatusID,PrintType,PrintMessage) values(2,'Print To PDF', 'Reprinted because of Insufficient supply');
+Insert Into PrintStatusTable(PrintStatusID,PrintType,PrintMessage) values(3,'Print To PDF', 'Reprinted for Label only');
+Insert Into PrintStatusTable(PrintStatusID,PrintType,PrintMessage) values(4,'Print To PDF', 'Reprinted For Transfer');
+
+Insert Into PrintStatusTable(PrintStatusID,PrintType,PrintMessage) values(5,'Print From Printer', 'Printed');
+Insert Into PrintStatusTable(PrintStatusID,PrintType,PrintMessage) values(6,'Print From Printer', 'Reprinted because of Insufficient supply');
+Insert Into PrintStatusTable(PrintStatusID,PrintType,PrintMessage) values(7,'Print From Printer', 'Reprinted for Label only');
+Insert Into PrintStatusTable(PrintStatusID,PrintType,PrintMessage) values(8,'Print From Printer', 'Reprinted For Transfer');
+--Insert some patients
+--note that you will need to comment these pluse the DELETE FROM PatientTable out in order to get orders in the ordertabel
 INSERT INTO PatientTable (fName, lName, DOB, sex, address, city, hospitalName, roomNumber, unitNumber, allergies, conditions)
 VALUES ('John', 'Doe', '1990-01-01', 'M', '123 Main St.', 'Fredericton', 'NBCC Lab', '123', '456', 'Peanuts', 'Asthma');
 
@@ -136,10 +148,3 @@ VALUES ('FRSS00', 'Sally', 'Sallyson', 'sally@nbcc.ca', 'password', 'Fredericton
 INSERT INTO UserTable (userID, fname, lname, email, password, campus, admin, active, createdDate, expirationDate)
 VALUES ('FRJJ00', 'Jane', 'Janeson', 'jane@nbcc.ca', 'password', 'Fredericton', 0, 0, GETDATE(), NULL)
 
-
--- Insert some nothing orders
-INSERT INTO OrderTable (PPR, DIN, physicianID, status, initiator, verifier, dateSubmitted, dateLastChanged, dateVerified, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, startTime, comments)
-VALUES ('1024', '123456', 'JS0000', 'Submitted', 'FRBB00', 'FRBB01', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '100ml', GETDATE(), '12:00', 'No Comments');
-
-INSERT INTO OrderTable (PPR, DIN, physicianID, status, initiator, verifier, dateSubmitted, dateLastChanged, dateVerified, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, startTime,  comments)
-VALUES ('1025', '123457', 'JS0001', 'Submitted', 'FRBB01', 'FRBB00', GETDATE(), GETDATE(), GETDATE(), 'QD', 'Each Day', 'Tablet', 'Oral', '1', 'QD', '1', '30 Tablets' , GETDATE(), '12:00', 'No Comments');

@@ -19,16 +19,12 @@ namespace PharmPracticumBackend.Controllers
         }
 
 
-        [HttpPost("test")]
+        [HttpGet("test")]
         public async Task<IActionResult> TestConnection()
         {
 
-            Console.Write("Did we log?");
 
-            string result = await _pharmDL.CanIConnect();
-
-
-            return Ok(new { message = result });
+            return Ok("We can connect");
 
         }
 

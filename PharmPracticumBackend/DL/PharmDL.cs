@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Mail;
 using System.Net;
 using PharmPracticumBackend.DTO;
-using PharmPracticumBackend.DTO;
 using System.Numerics;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.AspNetCore.Mvc;
@@ -42,19 +41,7 @@ namespace PharmPracticumBackend.DL
             return connection;
         }
 
-        //used for creating commands
-        public SqlCommand CreateCommand(SqlConnection connection, SqlTransaction transaction)
-        {
-            var command = connection.CreateCommand();
-            command.Transaction = transaction;
-            return command;
-        }
-
-        //Close Connection
-        public void Disconnect(SqlConnection connection)
-        {
-            connection.Close();
-        }
+       
 
         //db connection test
         public async Task<string> CanIConnect()
@@ -144,7 +131,6 @@ namespace PharmPracticumBackend.DL
                 //grab the ID using email
                 string userID = await GetIDByEmailAsync(email);
 
-                Console.WriteLine(userID);
 
                 //if this returns a valid userID, check if active
                 if (userID != "")
@@ -153,8 +139,7 @@ namespace PharmPracticumBackend.DL
                     //check if user is active
                     bool active = await IsUserActive(userID);
 
-                    Console.WriteLine(active.ToString());   
-
+                    Console.WriteLine(active.ToString());
                     //if not, return
                     if (!active)
                     {
@@ -176,7 +161,6 @@ namespace PharmPracticumBackend.DL
                         {
 
                             string dbHash = reader["password"].ToString();
-
                             //if we don't get one, send back an empty user
                             if (string.IsNullOrEmpty(dbHash))
                             {
@@ -187,7 +171,8 @@ namespace PharmPracticumBackend.DL
                             PasswordHasher<object> hasher = new PasswordHasher<object>();
 
                             PasswordVerificationResult verified = hasher.VerifyHashedPassword(null, dbHash, pass);
-
+                            
+                            Console.WriteLine("Is my password ok: " + verified);
                             switch (verified)
                             {
 
@@ -326,6 +311,7 @@ namespace PharmPracticumBackend.DL
                 Console.Write(ex.Message);
                 return id;
             }
+            
 
         }
 
@@ -481,7 +467,6 @@ namespace PharmPracticumBackend.DL
 
             try
             {
-
                 //SQL
                 using var connection = GetOpenConnection();
 
@@ -492,8 +477,6 @@ namespace PharmPracticumBackend.DL
                 returnParameter.Direction = ParameterDirection.ReturnValue;
 
                 //are they active?
-                cmd.ExecuteNonQuery();
-
                 await cmd.ExecuteNonQueryAsync();
                 int result = (int)returnParameter.Value;
 
@@ -856,7 +839,36 @@ namespace PharmPracticumBackend.DL
         }
 
         //DRUG METHODS
+        public drugsDTO GetDrugByID(String DIN)
+        {
+            drugsDTO drugsDTO = new drugsDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.getDrugInfo",conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@DIN",DIN);
 
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    drugsDTO.DIN = reader["DIN"].ToString();
+                    drugsDTO.Name = reader["drugName"].ToString();
+                    drugsDTO.Dosage = reader["dosage"].ToString();
+                    drugsDTO.Strength = reader["strength"].ToString();
+                    drugsDTO.Manufacturer = reader["manufacturer"].ToString();
+                    drugsDTO.Concentration = reader["concentration"].ToString();
+                    drugsDTO.ReferenceBrand = reader["referenceBrand"].ToString();
+                    drugsDTO.ContainerSize = reader["containerSize"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                drugsDTO.DIN = null;
+                Console.WriteLine(ex.Message);
+            }
+            return drugsDTO;
+        }
         public async Task<List<drugsDTO>> GetAllDrugs()
         {
             List<drugsDTO> drugs = new List<drugsDTO>();
@@ -1009,6 +1021,41 @@ namespace PharmPracticumBackend.DL
 
 
         //PATIENT METHODS
+        public patientsDTO GetPatientbyID(String PPR)
+        {
+            patientsDTO patient = new patientsDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.getPatientInfo", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PPR", PPR);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    patient.PPR = reader["PPR"].ToString();
+                    patient.FName = reader["fName"].ToString();
+                    patient.LName = reader["lName"].ToString();
+                    patient.DOB = reader["DOB"].ToString();
+                    patient.Sex = reader["sex"].ToString();
+                    patient.Address = reader["address"].ToString();
+                    patient.City = reader["city"].ToString();
+                    patient.HospitalName = reader["hospitalName"].ToString();
+                    patient.RoomNumber = reader["roomNumber"].ToString();
+                    patient.UnitNumber = reader["unitNumber"].ToString();
+                    patient.Allergies = reader["allergies"].ToString();
+                    patient.Conditions = reader["conditions"].ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                patient.PPR = null;
+                Console.WriteLine(ex.Message);
+            }
+            return patient;
+        }
         public async Task<List<patientsDTO>> GetAllPatients()
         {
             List<patientsDTO> patients = new List<patientsDTO>();
@@ -1321,7 +1368,49 @@ namespace PharmPracticumBackend.DL
         }
 
         //ORDER METHODS
-
+        public ordersDTO GetOrderByID(String RxNum)
+        {
+            ordersDTO dbOrders = new ordersDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetOrderInfo",conn);
+                cmd.CommandType= CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@rxNum", RxNum);
+                
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    dbOrders.RxNum = reader["rxNum"].ToString();
+                    dbOrders.PPR = reader["PPR"].ToString();
+                    dbOrders.DIN = reader["DIN"].ToString();
+                    dbOrders.PhysicianID = reader["physicianID"].ToString();
+                    dbOrders.Status = reader["status"].ToString();
+                    dbOrders.Initiator = reader["initiator"].ToString();
+                    dbOrders.Verifier = reader["verifier"].ToString();
+                    dbOrders.DateSubmitted = reader["dateSubmitted"].ToString();
+                    dbOrders.DateLastChanged = reader["dateLastChanged"].ToString();
+                    dbOrders.DateVerified = reader["dateVerified"].ToString();
+                    dbOrders.SIG = reader["SIG"].ToString();
+                    dbOrders.SIGDescription = reader["SIGDescription"].ToString();
+                    dbOrders.Form = reader["form"].ToString();
+                    dbOrders.Route = reader["route"].ToString();
+                    dbOrders.PrescribedDose = reader["prescribedDose"].ToString();
+                    dbOrders.Frequency = reader["frequency"].ToString();
+                    dbOrders.Duration = reader["duration"].ToString();
+                    dbOrders.Quantity = reader["quantity"].ToString();
+                    dbOrders.StartDate = reader["startDate"].ToString();
+                    dbOrders.StartTime = reader["startTime"].ToString();
+                    dbOrders.Comments = reader["comments"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                dbOrders.RxNum = null;
+                Console.WriteLine("This is an error message: "+ex);
+            }
+            return dbOrders;
+        }
         public async Task<List<ordersDTO>> GetAllOrders()
         {
             List<ordersDTO> orders = new List<ordersDTO>();
@@ -1470,6 +1559,141 @@ namespace PharmPracticumBackend.DL
                 return success;
             }
 
+        }
+
+        //get user-specific orders
+        public async Task<List<ordersDTO>> GetMyOrders(string user)
+        {
+
+            List<ordersDTO> orders = new List<ordersDTO>();
+
+            try
+            {
+
+                using var connection = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.getMyOrders", connection);
+
+                //add parameters
+                cmd.Parameters.AddWithValue("@userId", user);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                //query
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+
+                    while (reader.Read())
+                    {
+
+                        ordersDTO dbOrders = new ordersDTO();
+
+                        dbOrders.RxNum = reader["rxNum"].ToString();
+                        dbOrders.PPR = reader["PPR"].ToString();
+                        dbOrders.DIN = reader["DIN"].ToString();
+                        dbOrders.PhysicianID = reader["physicianID"].ToString();
+                        dbOrders.Status = reader["status"].ToString();
+                        dbOrders.Initiator = reader["initiator"].ToString();
+                        dbOrders.Verifier = reader["verifier"].ToString();
+                        dbOrders.DateSubmitted = reader["dateSubmitted"].ToString();
+                        dbOrders.DateLastChanged = reader["dateLastChanged"].ToString();
+                        dbOrders.DateVerified = reader["dateVerified"].ToString();
+                        dbOrders.SIG = reader["SIG"].ToString();
+                        dbOrders.SIGDescription = reader["SIGDescription"].ToString();
+                        dbOrders.Form = reader["form"].ToString();
+                        dbOrders.Route = reader["route"].ToString();
+                        dbOrders.PrescribedDose = reader["prescribedDose"].ToString();
+                        dbOrders.Frequency = reader["frequency"].ToString();
+                        dbOrders.Duration = reader["duration"].ToString();
+                        dbOrders.Quantity = reader["quantity"].ToString();
+                        dbOrders.StartDate = reader["startDate"].ToString();
+                        dbOrders.StartTime = reader["startTime"].ToString();
+                        dbOrders.Comments = reader["comments"].ToString();
+
+                        orders.Add(dbOrders);
+
+                    }
+
+                }
+
+                return orders;
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                orders.Clear();
+                return orders;
+            }
+
+        }
+
+        //Amend order
+        public async Task<bool> AmendOrder (ordersDTO order)
+        {
+
+            bool result = false;
+
+            try
+            {
+
+                using var connection = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.amendOrder", connection);
+
+                //add parameters
+                cmd.Parameters.AddWithValue("@userID", order.Initiator);
+                cmd.Parameters.AddWithValue("@rxNum", int.Parse(order.RxNum));
+                cmd.Parameters.AddWithValue("@PPR", int.Parse(order.PPR));
+                cmd.Parameters.AddWithValue("@DIN", order.DIN);
+                cmd.Parameters.AddWithValue("@physicianID", order.PhysicianID);
+                cmd.Parameters.AddWithValue("@SIG", order.SIG);
+                cmd.Parameters.AddWithValue("@SIGDescription", order.SIGDescription);
+                cmd.Parameters.AddWithValue("@form", order.Form);
+                cmd.Parameters.AddWithValue("@route", order.Route);
+                cmd.Parameters.AddWithValue("@prescribedDose", order.PrescribedDose);
+                cmd.Parameters.AddWithValue("@frequency", order.Frequency);
+                cmd.Parameters.AddWithValue("@duration", order.Duration);
+                cmd.Parameters.AddWithValue("@quantity", order.Quantity);
+                cmd.Parameters.AddWithValue("@startDate", DateTime.Parse(order.StartDate)); //date
+                cmd.Parameters.AddWithValue("@startTime", order.StartTime);
+                cmd.Parameters.AddWithValue("@comments", order.Comments);
+                cmd.Parameters.AddWithValue("@imagePath", "Test");
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                int rows = await cmd.ExecuteNonQueryAsync();
+
+                if (rows > 0) result = true;
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                return result;
+            }
+
+
+        }
+        public bool updateOrderPrintStatus(String OrderID, String PrintStatus)
+        {
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.updateOrderPrintStatus", conn);
+                cmd.Parameters.AddWithValue("@orderID", OrderID);
+                cmd.Parameters.AddWithValue("@statusID", PrintStatus);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                bool result = cmd.ExecuteNonQuery() == 1;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
         }
 
         //LOG METHODS

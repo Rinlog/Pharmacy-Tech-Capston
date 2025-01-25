@@ -17,8 +17,17 @@ DROP TABLE IF EXISTS LabelTable;
 DROP TABLE IF EXISTS LogTable;
 DROP TABLE IF EXISTS ConfirmationCodeTable;
 DROP TABLE IF EXISTS PasswordResetCodeTable;
+DROP TABLE IF EXISTS PrintStatusTable;
 
 
+-- Create the table in the specified schema
+CREATE TABLE PrintStatusTable
+(
+    PrintStatusID INT NOT NULL PRIMARY KEY, -- primary key column
+    PrintType VARCHAR(50) NOT NULL,
+    PrintMessage VARCHAR(50) NOT NULL
+    -- specify more columns here
+)
 
 
 -- Create User Table
@@ -96,7 +105,7 @@ CREATE TABLE DrugTable (
     DIN varchar(8) PRIMARY KEY NOT NULL,            -- Drug Identification Number (Numeric)
     drugName varchar(255) NOT NULL,                 -- Name of Medication
     dosage varchar(255) NOT NULL,                   -- Dosage of Medication (e.g. 10mg)
-    strength varchar(255) NOT NULL                  -- Strength of Medication
+    strength varchar(255) NOT NULL,                  -- Strength of Medication
     manufacturer varchar(255) NOT NULL,             -- Manufacturer
     concentration varchar(255) NOT NULL,            -- Concentration
     referenceBrand varchar(255),                    -- Reference Brand name if any (e.g. Tylenol, Advil, etc.)
@@ -160,15 +169,16 @@ CREATE TABLE OrderTable (
     startDate datetime NOT NULL,                    -- Date the medication should be started
     startTime varchar(255) NOT NULL,                -- Time the medication should be started
 
+    PrintStatusID int,
     comments varchar(500),                          -- Comments on the order
 
     FOREIGN KEY (PPR) REFERENCES PatientTable(PPR),
     FOREIGN KEY (DIN) REFERENCES DrugTable(DIN),
     FOREIGN KEY (physicianID) REFERENCES PhysicianTable(physicianID),
     FOREIGN KEY (initiator) REFERENCES UserTable(userID),
-    FOREIGN KEY (verifier) REFERENCES UserTable(userID)
+    FOREIGN KEY (verifier) REFERENCES UserTable(userID),
+    FOREIGN KEY (PrintStatusID) REFERENCES PrintStatusTable(PrintStatusID)
 )
-
 
 
 
@@ -180,7 +190,6 @@ CREATE TABLE ImageTable (
 
     FOREIGN KEY (rxNum) REFERENCES OrderTable(rxNum)
 )
-
 
 
 
