@@ -74,9 +74,9 @@ namespace PharmPracticumBackend.Controllers
         public IActionResult GeneratePrintPreview([FromBody] String OrderID)
         {
             try
-            {
+            { 
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
-                if (ordersDTO.RxNum == null) { return Ok("/images/PrintPreview/Default.png"); }
+                if (ordersDTO.RxNum == null || ordersDTO.DateVerified == "" || ordersDTO.DateSubmitted == null) { return Ok("/images/PrintPreview/Default.png"); }
                 Bitmap img = CreateOrderImage(ordersDTO);
                 img.Save("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg");
                 return Ok("/images/PrintPreview/Order " + OrderID + ".jpg");
@@ -191,12 +191,13 @@ namespace PharmPracticumBackend.Controllers
                 drugsDTO drug = _PharmDL.GetDrugByID(order.DIN);
 
                 img = DrawImage(patient, drug, order);
+                return img;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return img;
+            return null;
         }
         [SupportedOSPlatform("windows")]
         private Bitmap DrawImage(patientsDTO patient, drugsDTO drug, ordersDTO order)
