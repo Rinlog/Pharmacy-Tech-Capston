@@ -234,6 +234,7 @@ function Patients() {
                     <button id="deletePatient" onClick={handleDeleteClick}>Delete Patient</button>
                         <DeletePatientModal 
                             isOpen={isDeleteModalOpen} 
+                            onDelete={() => GetPatients()}
                             onClose={() => setIsDeleteModalOpen(false)} 
                             patientToDelete={selectedPatient}
                         />

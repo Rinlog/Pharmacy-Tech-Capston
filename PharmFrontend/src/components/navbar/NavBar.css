@@ -49,6 +49,7 @@
     font-size: 20px;
     font-weight: bold;
     color: white;
+    margin-right: 290px;
 }
 
 .navbar-item {
@@ -82,4 +83,10 @@
 /* Responsive Navbar */
 .hide {
     display: none;
+}
+
+/* logout button on nav bar */
+.logout-container {
+    display: flex;
+    align-items: center; /* Vertically align the text and button */
 }

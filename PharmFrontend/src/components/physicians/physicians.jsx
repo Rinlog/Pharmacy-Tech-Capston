@@ -213,7 +213,8 @@ function Physicians() {
                     <button id="deletePhysician" onClick={handleDeleteClick}>Delete Physician</button>
                         <DeletePhysicianModal 
                             isOpen={isDeleteModalOpen} 
-                            onClose={() => setIsDeleteModalOpen(false)} 
+                            onClose={() => setIsDeleteModalOpen(false)}
+                            onDelete={() => GetPhysicians()} //added for refresh
                             physicianToDelete={selectedPhysician}
                         />
                     <br/><br/>

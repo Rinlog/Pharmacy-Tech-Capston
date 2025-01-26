@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import he from 'he';
 
 
-const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete}) => {
+const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = () => {} }) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
@@ -39,6 +39,7 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete}) => {
 
             if (response.ok) {
                 alert("Physician deleted successfully");
+                onDelete(); //added for refresh
                 onClose();
             }
             else{

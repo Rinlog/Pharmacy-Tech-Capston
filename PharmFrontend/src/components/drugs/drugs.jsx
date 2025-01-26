@@ -226,6 +226,7 @@ function Drugs() {
                         <DeleteDrugModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)} 
+                            onDelete={() => GetDrugs()} //added for refresh
                             drugToDelete={selectedDrug}
                             setDrugToDelete={setSelectedDrug}
                         />

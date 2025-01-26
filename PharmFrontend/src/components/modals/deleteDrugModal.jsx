@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
+const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDelete = () => {} }) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
@@ -23,7 +23,6 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
 
     const DeleteDrug = async () => {
         try {
-            // Call the API
             const response = await fetch('https://localhost:7172/api/Drug/deletedrug', {
                 method: 'POST',
                 headers: {
@@ -32,17 +31,17 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
                 body: JSON.stringify({
                     "DIN": drugToDelete["DIN"]
                 })
-
             });
-
+    
             if (response.ok) {
                 alert("Drug deleted successfully");
-                // Clear the drugToDelete
+                onDelete(); //added for refresh?
                 setDrugToDelete({ "DIN": null, selected: false });
+                
+                // Explicitly call onClose after setting state
                 onClose();
             }
-            else{
-                // Alert out the message sent from the API
+            else {
                 const data = await response.json();
                 alert(data.message);
             }

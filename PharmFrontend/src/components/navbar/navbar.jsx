@@ -70,14 +70,14 @@ function Navbar() {
             </>
           )}
           {authState.loggedIn && isHomePage && (
-            <div className="logout-container" >
-                <div className="navbar-hometext">
+            <div className="logout-container">
+            <div className="navbar-hometext">
                 Welcome to the NBCC Pharmaceutical Tech System!
+            </div>
             <button className="navbar-button" onClick={Logout}>
-              Logout
+                Logout
             </button>
-            </div>
-            </div>
+        </div>
           )}
         </div>
       </div>
