@@ -1676,6 +1676,25 @@ namespace PharmPracticumBackend.DL
 
 
         }
+        public bool updateOrderPrintStatus(String OrderID, String PrintStatus)
+        {
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.updateOrderPrintStatus", conn);
+                cmd.Parameters.AddWithValue("@orderID", OrderID);
+                cmd.Parameters.AddWithValue("@statusID", PrintStatus);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                bool result = cmd.ExecuteNonQuery() == 1;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+        }
 
         //LOG METHODS
 

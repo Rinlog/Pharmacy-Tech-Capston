@@ -11,7 +11,6 @@ import PatientLookupModal from '@components/modals/patientLookupModal.jsx';
 import PhysicianLookupModal from '@components/modals/physicianLookupModal.jsx';
 
 function MyOrders(){
-
     // UseStates for data
     const [data, setData] = useState([]);
     const [tableHeaders, setTableHeaders] = useState([]);
@@ -450,7 +449,6 @@ function MyOrders(){
                                 </tbody>
                             </table> 
                         </div>
-                        <br></br>
 
                         <h2>Approved</h2>                        
                         <div className='scroll-table'>
@@ -476,7 +474,6 @@ function MyOrders(){
                                 </tbody>
                             </table> 
                         </div>
-                        <br></br>
 
                         <h2>Other</h2>      
                         <div className='scroll-table'>

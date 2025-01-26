@@ -20,7 +20,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS setUserPassword; 
     DROP PROCEDURE IF EXISTS setOrderStatus; 
     DROP PROCEDURE IF EXISTS setOrderImage; 
-
+    DROP PROCEDURE IF EXISTS updateOrderPrintStatus;
     -- Updates (Whole Row Updates)
     DROP PROCEDURE IF EXISTS updateUser; 
     DROP PROCEDURE IF EXISTS updatePatient; 
@@ -48,7 +48,6 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS getIDByEmail; 
     DROP PROCEDURE IF EXISTS getEmailByID; 
     DROP PROCEDURE IF EXISTS getImagePathByOrderID; 
-
     -- Retrievals (Whole Row)
     DROP PROCEDURE IF EXISTS getUserInfo; 
     DROP PROCEDURE IF EXISTS getPatientInfo; 
@@ -358,9 +357,10 @@ GO
             -- Return the rxNum of the order
             SELECT SCOPE_IDENTITY() AS rxNum;
 
-            -- Insert the image with the rxNum we just got
+             -- Insert the image with the rxNum we just got
             INSERT INTO ImageTable (rxNum, imagePath)
             VALUES (SCOPE_IDENTITY(), @imagePath);
+
         END;
         GO
 
@@ -643,31 +643,30 @@ GO
         END;
         GO
 
-    CREATE PROCEDURE setOrderImage
-        -- Procedure: setOrderImage
-        -- Purpose: Set the image path of an order
-        -- Parameters:
-        --      @orderID - the ID of the order
-        --      @imagePath - the path to the image
-        -- Returns: None
-        -- Notes: None
-        @orderID int,
-        @imagePath varchar(255)
-        AS
-        BEGIN
-            -- Make sure the order exists
-            IF NOT EXISTS (SELECT * FROM OrderTable WHERE rxNum = @orderID)
-            BEGIN
-                RETURN;
-            END;
+        CREATE PROCEDURE setOrderImage
+                -- Procedure: setOrderImage
+                -- Purpose: Set the image path of an order
+                -- Parameters:
+                --      @orderID - the ID of the order
+                --      @imagePath - the path to the image
+                -- Returns: None
+                -- Notes: None
+                @orderID int,
+                @imagePath varchar(255)
+                AS
+                BEGIN
+                    -- Make sure the order exists
+                    IF NOT EXISTS (SELECT * FROM OrderTable WHERE rxNum = @orderID)
+                    BEGIN
+                        RETURN;
+                    END;
 
-            -- Set the image path of the order
-            UPDATE ImageTable
-            SET imagePath = @imagePath
-            WHERE rxNum = @orderID;
-        END;
-        GO
-
+                    -- Set the image path of the order
+                    UPDATE ImageTable
+                    SET imagePath = @imagePath
+                    WHERE rxNum = @orderID;
+                END;
+                GO
 -- Updates (Whole Row Updates)
     CREATE PROCEDURE updateUser
         -- Procedure: updateUser
@@ -1049,7 +1048,7 @@ GO
             INSERT INTO @ordersToDelete
             SELECT rxNum FROM OrderTable WHERE initiator = @userID;
 
-            -- Now we need to delete any images associated with those orders
+             -- Now we need to delete any images associated with those orders
             DELETE FROM ImageTable WHERE rxNum IN (SELECT orderID FROM @ordersToDelete);
 
             -- We also need to delete any labels associated with those orders (if they exist)
@@ -1156,7 +1155,7 @@ GO
                 RETURN;
             END;
 
-            -- Delete any images associated with the order
+             -- Delete any images associated with the order
             DELETE FROM ImageTable WHERE rxNum = @orderID;
 
             -- Delete any labels associated with the order
@@ -1231,7 +1230,6 @@ GO
         END;
         GO
 
--- Retrievals (Whole Row)
     CREATE PROCEDURE getUserInfo
         -- Procedure: getUserInfo
         -- Purpose: Gets all information about a single user (except password)
@@ -1254,7 +1252,6 @@ GO
             WHERE userID = @userID;
         END;
         GO
-
     CREATE PROCEDURE getPatientInfo
         -- Procedure: getPatientInfo
         -- Purpose: Gets all information about a single patient
@@ -1443,7 +1440,7 @@ GO
         BEGIN
             -- Select from a join of OrderTable and ImageTable so we can get the image path
             SELECT o.rxNum, o.PPR, o.DIN, o.physicianID, o.SIG, o.SIGDescription, o.form, o.route, o.prescribedDose, o.frequency, o.duration, o.quantity, o.startDate, 
-                o.startTime, o.comments, o.dateSubmitted, o.dateVerified, o.dateLastChanged, o.status, o.initiator, o.verifier, i.imagePath
+                o.startTime, o.comments, o.dateSubmitted, o.dateVerified, o.dateLastChanged, o.status, o.initiator, o.verifier, i.imagePath, o.PrintStatusID
             FROM OrderTable o
             LEFT JOIN ImageTable i
             ON o.rxNum = i.rxNum
@@ -1574,7 +1571,7 @@ GO
             -- Update the status of the order
             EXEC setOrderStatus @userID, @rxNum, 'Amended';
 
-            -- Update the image path of the order
+             -- Update the image path of the order
             EXEC setOrderImage @rxNum, @imagePath;
 
             -- Log the amendment
@@ -1681,7 +1678,7 @@ GO
         -- Parameters:
         --      @userId - the ID of the user
         -- Returns: rxNum, PPR, DIN, physicianID, SIG, SIGDescription, form, route, prescribedDose, frequency, duration, quantity, startDate, 
-        --          startTime, comments, dateSubmitted, dateVerified, dateLastChanged, status, initiator, verifier of each as well as the imagePath of the order
+        --          startTime, comments, dateSubmitted, dateVerified, dateLastChanged, status, initiator, verifier
         -- Notes: None
 		@userId char(6)
         AS
@@ -1692,4 +1689,21 @@ GO
 			duration, quantity, startDate, startTime, comments from OrderTable where initiator = @userId
         END;
         GO
+    CREATE PROCEDURE updateOrderPrintStatus
+        --updates print status for an order, tying the print status with some sort of print
+
+        @orderID INT,
+        @statusID int
+        AS
+            BEGIN
+                --checks to make sure info entered is valid
+                if not exists(select * from OrderTable where rxNum = @orderID)
+                    or not exists (select * from PrintStatusTable where PrintStatusID = @statusID)
+                begin
+                    return;
+                end;
+                
+                update OrderTable set PrintStatusID = @statusID where rxNum = @orderID;
+            end;
+    go
 

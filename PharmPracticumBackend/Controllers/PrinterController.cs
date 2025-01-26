@@ -16,11 +16,38 @@ namespace PharmPracticumBackend.Controllers
     public class PrinterController : Controller
     {
         readonly PharmDL _PharmDL;
+        readonly String _PrinterName;
         static Bitmap? fileToPrint;
-        public PrinterController(PharmDL pharmDL) {
+        public PrinterController(PharmDL pharmDL, IConfiguration configuration) {
             _PharmDL = pharmDL;
+            _PrinterName = configuration.GetSection("PrinterName")["ZebraPrinter"];
         }
 
+        [HttpPost("VerifyUser")]
+        public IActionResult VerifyUser([FromBody] String InfoString)
+        {
+            //index 0 is the userid, index 1 is the orderid
+
+            try
+            {
+                String[] Info = InfoString.Split("~!~");
+                ordersDTO order = _PharmDL.GetOrderByID(Info[1]);
+                if (order.RxNum == null) { return BadRequest("Order does not exist"); }
+                if (Info[0] == order.Verifier)
+                {
+                    return Ok(true);
+                }
+                else
+                {
+                    return Ok(false);
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest("Failed to Verify User");
+            }
+        }
         [SupportedOSPlatform("windows")]
         [HttpPost("PrintOrder")]
         public IActionResult PrintOrder([FromBody] String OrderID)
@@ -29,6 +56,9 @@ namespace PharmPracticumBackend.Controllers
             {
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
                 if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
+
+                //update print status in db
+                _PharmDL.updateOrderPrintStatus(OrderID, "5");
                 Bitmap img = CreateOrderImage(ordersDTO);
                 return StartPrint(img);
             }
@@ -40,6 +70,24 @@ namespace PharmPracticumBackend.Controllers
 
         }
         [SupportedOSPlatform("windows")]
+        [HttpPost("GeneratePrintPreview")]
+        public IActionResult GeneratePrintPreview([FromBody] String OrderID)
+        {
+            try
+            { 
+                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
+                if (ordersDTO.RxNum == null || ordersDTO.DateVerified == "" || ordersDTO.DateSubmitted == null) { return Ok("/images/PrintPreview/Default.png"); }
+                Bitmap img = CreateOrderImage(ordersDTO);
+                img.Save("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg");
+                return Ok("/images/PrintPreview/Order " + OrderID + ".jpg");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("Could not generate print preview");
+            }
+        }
+        [SupportedOSPlatform("windows")]
         [HttpGet("PrintToPDF")]
         public IActionResult PrintToPDF([FromQuery] String OrderID)
         {
@@ -47,15 +95,17 @@ namespace PharmPracticumBackend.Controllers
             {
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
                 if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
-                Bitmap img = CreateOrderImage(ordersDTO);
-                img.Save("PrintTOPDF.jpg"); //saves the image we dynamically generate
 
+                //update order status in db
+                _PharmDL.updateOrderPrintStatus(OrderID, "1");
+
+                //Print to pdf
                 PdfDocument pdfDocument = new PdfDocument();
                 pdfDocument.Info.Title = "PDF Copy of Order " + ordersDTO.RxNum;
                 PdfPage page = pdfDocument.AddPage();
                 XGraphics gfx = XGraphics.FromPdfPage(page);
 
-                var Ximg = XBitmapImage.FromFile("PrintTOPDF.jpg"); //reads the image to insert it into the pdf
+                var Ximg = XBitmapImage.FromFile("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg"); //reads the image to insert it into the pdf
                 gfx.DrawImage(Ximg, 50, 50);
                 Console.WriteLine("Made it to back end");
                 gfx.Save();
@@ -87,7 +137,7 @@ namespace PharmPracticumBackend.Controllers
                 printerResolution.Y = 203;
                 pageSettings.PrinterResolution = printerResolution;
 
-                String ExpectedPrinter = "ZDesigner ZT231-203dpi ZPL";
+                String ExpectedPrinter = _PrinterName;
                 foreach (String PrinterList in PrinterSettings.InstalledPrinters)
                 {
                     Console.Write(PrinterList);
@@ -141,12 +191,13 @@ namespace PharmPracticumBackend.Controllers
                 drugsDTO drug = _PharmDL.GetDrugByID(order.DIN);
 
                 img = DrawImage(patient, drug, order);
+                return img;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return img;
+            return null;
         }
         [SupportedOSPlatform("windows")]
         private Bitmap DrawImage(patientsDTO patient, drugsDTO drug, ordersDTO order)
