@@ -685,11 +685,11 @@ GO
         @userID char(6),
         @firstName varchar(255),
         @lastName varchar(255),
-        @email varchar(255),
-        @campus varchar(255),
+        --@email varchar(255),
+        --@campus varchar(255),
         @admin bit,
-        @active bit,
-        @expiration date
+        @active bit
+       -- @expiration date
         AS
         BEGIN
             -- Make sure the user exists
@@ -702,11 +702,11 @@ GO
             UPDATE UserTable
             SET fName = @firstName,
                 lName = @lastName,
-                email = @email,
-                campus = @campus,
+                --email = @email,
+                --campus = @campus,
                 admin = @admin,
-                active = @active,
-                expirationDate = @expiration
+                active = @active
+                --expirationDate = @expiration
             WHERE userID = @userID;
         END;
         GO

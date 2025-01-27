@@ -40,29 +40,22 @@ function EditUser() {
     const [lastName, setLastName] = useState('');
     const [active, setActive] = useState('');
     const [admin, setAdmin] = useState('');
+    const [email, setEmail] = useState(''); //email needed to be added
 
     //pget user data
-    const GetUsers = async () =>{
-
+    const GetUsers = async () => {
         try {
-
-            //api call
-            const response = await fetch('https://localhost:7172/api/Management/getusers' , {
+            const response = await fetch('https://localhost:7172/api/Management/getusers', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
             const fetchedData = await response.json();
-
-            //set data state
-            setData(fetchedData.data);
-
-            if (data.length > 0){
-
-                //transform keys in data
+    
+            if (fetchedData.data && fetchedData.data.length > 0) {
+                // Transform keys in data
                 const transformedData = fetchedData.data.map(item => {
-
                     return {
                         "User ID": item.id,
                         "First Name": item.fName,
@@ -76,21 +69,19 @@ function EditUser() {
                     };
                 });
         
-                //set data to the transformed version (change keys)
+                // Set the transformed data
                 setData(transformedData);
-                const keys = Object.keys(data[0]);
-
-                //map the custom versions
+                
+                // Use the transformed data directly for headers
+                const keys = Object.keys(transformedData[0]);
                 const customHeaders = keys.map(key => headerMapping[key] || key);
                 setTableHeaders(customHeaders);
                 setDataObtained(true);
             }
-        }
-        catch (error) {
+        } catch (error) {
             alert("Could not obtain user data at this time.\nPlease contact system administrator.");
             console.log(error);
         }
-        
     }
 
     //attempt to obtain user data until success
@@ -123,6 +114,10 @@ function EditUser() {
 
         setFirstName(rowData["First Name"]);
         setLastName(rowData["Last Name"]);
+        setEmail(rowData["Email"]); //email needed to be added
+
+        //console.log("email being sent: " , rowData["Email"]); //debugging
+
         if (rowData["Active"] === "Y") setActive("Yes");
         else setActive("No")
         if (rowData["Admin"] === "Y") setAdmin("Yes");
@@ -155,6 +150,7 @@ function EditUser() {
             UserID: userID,
             FName: firstName,
             LName: lastName,
+            Email: email, //added for bug
             Admin: admin,
             Active: active
             

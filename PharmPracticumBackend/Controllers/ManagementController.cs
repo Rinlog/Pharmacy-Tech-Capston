@@ -45,7 +45,7 @@ namespace PharmPracticumBackend.Controllers
             else user.Admin = "0";
 
             if (user.Active == "Yes") user.Active = "1";
-            else user.Admin = "0";
+            else user.Active = "0"; //changed from user.Admin to user.Active
 
             string result = await _pharmDL.EditUser(user);
 
