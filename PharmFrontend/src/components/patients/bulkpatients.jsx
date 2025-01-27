@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 // Other imports
 import readXlsxFile from 'read-excel-file';
+import { SanitizeInput } from '@components/datasanitization/sanitization';
 
 function BulkPatients({setDisplay}) {
 
