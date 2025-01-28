@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 const DeletePatientModal = ({ isOpen, onClose, patientToDelete, onDelete = () => {} }) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -22,7 +24,7 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, onDelete = () =>
     const DeletePatient = async () => {
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Patient/deletepatient', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Patient/deletepatient', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -11,7 +11,8 @@ import { NullCheck, CheckEmail, VarMatch, PassRequirements, CheckNBCCEmail } fro
 //sanitization import
 import { SanitizeEmail, SanitizeName } from '@components/datasanitization/sanitization.jsx'; 
 
-
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function Signup() {
 
     //states for form inputs
@@ -43,7 +44,7 @@ function Signup() {
         let emailFormat = 'Please enter a valid email';
         let emailNBCC = 'Please enter a valid NBCC email';
         let passwordMatch = 'Passwords do not match';
-        let passwordReq = 'Password must be at least 8 characters long and contain at least one capital letter and one number';
+        let passwordReq = 'Password must be at least 8 characters long, contain at least one capital letter, one lower case and one number';
 
         // Error count
         let errors = 0;
@@ -144,7 +145,7 @@ function Signup() {
             
             //api call for submission
             try {
-                const response = await fetch('https://localhost:7172/api/User/signup', {
+                const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -277,6 +278,7 @@ function Signup() {
                 </div>
                 <br></br>
                 <button className="button" type="submit">Submit</button>
+                <button className="button" onClick={() => navigate('/login')}>Back</button>
 
             </form>
 

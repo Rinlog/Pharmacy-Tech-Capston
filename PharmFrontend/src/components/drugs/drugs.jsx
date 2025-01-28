@@ -13,6 +13,8 @@ import DeleteDrugModal from '@components/modals/deleteDrugModal';
 import EditDrug from '@components/drugs/editdrug';
 import BulkDrugs from '@components/drugs/bulkdrugs';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function Drugs() {
 
     // UseStates for drug data
@@ -48,7 +50,7 @@ function Drugs() {
     const GetDrugs = async () => {
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Drug/getdrugs', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Drug/getdrugs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -7,6 +7,8 @@ import "@components/modals/modalStyles.css";
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -44,7 +46,7 @@ const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
         try {
 
             //call the API
-            const response = await fetch('https://localhost:7172/api/Patient/getpatients', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Patient/getpatients', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

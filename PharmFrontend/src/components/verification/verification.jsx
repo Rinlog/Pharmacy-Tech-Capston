@@ -7,6 +7,8 @@ import VerifyOrder from './verifyOrder';
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function Verification() {
 
     // UseStates for order data
@@ -48,7 +50,7 @@ function Verification() {
     const GetOrders = async () => {
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Order/getorders', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Order/getorders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

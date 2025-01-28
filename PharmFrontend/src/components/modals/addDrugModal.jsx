@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { SanitizeEmail, SanitizeName, SanitizeDate, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
 
-
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 const AddDrugModal = ({ isOpen, onClose}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -25,7 +26,7 @@ const AddDrugModal = ({ isOpen, onClose}) => {
 
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Drug/adddrug', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Drug/adddrug', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -5,6 +5,8 @@ import { useState } from 'react';
 import readXlsxFile from 'read-excel-file';
 import { SanitizeInput, SanitizeLength } from '@components/datasanitization/sanitization';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function BulkDrugs({setDisplay}) {
 
     const [excelFile, setExcelFile] = useState(null);
@@ -109,7 +111,7 @@ function BulkDrugs({setDisplay}) {
             alert("Please wait. Do not refresh the page.");
 
             // API call
-            const response = await fetch('https://localhost:7172/api/Drug/bulkdrug' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Drug/bulkdrug' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

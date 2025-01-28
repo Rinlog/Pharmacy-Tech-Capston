@@ -4,6 +4,9 @@ import { useState } from 'react';
 //other imports
 import readXlsxFile from 'read-excel-file';
 
+
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function AddUsers() {
 
     const [excelFile, setExcelFile] = useState(null);
@@ -75,7 +78,7 @@ function AddUsers() {
             alert("Please wait. Do not refresh the page.");
 
             //api call
-            const response = await fetch('https://localhost:7172/api/User/bulkadd' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/bulkadd' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

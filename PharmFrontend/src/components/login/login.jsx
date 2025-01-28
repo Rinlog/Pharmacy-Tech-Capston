@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import AuthContext from '@components/login/AuthContext.jsx';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -28,7 +30,7 @@ const Login = () => {
         }
 
         try {
-            const response = await fetch('https://localhost:7172/api/User/login', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +67,7 @@ const Login = () => {
         let email = prompt("Please enter your email address to reset your password:");
         if (email) {
             try {
-                const response = await fetch('https://localhost:7172/api/User/resetrequest', {
+                const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/resetrequest', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

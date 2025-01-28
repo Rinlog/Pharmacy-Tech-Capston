@@ -1,6 +1,8 @@
 // React import
 import React, { useState, useEffect } from 'react';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function Logs() {
 
     // UseStates for log data
@@ -27,7 +29,7 @@ function Logs() {
             let end = endDate.toString() || null;
 
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Log/getlogs', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Log/getlogs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -10,6 +10,8 @@ import DrugLookupModal from '@components/modals/drugLookupModal.jsx';
 import PatientLookupModal from '@components/modals/patientLookupModal.jsx';
 import PhysicianLookupModal from '@components/modals/physicianLookupModal.jsx';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function MyOrders(){
     // UseStates for data
     const [data, setData] = useState([]);
@@ -82,7 +84,7 @@ function MyOrders(){
     const GetOrders = async () => {
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Order/getMyOrders', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Order/getMyOrders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -102,7 +104,7 @@ function MyOrders(){
                 // We got data, so transform it
                 const transformedData = await Promise.all(fetchedData.data.map(async item => {
                     // Call the getNames API
-                    const namesResponse = await fetch('https://localhost:7172/api/Management/getnames', {
+                    const namesResponse = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Management/getnames', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -259,7 +261,7 @@ function MyOrders(){
         //API call 
         try {
 
-            const response = await fetch('https://localhost:7172/api/Order/editorder' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Order/editorder' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

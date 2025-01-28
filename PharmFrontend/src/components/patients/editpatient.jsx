@@ -8,6 +8,8 @@ import he from 'he';
 import { SanitizeInput } from '@components/datasanitization/sanitization';
 
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
 
     //states for selected patient
@@ -82,7 +84,7 @@ function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
         try{
 
             //api call
-            const response = await fetch('https://localhost:7172/api/Patient/editpatient' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Patient/editpatient' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

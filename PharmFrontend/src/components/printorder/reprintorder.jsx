@@ -9,6 +9,9 @@ import './printorder.css';
 import { DropdownButton } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
+
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function reprintOrder(){
     //this displays the reprint order page
 
@@ -35,7 +38,7 @@ function reprintOrder(){
         try{
             await $.ajax({
                 method:"POST",
-                url:"https://localhost:7172/api/printer/GeneratePrintPreview",
+                url:"https://"+BackendIP+':'+BackendPort+"/api/printer/GeneratePrintPreview",
                 data: JSON.stringify(OrderID),
                 headers:{
                     "Content-Type":"application/json"
@@ -64,7 +67,7 @@ function reprintOrder(){
         try{
             await $.ajax({
                 method:"POST",
-                url:"https://localhost:7172/api/printer/VerifyUser",
+                url:"https://"+BackendIP+':'+BackendPort+"/api/printer/VerifyUser",
                 data: JSON.stringify(Info),
                 headers:{
                     "Content-Type":"application/json"
@@ -90,9 +93,7 @@ function reprintOrder(){
             try{
                 if (OrderID != null){
                     //i run this on top to first check if the order exists, only if it exists will we download it
-                    let result = await $.get("https://localhost:7172/api/printer/PrintToPDF?OrderID="+OrderID,function(data){
-                        window.location = "https://localhost:7172/api/printer/PrintToPDF?OrderID="+OrderID;
-                    });
+                    window.location = "https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderID="+OrderID;
 
                 }
                 else{
@@ -114,7 +115,7 @@ function reprintOrder(){
                 if (OrderID != null){
                     await $.ajax({
                         method:"POST",
-                        url:"https://localhost:7172/api/printer/PrintOrder",
+                        url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintOrder",
                         data: JSON.stringify(OrderID),
                         headers:{
                             "Content-Type":"application/json"

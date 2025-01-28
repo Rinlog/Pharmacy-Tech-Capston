@@ -7,6 +7,8 @@ import DrugLookupModal from '@components/modals/drugLookupModal.jsx';
 import PatientLookupModal from '@components/modals/patientLookupModal.jsx';
 import PhysicianLookupModal from '@components/modals/physicianLookupModal.jsx';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function AddOrder(){
 
     //modal stuff
@@ -73,7 +75,7 @@ function AddOrder(){
         //API call 
         try {
 
-            const response = await fetch('https://localhost:7172/api/Order/addorder' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Order/addorder' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
