@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 // Other imports
 import readXlsxFile from 'read-excel-file';
+import { SanitizeInput } from '@components/datasanitization/sanitization';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
