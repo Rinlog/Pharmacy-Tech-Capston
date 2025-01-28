@@ -25,6 +25,27 @@ namespace PharmPracticumBackend.Controllers
             _Environment = configuration.GetSection("Environment")["Status"];
         }
 
+        [HttpPost("VerifyOrderNotPrinted")]
+        public IActionResult VerifyOrderNotPrinted([FromBody] String OrderID)
+        {
+            try
+            {
+                ordersDTO order = _PharmDL.GetOrderByID(OrderID);
+                if (order.PrintStatusID != null) { 
+                    return Ok(false);
+                }
+                else
+                {
+                    return Ok(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("Error verifying order");
+            }
+        }
+
         [HttpPost("VerifyUser")]
         public IActionResult VerifyUser([FromBody] String InfoString)
         {

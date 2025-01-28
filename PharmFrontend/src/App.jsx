@@ -12,7 +12,6 @@ import UserManagement from '@components/userManagement/userManagement.jsx';
 import Logs from '@components/logs/logs.jsx';
 import Verification from '@components/verification/verification.jsx';
 import printOrder from './components/printorder/printorder';
-import reprintOrder from './components/printorder/reprintorder';
 
 //css import
 import './App.css';
@@ -45,8 +44,6 @@ function App() {
                             <Route path="/drugs" element={<ProtectedRoute component={Drugs} />} />
                             <Route path="/printorder/:OrderID" element={<ProtectedRoute component={printOrder}/>} />
                             <Route path="/printorder/" element={<Navigate to="/home" replace />} />
-                            <Route path="/reprintorder/:OrderID" element={<ProtectedRoute component={reprintOrder}/>} />
-                            <Route path="/reprintorder/" element={<Navigate to="/home" replace />} />
                             <Route path="/verification" element={<ProtectedRoute component={Verification} />} />
                             
                             {/*admin routes*/}

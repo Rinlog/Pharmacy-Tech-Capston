@@ -17,10 +17,35 @@ function printOrder(){
 
     //setting some default css
     document.body.style = 'background-color: #007599';
-    $(document).ready(function(){
+    $(document).ready(async function(){
         document.getElementById("navbarMenu").style = "margin-right: 1em";
         let Items = document.getElementsByClassName("navbar-brand");
         Items[0].style = "margin-left: 1em";
+
+        try{
+            await $.ajax({
+                method:"POST",
+                url:"https://"+BackendIP+':'+BackendPort+"/api/printer/VerifyOrderNotPrinted",
+                data: JSON.stringify(OrderID),
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                success:function(data){
+                   if (data == false){
+                    window.location.replace("/home")
+                   }
+                }
+            });
+        }
+        catch(ex){
+            if (ex.responseText != null){
+                alert(ex.responseText);
+            }
+            else{
+                alert("Sorry, something went wrong");
+            }
+        }
+
     })
 
     const [show, setShow] = useState(false);
@@ -92,6 +117,10 @@ function printOrder(){
         if (PrinterOption.toLowerCase() === "print to pdf"){
             try{
                 if (OrderID != null){
+                    setTimeout(function(){
+                        window.location.replace("/home")
+                    }
+                    ,1000)
                     window.location = "https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderID="+OrderID;   
                 }
                 else{
@@ -120,6 +149,7 @@ function printOrder(){
                         },
                         success:function(data){
                             alert(data)
+                            window.location.replace("/home")
                         }
                     });
                 }
@@ -191,7 +221,6 @@ function printOrder(){
 
     
     return(
-        
             <div className="Container">
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossOrigin="anonymous"/>
                 {PrintModal}

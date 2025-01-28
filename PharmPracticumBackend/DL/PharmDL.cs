@@ -1401,6 +1401,7 @@ namespace PharmPracticumBackend.DL
                     dbOrders.Quantity = reader["quantity"].ToString();
                     dbOrders.StartDate = reader["startDate"].ToString();
                     dbOrders.StartTime = reader["startTime"].ToString();
+                    dbOrders.PrintStatusID = reader["PrintStatusID"].ToString();
                     dbOrders.Comments = reader["comments"].ToString();
                 }
             }
@@ -1452,6 +1453,7 @@ namespace PharmPracticumBackend.DL
                         dbOrders.Quantity = reader["quantity"].ToString();
                         dbOrders.StartDate = reader["startDate"].ToString();
                         dbOrders.StartTime = reader["startTime"].ToString();
+                        dbOrders.PrintStatusID = reader["PrintStatusID"].ToString();
                         dbOrders.Comments = reader["comments"].ToString();
 
                         orders.Add(dbOrders);
@@ -1607,6 +1609,7 @@ namespace PharmPracticumBackend.DL
                         dbOrders.Quantity = reader["quantity"].ToString();
                         dbOrders.StartDate = reader["startDate"].ToString();
                         dbOrders.StartTime = reader["startTime"].ToString();
+                        dbOrders.PrintStatusID = reader["PrintStatusID"].ToString();
                         dbOrders.Comments = reader["comments"].ToString();
 
                         orders.Add(dbOrders);
