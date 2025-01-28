@@ -18,9 +18,11 @@ namespace PharmPracticumBackend.Controllers
         readonly PharmDL _PharmDL;
         readonly String _PrinterName;
         static Bitmap? fileToPrint;
+        readonly String _Environment;
         public PrinterController(PharmDL pharmDL, IConfiguration configuration) {
             _PharmDL = pharmDL;
             _PrinterName = configuration.GetSection("PrinterName")["ZebraPrinter"];
+            _Environment = configuration.GetSection("Environment")["Status"];
         }
 
         [HttpPost("VerifyUser")]
@@ -78,13 +80,20 @@ namespace PharmPracticumBackend.Controllers
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
                 if (ordersDTO.RxNum == null || ordersDTO.DateVerified == "" || ordersDTO.DateSubmitted == null) { return Ok("/images/PrintPreview/Default.png"); }
                 Bitmap img = CreateOrderImage(ordersDTO);
-                img.Save("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg");
+                if (_Environment == "Development")
+                {
+                    img.Save("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg");
+                }
+                else if (_Environment == "Deployed")
+                {
+                    img.Save("../PharmFrontend/images/PrintPreview/Order " + OrderID + ".jpg");
+                }
                 return Ok("/images/PrintPreview/Order " + OrderID + ".jpg");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest("Could not generate print preview");
+                return BadRequest(ex.Message);
             }
         }
         [SupportedOSPlatform("windows")]
@@ -105,13 +114,30 @@ namespace PharmPracticumBackend.Controllers
                 PdfPage page = pdfDocument.AddPage();
                 XGraphics gfx = XGraphics.FromPdfPage(page);
 
-                var Ximg = XBitmapImage.FromFile("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg"); //reads the image to insert it into the pdf
-                gfx.DrawImage(Ximg, 50, 50);
-                Console.WriteLine("Made it to back end");
-                gfx.Save();
-                pdfDocument.Save("PrintedPDF.pdf"); //saves the pdf so we can send it back to the frontend
-                var stream = new FileStream(@"PrintedPDF.pdf", FileMode.Open);
-                return File(stream, "application/pdf","PDF Copy of Order " + ordersDTO.RxNum);
+                XImage Ximg = null;
+                if (_Environment == "Development")
+                {
+                    Ximg = XBitmapImage.FromFile("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg"); //reads the image to insert it into the pdf
+                }
+                else if ( _Environment == "Deployed")
+                {
+                    Ximg = XBitmapImage.FromFile("../PharmFrontend/images/PrintPreview/Order " + OrderID + ".jpg"); //reads the image to insert it into the pdf
+                }
+
+                if (Ximg != null)
+                {
+                    gfx.DrawImage(Ximg, 50, 50);
+
+                    gfx.Save();
+                    pdfDocument.Save("PrintedPDF.pdf"); //saves the pdf so we can send it back to the frontend
+                    var stream = new FileStream(@"PrintedPDF.pdf", FileMode.Open);
+                    return File(stream, "application/pdf", "PDF Copy of Order " + ordersDTO.RxNum +".pdf");
+
+                }
+                else
+                {
+                    return BadRequest("Could not find image to print to pdf");
+                }
 
             }
             catch (Exception ex)

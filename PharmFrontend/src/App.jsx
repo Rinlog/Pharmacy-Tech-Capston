@@ -52,6 +52,7 @@ function App() {
                             {/*admin routes*/}
                             <Route path="/usermanagement" element={<ProtectedRoute component={UserManagement} adminRequired />} />
                             <Route path="/logs" element={<ProtectedRoute component={Logs} adminRequired />} />
+
                         </Routes>
                     </Router>
                 </CookiesProvider>
