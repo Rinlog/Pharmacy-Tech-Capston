@@ -43,7 +43,7 @@ function Signup() {
         let emailFormat = 'Please enter a valid email';
         let emailNBCC = 'Please enter a valid NBCC email';
         let passwordMatch = 'Passwords do not match';
-        let passwordReq = 'Password must be at least 8 characters long and contain at least one capital letter and one number';
+        let passwordReq = 'Password must be at least 8 characters long, contain at least one capital letter, one lower case and one number';
 
         // Error count
         let errors = 0;
@@ -277,6 +277,7 @@ function Signup() {
                 </div>
                 <br></br>
                 <button className="button" type="submit">Submit</button>
+                <button className="button" onClick={() => navigate('/login')}>Back</button>
 
             </form>
 
