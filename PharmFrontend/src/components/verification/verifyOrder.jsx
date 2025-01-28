@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) { 
 
     //states for selected order
@@ -78,7 +80,7 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
 
         // Pass the Rx Number to the API to reject the order
         try{
-            const response = await fetch('https://localhost:7172/api/Verify/rejectorder' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Verify/rejectorder' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -116,7 +118,7 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
         try{
 
             //api call
-            const response = await fetch('https://localhost:7172/api/Verify/verifyorder' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Verify/verifyorder' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -6,7 +6,8 @@ import { SanitizeName } from '@components/datasanitization/sanitization.jsx';
 
 //other imports
 
-
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function EditUser() {
 
     //users from DB
@@ -45,7 +46,7 @@ function EditUser() {
     //pget user data
     const GetUsers = async () => {
         try {
-            const response = await fetch('https://localhost:7172/api/Management/getusers', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Management/getusers', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -158,7 +159,7 @@ function EditUser() {
 
         //api call
         try {
-        const response = await fetch('https://localhost:7172/api/Management/edituser' , {
+        const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Management/edituser' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -195,7 +196,7 @@ function EditUser() {
             //api call
             try {
 
-                const response = await fetch('https://localhost:7172/api/Management/deleteuser' , {
+                const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Management/deleteuser' , {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

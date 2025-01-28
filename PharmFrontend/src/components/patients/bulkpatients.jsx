@@ -4,6 +4,8 @@ import { useState } from 'react';
 // Other imports
 import readXlsxFile from 'read-excel-file';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function BulkPatients({setDisplay}) {
 
     const [excelFile, setExcelFile] = useState(null);
@@ -114,7 +116,7 @@ function BulkPatients({setDisplay}) {
             alert("Please wait. Do not refresh the page.");
 
             // API call
-            const response = await fetch('https://localhost:7172/api/Patient/bulkpatient' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Patient/bulkpatient' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

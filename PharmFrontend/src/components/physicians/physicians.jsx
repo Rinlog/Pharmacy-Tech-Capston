@@ -10,6 +10,8 @@ import DeletePhysicianModal from '@components/modals/deletePhysicianModal';
 import EditPhysician from '@components/physicians/editphysician';
 import BulkPhysicians from '@components/physicians/bulkphysicians';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
@@ -45,7 +47,7 @@ function Physicians() {
     const GetPhysicians = async () => {
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Physician/getphysicians', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/getphysicians', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

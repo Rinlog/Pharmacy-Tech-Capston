@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function PasswordReset() {
 
     // Grab the code and userID from the URL
@@ -32,7 +34,7 @@ function PasswordReset() {
 
         try{
             // Send a POST request to the server to change the password
-            const response = await fetch('https://localhost:7172/api/User/passwordreset', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/passwordreset', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

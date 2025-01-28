@@ -4,6 +4,9 @@ import {useState} from 'react';
 import './Orders.css';
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
+
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function AllOrders(){
     const [OrdersGotten,setOrdersGotten] = useState(false);
     const [onlyOne,setonlyOne] = useState(1);
@@ -17,7 +20,7 @@ function AllOrders(){
             try{
                 let Data = await $.ajax({
                     method:"POST",
-                    url:"https://localhost:7172/api/Order/getorders",
+                    url:"https://"+BackendIP+':'+BackendPort+"/api/Order/getorders",
                     headers:{
                         "Content-Type":"application/json"
                     },
@@ -29,7 +32,7 @@ function AllOrders(){
                 Data.forEach(async Order => {
                     let NamedData = await $.ajax({
                         method:"POST",
-                        url:"https://localhost:7172/api/Management/getnames",
+                        url:"https://"+BackendIP+':'+BackendPort+"/api/Management/getnames",
                         data:JSON.stringify({
                             userID: Order.initiator,
                             ppr: Order.ppr,

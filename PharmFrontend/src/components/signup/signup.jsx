@@ -11,7 +11,8 @@ import { NullCheck, CheckEmail, VarMatch, PassRequirements, CheckNBCCEmail } fro
 //sanitization import
 import { SanitizeEmail, SanitizeName } from '@components/datasanitization/sanitization.jsx'; 
 
-
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function Signup() {
 
     //states for form inputs
@@ -144,7 +145,7 @@ function Signup() {
             
             //api call for submission
             try {
-                const response = await fetch('https://localhost:7172/api/User/signup', {
+                const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

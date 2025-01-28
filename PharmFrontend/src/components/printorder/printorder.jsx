@@ -9,6 +9,9 @@ import './printorder.css';
 import { DropdownButton } from "react-bootstrap";
 import { Navigate, useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
+
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function printOrder(){
     //this displays the print order page
 
@@ -34,7 +37,7 @@ function printOrder(){
         try{
             await $.ajax({
                 method:"POST",
-                url:"https://localhost:7172/api/printer/GeneratePrintPreview",
+                url:"https://"+BackendIP+':'+BackendPort+"/api/printer/GeneratePrintPreview",
                 data: JSON.stringify(OrderID),
                 headers:{
                     "Content-Type":"application/json"
@@ -63,7 +66,7 @@ function printOrder(){
         try{
             await $.ajax({
                 method:"POST",
-                url:"https://localhost:7172/api/printer/VerifyUser",
+                url:"https://"+BackendIP+':'+BackendPort+"/api/printer/VerifyUser",
                 data: JSON.stringify(Info),
                 headers:{
                     "Content-Type":"application/json"
@@ -89,7 +92,7 @@ function printOrder(){
         if (PrinterOption.toLowerCase() === "print to pdf"){
             try{
                 if (OrderID != null){
-                    window.location = "https://localhost:7172/api/printer/PrintToPDF?OrderID="+OrderID;   
+                    window.location = "https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderID="+OrderID;   
                 }
                 else{
                     alert("No order id Provided");
@@ -110,7 +113,7 @@ function printOrder(){
                 if (OrderID != null){
                     await $.ajax({
                         method:"POST",
-                        url:"https://localhost:7172/api/printer/PrintOrder",
+                        url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintOrder",
                         data: JSON.stringify(OrderID),
                         headers:{
                             "Content-Type":"application/json"

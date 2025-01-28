@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
-
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = () => {} }) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -26,7 +27,7 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
     const DeletePhysician = async () => {
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Physician/deletephysician', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/deletephysician', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

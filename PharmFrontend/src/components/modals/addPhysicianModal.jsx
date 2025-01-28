@@ -3,7 +3,8 @@ import { SanitizeName } from "@components/datasanitization/sanitization";
 
 import { SanitizeInput, SanitizeLength } from "@components/datasanitization/sanitization";
 
-
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 const AddPhysicianModal = ({ isOpen, onClose}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -18,7 +19,7 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
 
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Physician/addphysician', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/addphysician', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

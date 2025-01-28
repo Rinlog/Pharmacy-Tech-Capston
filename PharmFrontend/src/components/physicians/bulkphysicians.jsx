@@ -5,6 +5,8 @@ import { useState } from 'react';
 import readXlsxFile from 'read-excel-file';
 import { SanitizeInput } from '@components/datasanitization/sanitization';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function BulkPhysicians({setDisplay}) {
 
     const [excelFile, setExcelFile] = useState(null);
@@ -94,7 +96,7 @@ function BulkPhysicians({setDisplay}) {
             alert("Please wait. Do not refresh the page.");
 
             // API call
-            const response = await fetch('https://localhost:7172/api/Physician/bulkphysician' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/bulkphysician' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

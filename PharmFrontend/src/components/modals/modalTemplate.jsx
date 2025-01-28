@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 const ModalTemplate = ({ isOpen, onClose, onSelect}) => {
 
     const [search, setSearch] = useState('');
@@ -13,7 +14,7 @@ const ModalTemplate = ({ isOpen, onClose, onSelect}) => {
     const GetData = async () => {
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/path', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/path', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
