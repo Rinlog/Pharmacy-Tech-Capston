@@ -1686,7 +1686,7 @@ GO
             -- Select orders for specific user
             SELECT rxNum, PPR, DIN, physicianID, status, initiator, verifier, dateSubmitted, 
 			dateLastChanged, dateVerified, SIG, SIGDescription, form, route, prescribedDose, frequency,
-			duration, quantity, startDate, startTime, comments from OrderTable where initiator = @userId
+			duration, quantity, startDate, startTime, PrintStatusID, comments from OrderTable where initiator = @userId
         END;
         GO
     CREATE PROCEDURE updateOrderPrintStatus

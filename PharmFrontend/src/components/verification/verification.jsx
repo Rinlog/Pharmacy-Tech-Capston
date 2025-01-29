@@ -75,7 +75,7 @@ function Verification() {
                 // We got data, so transform it
                 const transformedData = await Promise.all(fetchedData.data.map(async item => {
                     // Call the getNames API
-                    const namesResponse = await fetch('https://localhost:7172/api/Management/getnames', {
+                    const namesResponse = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Management/getnames', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
