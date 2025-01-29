@@ -1,11 +1,11 @@
 import "./Home.css";
 import { Link } from "react-router-dom";
 import { CheckAuth } from "@components/login/CheckAuth";
-
+import React from 'react'
 function Home() {
     const authState = CheckAuth();
     //console.log('Home component:', authState); //debugging
-
+    
     return (
         <div className="home-container">
             {/* <header className="home-header">

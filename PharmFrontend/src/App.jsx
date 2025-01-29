@@ -15,18 +15,20 @@ import printOrder from './components/printorder/printorder';
 
 //css import
 import './App.css';
+
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 import { AuthProvider } from '@components/login/AuthContext.jsx';
 import ProtectedRoute from '@components/login/ProtectedRoute.jsx';
 import UnProtectedRoute from '@components/login/UnprotectedRoute';
-
+import ManageLoginStatus from './components/login/ManageLoginStatus';
 function App() {
     return (
         <div className='page-container'>
             <AuthProvider>
                 <CookiesProvider>
                     <Router>
+                        <ManageLoginStatus/>
                         <Navbar />
                         <Routes>
                             <Route path="/" element={<Navigate to="/home" replace />} />

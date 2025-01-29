@@ -10,7 +10,7 @@ const ProtectedRoute = ({ component: Component, adminRequired = false }) => {
 
     // check if the user is not logged in
     if (!loggedIn) {
-        //console.log('Redirecting to /login'); //debugging
+        console.log('Redirecting to /login'); //debugging
         return <Navigate to="/login" replace />;
     }
 

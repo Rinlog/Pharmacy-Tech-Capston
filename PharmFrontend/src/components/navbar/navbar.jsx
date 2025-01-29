@@ -9,7 +9,6 @@ function Navbar() {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(['user', 'admin']);
   const location = useLocation(); // Get the current route
-
   const Logout = () => {
 
     removeCookie("user")
