@@ -22,10 +22,12 @@ namespace PharmPracticumBackend.DL
         //private readonly IConfiguration _configuration;
 
         private readonly string _connectionString;
+        private readonly IConfiguration _configuration;
 
         public PharmDL(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnectionRemoteServer");
+            _configuration = configuration;
         }
 
         //Opens connection
@@ -662,12 +664,30 @@ namespace PharmPracticumBackend.DL
                 if (usage  != null && usage == "Confirmation")
                 {
                     message.Subject = "Confirmation Email";
-                    message.Body = "Please click the link to confirm your account: http://localhost:5173/confirmation/" + urlCode + "/" + userID;
+                    if (_configuration.GetSection("Environment")["Status"] == "Development")
+                    {
+                        message.Body = "Please click the link to confirm your account: http://localhost:5173/confirmation/" + urlCode + "/" + userID;
+                    }
+                    else if (_configuration.GetSection("Environment")["Status"] == "Deployed")
+                    {
+                        String FrontendIP = _configuration.GetSection("DeployedSettings")["FrontendIP"];
+                        String FrontendPort = _configuration.GetSection("DeployedSettings")["FrontendPort"];
+                        message.Body = "Please click the link to confirm your account: https://" + FrontendIP + ":" + FrontendPort + "/confirmation/" + urlCode + "/" + userID;
+                    }
                 }
                 else if (usage != null && usage == "Reset")
                 {
                         message.Subject = "Password Reset Email";
-                        message.Body = "Please click the link to reset your password: http://localhost:5173/passwordreset/" + urlCode + "/" + userID;
+                    if (_configuration.GetSection("Environment")["Status"] == "Development")
+                    {
+                        message.Body = "Please click the link to confirm your account: http://localhost:5173/passwordreset/" + urlCode + "/" + userID;
+                    }
+                    else if (_configuration.GetSection("Environment")["Status"] == "Deployed")
+                    {
+                        String FrontendIP = _configuration.GetSection("DeployedSettings")["FrontendIP"];
+                        String FrontendPort = _configuration.GetSection("DeployedSettings")["FrontendPort"];
+                        message.Body = "Please click the link to confirm your account: https://"+FrontendIP+":"+FrontendPort+"/passwordreset/" + urlCode + "/" + userID;
+                    }
                 }
                 else
                 {

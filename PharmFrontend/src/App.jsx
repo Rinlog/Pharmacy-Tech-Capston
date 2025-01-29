@@ -19,6 +19,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { CookiesProvider } from 'react-cookie';
 import { AuthProvider } from '@components/login/AuthContext.jsx';
 import ProtectedRoute from '@components/login/ProtectedRoute.jsx';
+import UnProtectedRoute from '@components/login/UnprotectedRoute';
 
 function App() {
     return (
@@ -29,11 +30,11 @@ function App() {
                         <Navbar />
                         <Routes>
                             <Route path="/" element={<Navigate to="/home" replace />} />
-                            <Route path="/signup" element={<Signup />} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/confirmation/:code/:userID" element={<Confirmation />} />
+                            <Route path="/signup" element={<UnProtectedRoute component={Signup}></UnProtectedRoute>} />
+                            <Route path="/login" element={<UnProtectedRoute component={Login}></UnProtectedRoute>} />
+                            <Route path="/confirmation/:code/:userID" element={<UnProtectedRoute component={Confirmation}></UnProtectedRoute>} />
                             <Route path="/confirmation/" element={<Navigate to="/home" replace />} />
-                            <Route path="/passwordreset/:code/:userID" element={<PasswordReset />} />
+                            <Route path="/passwordreset/:code/:userID" element={<UnProtectedRoute component={PasswordReset}></UnProtectedRoute>} />
                             <Route path="/passwordreset/" element={<Navigate to="/home" replace />} />
 
                             {/*Logged in sections*/}
