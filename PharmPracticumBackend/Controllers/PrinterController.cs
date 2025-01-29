@@ -31,7 +31,7 @@ namespace PharmPracticumBackend.Controllers
             try
             {
                 ordersDTO order = _PharmDL.GetOrderByID(OrderID);
-                if (order.PrintStatusID != null) { 
+                if (order.PrintStatusID != "") { 
                     return Ok(false);
                 }
                 else
