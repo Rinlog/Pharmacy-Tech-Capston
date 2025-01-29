@@ -55,7 +55,7 @@ function AllOrders(){
                         }});
                     //Now that we have all the data we will output it
                     let CurrentOrder = (
-                        <tr>
+                        <tr key={Order.rxNum}>
                             <td>{he.decode(Order.rxNum)}</td>
                             <td>{he.decode(Order.ppr)}</td>
                             <td>{he.decode(NamedData.patientLName)}</td>

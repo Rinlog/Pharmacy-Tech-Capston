@@ -7,16 +7,13 @@ import "./Navbar.css";
 function Navbar() {
   const authState = CheckAuth();
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(['user', 'admin']);
+  const [cookies, setCookie, removeCookie] = useCookies(['user', 'admin']);
   const location = useLocation(); // Get the current route
 
   const Logout = () => {
-    let currentDate = new Date()
-    let pastDate = currentDate - new Date(100000)
-    let pastStringDate = new Date(pastDate) 
 
-    setCookie("user",null,{expires: pastStringDate})
-    setCookie("admin",null,{expires: pastStringDate})
+    removeCookie("user")
+    removeCookie("admin")
     navigate("/login");
     //window.location.reload(); //commented this out testing to see if i need it still
   };

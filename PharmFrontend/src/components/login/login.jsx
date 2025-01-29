@@ -43,9 +43,8 @@ const Login = () => {
             } else if (data.message) {
                 alert(data.message);
             } else {
-                alert("Login successful, redirecting.");
-                setCookie('user', data.data.userId, { path: '/', sameSite: 'none', secure: true });
-                setCookie('admin', data.data.admin, { path: '/', sameSite: 'none', secure: true });
+                setCookie('user', data.data.userId, { path: '/', sameSite: 'none', secure: true});
+                setCookie('admin', data.data.admin, { path: '/', sameSite: 'none', secure: true});
 
                 // Update auth state
                 setAuthState({
