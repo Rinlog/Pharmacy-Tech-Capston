@@ -88,3 +88,16 @@
   }
 }
 
+@media (max-width: 744px) {
+  .button-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1176px) {
+  .home-button {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
