@@ -1443,7 +1443,7 @@ GO
                 o.startTime, o.comments, o.dateSubmitted, o.dateVerified, o.dateLastChanged, o.status, o.initiator, o.verifier, i.imagePath, o.PrintStatusID
             FROM OrderTable o
             LEFT JOIN ImageTable i
-            ON o.rxNum = i.rxNum
+            ON o.rxNum = i.rxNum order by o.rxNum asc
         END;
         GO
 

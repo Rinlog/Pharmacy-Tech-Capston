@@ -22,7 +22,6 @@
         public string? Quantity { get; set; }
         public string? StartDate { get; set; }
         public string? StartTime { get; set; }
-
         public string? PrintStatusID { get; set; }
         public string? Comments { get; set; }
     }

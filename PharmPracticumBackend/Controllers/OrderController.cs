@@ -25,7 +25,6 @@ namespace PharmPracticumBackend.Controllers
         {
 
             List<ordersDTO> orders = await _pharmDL.GetAllOrders();
-
             return Ok(new { data = orders });
 
         }

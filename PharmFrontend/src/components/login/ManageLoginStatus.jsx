@@ -17,7 +17,7 @@ function ManageLoginStatus(){
             function timerIncrement() {
                 idleRef += 1;
                 //console.log(idleRef) debug code that shows how many seconds have passed
-                if (idleRef > 119) { // 2 minute
+                if (idleRef > 10000) { // 2 minute
                     // Do something here
                     clearInterval(idleInterval);
                     removeCookie("user")

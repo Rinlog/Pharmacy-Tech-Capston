@@ -73,16 +73,18 @@ namespace PharmPracticumBackend.Controllers
         }
         [SupportedOSPlatform("windows")]
         [HttpPost("PrintOrder")]
-        public IActionResult PrintOrder([FromBody] String OrderID)
+        public IActionResult PrintOrder([FromBody] String OrderInfo)
         {
             try
             {
-                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
-                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
+                //index 0 is the order id , index 1 is the print status code, index 2 is the quantity to print
+                String[] OrderInfoArray = OrderInfo.Split("~!~");
+                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderInfoArray[0]);
+                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderInfoArray[0]); }
 
                 //update print status in db
-                _PharmDL.updateOrderPrintStatus(OrderID, "5");
-                Bitmap img = CreateOrderImage(ordersDTO);
+                _PharmDL.updateOrderPrintStatus(OrderInfoArray[0], OrderInfoArray[1]);
+                Bitmap img = CreateOrderImage(ordersDTO, OrderInfoArray[2]);
                 return StartPrint(img);
             }
             catch (Exception ex)
@@ -94,40 +96,44 @@ namespace PharmPracticumBackend.Controllers
         }
         [SupportedOSPlatform("windows")]
         [HttpPost("GeneratePrintPreview")]
-        public IActionResult GeneratePrintPreview([FromBody] String OrderID)
+        public IActionResult GeneratePrintPreview([FromBody] String OrderInfo)
         {
             try
-            { 
-                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
+            {
+                //index 0 is the order id, index 1 is the quantity
+                String[] OrderInfoArray = OrderInfo.Split("~!~");
+                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderInfoArray[0]);
                 if (ordersDTO.RxNum == null || ordersDTO.DateVerified == "" || ordersDTO.DateSubmitted == null) { return Ok("/images/PrintPreview/Default.png"); }
-                Bitmap img = CreateOrderImage(ordersDTO);
+                Bitmap img = CreateOrderImage(ordersDTO, OrderInfoArray[1]);
                 if (_Environment == "Development")
                 {
-                    img.Save("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg");
+                    img.Save("../PharmFrontend/Public/images/PrintPreview/Order " + OrderInfoArray[0] + ".jpg");
                 }
                 else if (_Environment == "Deployed")
                 {
-                    img.Save("../PharmFrontend/images/PrintPreview/Order " + OrderID + ".jpg");
+                    img.Save("../PharmFrontend/images/PrintPreview/Order " + OrderInfoArray[0] + ".jpg");
                 }
-                return Ok("/images/PrintPreview/Order " + OrderID + ".jpg");
+                return Ok("/images/PrintPreview/Order " + OrderInfoArray[0] +".jpg");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
                 return BadRequest(ex.Message);
             }
         }
         [SupportedOSPlatform("windows")]
         [HttpGet("PrintToPDF")]
-        public IActionResult PrintToPDF([FromQuery] String OrderID)
+        public IActionResult PrintToPDF([FromQuery] String OrderInfo)
         {
             try
             {
-                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
-                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
+                //index 0 is the order id , index 1 is the print status code
+                String[] OrderInfoArray = OrderInfo.Split("~!~");
+                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderInfoArray[0]);
+                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderInfoArray[0]); }
 
                 //update order status in db
-                _PharmDL.updateOrderPrintStatus(OrderID, "1");
+                _PharmDL.updateOrderPrintStatus(OrderInfoArray[0], OrderInfoArray[1]);
 
                 //Print to pdf
                 PdfDocument pdfDocument = new PdfDocument();
@@ -138,11 +144,11 @@ namespace PharmPracticumBackend.Controllers
                 XImage Ximg = null;
                 if (_Environment == "Development")
                 {
-                    Ximg = XBitmapImage.FromFile("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg"); //reads the image to insert it into the pdf
+                    Ximg = XBitmapImage.FromFile("../PharmFrontend/Public/images/PrintPreview/Order " + OrderInfoArray[0] + ".jpg"); //reads the image to insert it into the pdf
                 }
                 else if ( _Environment == "Deployed")
                 {
-                    Ximg = XBitmapImage.FromFile("../PharmFrontend/images/PrintPreview/Order " + OrderID + ".jpg"); //reads the image to insert it into the pdf
+                    Ximg = XBitmapImage.FromFile("../PharmFrontend/images/PrintPreview/Order " + OrderInfoArray[0] + ".jpg"); //reads the image to insert it into the pdf
                 }
 
                 if (Ximg != null)
@@ -229,7 +235,7 @@ namespace PharmPracticumBackend.Controllers
 
         //creates an image from all the order information that we can then print
         [SupportedOSPlatform("windows")]
-        private Bitmap CreateOrderImage(ordersDTO order)
+        private Bitmap CreateOrderImage(ordersDTO order, String quantity)
         {
             Bitmap img = null;
             try
@@ -237,7 +243,7 @@ namespace PharmPracticumBackend.Controllers
                 patientsDTO patient = _PharmDL.GetPatientbyID(order.PPR);
                 drugsDTO drug = _PharmDL.GetDrugByID(order.DIN);
 
-                img = DrawImage(patient, drug, order);
+                img = DrawImage(patient, drug, order, quantity);
                 return img;
             }
             catch (Exception ex)
@@ -247,7 +253,7 @@ namespace PharmPracticumBackend.Controllers
             return null;
         }
         [SupportedOSPlatform("windows")]
-        private Bitmap DrawImage(patientsDTO patient, drugsDTO drug, ordersDTO order)
+        private Bitmap DrawImage(patientsDTO patient, drugsDTO drug, ordersDTO order, String quantity)
         {
             try
             {
@@ -282,7 +288,7 @@ namespace PharmPracticumBackend.Controllers
                             break;
                         case 3:
                         case 12:
-                            drawing.DrawString(drug.Dosage, font, textBrush, StartingPoint);
+                            drawing.DrawString(order.PrescribedDose, font, textBrush, StartingPoint);
                             break;
                         case 4:
                         case 15:
@@ -293,7 +299,7 @@ namespace PharmPracticumBackend.Controllers
                             drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
                             break;
                         case 6:
-                            drawing.DrawString("Printing:1", font, textBrush, StartingPoint);
+                            drawing.DrawString("Dispensing:" + quantity, font, textBrush, StartingPoint);
                             drawing.DrawString("FILL BY: " + order.Initiator, font, textBrush, RightSideTextPoint);
                             break;
                         case 7:

@@ -7,9 +7,9 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Image from "react-bootstrap/Image"
 import './printorder.css';
 import { DropdownButton } from "react-bootstrap";
-import { Navigate, useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 
+import { useParams } from "react-router-dom";
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 function printOrder(){
@@ -121,7 +121,7 @@ function printOrder(){
                         window.location.replace("/home")
                     }
                     ,1000)
-                    window.location = "https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderID="+OrderID;   
+                    window.location = "https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderInfo="+OrderID+"~!~"+"1";   
                 }
                 else{
                     alert("No order id Provided");
@@ -143,7 +143,7 @@ function printOrder(){
                     await $.ajax({
                         method:"POST",
                         url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintOrder",
-                        data: JSON.stringify(OrderID),
+                        data: JSON.stringify(+OrderID+"~!~"+"5"),
                         headers:{
                             "Content-Type":"application/json"
                         },
