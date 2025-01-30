@@ -63,7 +63,7 @@ function printOrder(){
             await $.ajax({
                 method:"POST",
                 url:"https://"+BackendIP+':'+BackendPort+"/api/printer/GeneratePrintPreview",
-                data: JSON.stringify(OrderID),
+                data: JSON.stringify(OrderID+"~!~"+undefined),
                 headers:{
                     "Content-Type":"application/json"
                 },
@@ -143,7 +143,7 @@ function printOrder(){
                     await $.ajax({
                         method:"POST",
                         url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintOrder",
-                        data: JSON.stringify(+OrderID+"~!~"+"5"),
+                        data: JSON.stringify(OrderID+"~!~"+"5"+"~!~"+"1"),
                         headers:{
                             "Content-Type":"application/json"
                         },
