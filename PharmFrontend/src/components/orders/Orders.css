@@ -4,6 +4,13 @@ div[class="scroll-table"]{
     margin:auto;
 
 }
-.red{
-    color:red;
+.ApprovedButtons{
+    display: flex;
+    justify-content: right;
+    margin-right: 10.1em;
+    margin-bottom: 0.5em;
+    gap:0.5em;
+}
+.glow{
+    box-shadow: 0 0 15px 4px #007599
 }

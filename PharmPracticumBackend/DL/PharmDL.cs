@@ -1432,6 +1432,65 @@ namespace PharmPracticumBackend.DL
             }
             return dbOrders;
         }
+        public List<ordersDTO> getOrdersVerifiedByUser(String UserID)
+        {
+            List<ordersDTO> orders = new List<ordersDTO>();
+
+            try
+            {
+
+                using var connection = GetOpenConnection();
+
+                SqlCommand cmd = new SqlCommand("dbo.getOrdersVerifiedByUser", connection);
+                cmd.Parameters.AddWithValue("@userID", UserID);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var reader = cmd.ExecuteReader())
+                {
+
+                    while (reader.Read())
+                    {
+
+                        ordersDTO dbOrders = new ordersDTO();
+
+                        dbOrders.RxNum = reader["rxNum"].ToString();
+                        dbOrders.PPR = reader["PPR"].ToString();
+                        dbOrders.DIN = reader["DIN"].ToString();
+                        dbOrders.PhysicianID = reader["physicianID"].ToString();
+                        dbOrders.Status = reader["status"].ToString();
+                        dbOrders.Initiator = reader["initiator"].ToString();
+                        dbOrders.Verifier = reader["verifier"].ToString();
+                        dbOrders.DateSubmitted = reader["dateSubmitted"].ToString();
+                        dbOrders.DateLastChanged = reader["dateLastChanged"].ToString();
+                        dbOrders.DateVerified = reader["dateVerified"].ToString();
+                        dbOrders.SIG = reader["SIG"].ToString();
+                        dbOrders.SIGDescription = reader["SIGDescription"].ToString();
+                        dbOrders.Form = reader["form"].ToString();
+                        dbOrders.Route = reader["route"].ToString();
+                        dbOrders.PrescribedDose = reader["prescribedDose"].ToString();
+                        dbOrders.Frequency = reader["frequency"].ToString();
+                        dbOrders.Duration = reader["duration"].ToString();
+                        dbOrders.Quantity = reader["quantity"].ToString();
+                        dbOrders.StartDate = reader["startDate"].ToString();
+                        dbOrders.StartTime = reader["startTime"].ToString();
+                        dbOrders.PrintStatusID = reader["PrintStatusID"].ToString();
+                        dbOrders.Comments = reader["comments"].ToString();
+
+                        orders.Add(dbOrders);
+
+                    }
+
+                }
+
+                return orders;
+            }
+            catch (Exception ex)
+            {
+                orders.Clear();
+                Console.WriteLine("oh no" + ex.Message);
+                return orders;
+            }
+        }
         public async Task<List<ordersDTO>> GetAllOrders()
         {
             List<ordersDTO> orders = new List<ordersDTO>();

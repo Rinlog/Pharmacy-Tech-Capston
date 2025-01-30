@@ -19,7 +19,12 @@ namespace PharmPracticumBackend.Controllers
             _sanitization = new SanitizationClass();
 
         }
-
+        [HttpPost("GetOrdersVerifiedByUser")]
+        public IActionResult getOrdersVerifiedByUser([FromBody] String UserID)
+        {
+            List<ordersDTO> orders = _pharmDL.getOrdersVerifiedByUser(UserID);
+            return Ok(orders);
+        }
         [HttpPost("getorders")]
         public async Task<IActionResult> GetOrders()
         {

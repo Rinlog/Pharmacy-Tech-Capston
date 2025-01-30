@@ -85,7 +85,14 @@ namespace PharmPracticumBackend.Controllers
                 //update print status in db
                 _PharmDL.updateOrderPrintStatus(OrderInfoArray[0], OrderInfoArray[1]);
                 Bitmap img = CreateOrderImage(ordersDTO, OrderInfoArray[2]);
-                return StartPrint(img);
+                if (short.TryParse(OrderInfoArray[2], out short PrintQuantity))
+                {
+                    return StartPrint(img,PrintQuantity);
+                }
+                else
+                {
+                    return BadRequest("Print quantity is not a number");
+                }
             }
             catch (Exception ex)
             {
@@ -176,7 +183,7 @@ namespace PharmPracticumBackend.Controllers
         }
         //MAIN METHOD FOR PRINTING, Should be called by an api method
         [SupportedOSPlatform("windows")]
-        private IActionResult StartPrint(Bitmap file)
+        private IActionResult StartPrint(Bitmap file,short Copys)
         {
             try
             {
@@ -205,6 +212,7 @@ namespace PharmPracticumBackend.Controllers
                 }
                 PrintDocument pd = new PrintDocument();
                 pd.PrinterSettings.PrinterName = ExpectedPrinter;
+                pd.PrinterSettings.Copies = Copys;
                 pd.DefaultPageSettings = pageSettings;
                 pd.PrintPage += Pd_PrintPage;//sends the file to be printed when we run the Print() command
                 if (pd.PrinterSettings.IsValid)
@@ -216,7 +224,7 @@ namespace PharmPracticumBackend.Controllers
                     return BadRequest("No valid printers detected");
                 }
 
-                return Ok("Succefullly Printed Label");
+                return Ok("Succefullly Printed");
             }
             catch (Exception ex)
             {

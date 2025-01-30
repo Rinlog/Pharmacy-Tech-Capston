@@ -63,7 +63,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS getAllDrugs; 
     DROP PROCEDURE IF EXISTS getAllOrders; 
     DROP PROCEDURE IF EXISTS getAllLogs; 
-
+    DROP PROCEDURE IF EXISTS getOrdersVerifiedByUser
     -- Specific Procedures
     DROP PROCEDURE IF EXISTS getLogs; 
     DROP PROCEDURE IF EXISTS amendOrder; 
@@ -1446,6 +1446,15 @@ GO
             ON o.rxNum = i.rxNum order by o.rxNum asc
         END;
         GO
+
+    CREATE PROCEDURE getOrdersVerifiedByUser
+
+    @userID char(6)
+    AS
+        BEGIN
+            Select * from OrderTable where verifier = @userID and status = 'Approved';
+        end;
+    GO
 
     CREATE PROCEDURE getAllLogs
         -- Procedure: getAllLogs

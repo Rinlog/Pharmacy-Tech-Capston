@@ -28,8 +28,11 @@ function AllOrders(){
     const [OtherOrder, setOtherOrders] = useState([])
 
     const [cookies] = useCookies(["user"])
+    const [DisplayAllVerifiedOrders, setDisplayAllVerifiedOrders] = useState(true);
+    const [DisplayMyVerifiedOrders, setDisplayMyVerifiedOrders] = useState(false);
 
-
+    const [myNamedData, setMyNamedData] = useState([])
+    const [MyApprovedOrder, setMyApprovedOrders] = useState([])
     //Printing Related Variables
     const [show, setShow] = useState(false);
     const [reprintShow, setReprintShow] = useState(false);
@@ -362,7 +365,14 @@ function AllOrders(){
                     </Form>
                 </div>
                 <div id="PrintImage">
-                    <Image src={PrintPreview} alt="Print Preview of Order" rounded fluid></Image>
+                    <Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoadStart={function(e){
+                        console.log("loading")
+                        return(
+                        <div>
+                            <p>Loading</p>
+                        </div>
+                        )
+                    }}></Image>
                 </div>
             </Modal.Body>
             <Modal.Footer>
@@ -376,6 +386,73 @@ function AllOrders(){
          </Modal>
     );
     //GENERATING TABLE STRUCTURE
+    async function LoadVerifiedByMe(GenerateTableFunction){
+        try{
+            let Data = await $.ajax({
+                method:"POST",
+                url:"https://"+BackendIP+':'+BackendPort+"/api/Order/GetOrdersVerifiedByUser",
+                data: JSON.stringify(cookies.user),
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                success:function(data){
+                    
+                }});
+
+            let OrderAmount = Data.length;
+            let CurrentOrderAmount = 0;
+            Data.forEach(async Order => {
+                    await $.ajax({
+                    method:"POST",
+                    url:"https://"+BackendIP+':'+BackendPort+"/api/Management/getnames",
+                    data:JSON.stringify({
+                        userID: Order.initiator,
+                        ppr: Order.ppr,
+                        physicianID: Order.physicianID,
+                        din: Order.din,
+                        // We also need to pass through empty strings for the other fields since the API expects them
+                        patientFName: '',
+                        patientLName: '',
+                        drugName: '',
+                        physicianFName: '',
+                        physicianLName: '',
+                        userFName: '',
+                        userLName: '',
+                    }),
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    success:function(data){
+                        CurrentOrderAmount+=1
+                        myNamedData.push(data)
+                        if (CurrentOrderAmount == OrderAmount){
+                            GenerateTableFunction(Data,myNamedData,"My")
+                        }
+                    }});
+        })
+        }
+        catch(ex){
+            if (ex.responseText != null){
+                alert(ex.responseText);
+            }
+            else{
+                alert("Failed to get orders")
+                return;
+            }
+        }
+    }
+    function SetDisplayAllOrders(){
+        $("#AllOrders").addClass("glow")
+        $("#VerifiedByMe").removeClass("glow")
+        setDisplayAllVerifiedOrders(true);
+        setDisplayMyVerifiedOrders(false);
+    }
+    function SetDisplayMyOrders(){
+        $("#AllOrders").removeClass("glow")
+        $("#VerifiedByMe").addClass("glow")
+        setDisplayAllVerifiedOrders(false);
+        setDisplayMyVerifiedOrders(true);
+    }
     $(document).ready(async function(){
         setonlyOne(onlyOne+1);
         if (onlyOne == 1){
@@ -390,6 +467,7 @@ function AllOrders(){
                         setOrdersGotten(true);
                     }});
                 Data = Data.data; //a weird line because of how the previous team wrote code... too late to change structure
+
                 let OrderAmount = Data.length;
                 let CurrentOrderAmount = 0;
                 Data.forEach(async Order => {
@@ -417,11 +495,12 @@ function AllOrders(){
                             CurrentOrderAmount+=1
                             NamedData.push(data)
                             if (CurrentOrderAmount == OrderAmount){
-                                GenerateTables()
+                                GenerateTables(Data,NamedData,"All")
+                                LoadVerifiedByMe(GenerateTables)
                             }
                         }});
                 });
-                function GenerateTables(){
+                function GenerateTables(Data,NamedData,Type){
                     let OrderNumber = 0;
                     //Now that we have all the data we will output it
                     Data.forEach(function(Order){
@@ -461,7 +540,12 @@ function AllOrders(){
     
                         )
                         if (Order.status == "Approved"){
-                            ApprovedOrder.push(CurrentOrder);
+                            if (Type == "All"){
+                                ApprovedOrder.push(CurrentOrder);
+                            }
+                            else{
+                                MyApprovedOrder.push(CurrentOrder)
+                            }
                         }
                         else if (Order.status == "Rejected"){
                             RejectedOrder.push(CurrentOrder)
@@ -473,6 +557,7 @@ function AllOrders(){
                     })
                     
                 }
+
             }
             catch(ex){
                 if (ex.responseText != null){
@@ -529,11 +614,17 @@ function AllOrders(){
                 </table>
             </div>
             <h2>Approved</h2>
+            <div className="ApprovedButtons">
+                <button id="VerifiedByMe" className="" onClick={SetDisplayMyOrders}>Verified by Me</button>
+                <button id="AllOrders" className="glow" onClick={SetDisplayAllOrders}>All Orders</button>
+            </div>
             <div className="scroll-table">
                 <table>
                     {PageHeaders}
                     <tbody id="Approved">
-                        {ApprovedOrder}
+                        {DisplayAllVerifiedOrders == true && ApprovedOrder ||
+                        DisplayMyVerifiedOrders == true && MyApprovedOrder
+                        }
                     </tbody>
                 </table>
             </div>
