@@ -14,3 +14,6 @@ div[class="scroll-table"]{
 .glow{
     box-shadow: 0 0 15px 4px #007599
 }
+.hide{
+    display:none;
+}

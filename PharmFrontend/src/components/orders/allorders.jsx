@@ -365,13 +365,11 @@ function AllOrders(){
                     </Form>
                 </div>
                 <div id="PrintImage">
-                    <Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoadStart={function(e){
-                        console.log("loading")
-                        return(
-                        <div>
-                            <p>Loading</p>
-                        </div>
-                        )
+                    <p id="Loading">
+                        
+                    </p>
+                    <Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoad={function(e){
+                        $("#Loading").addClass("hide");
                     }}></Image>
                 </div>
             </Modal.Body>
