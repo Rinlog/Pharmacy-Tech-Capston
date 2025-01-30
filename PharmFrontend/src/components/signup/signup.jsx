@@ -44,7 +44,7 @@ function Signup() {
         let emailFormat = 'Please enter a valid email';
         let emailNBCC = 'Please enter a valid NBCC email';
         let passwordMatch = 'Passwords do not match';
-        let passwordReq = 'Password must be at least 8 characters long, contain at least one capital letter, one lower case and one number';
+        let passwordReq = 'Password must contain at least 8 characters, one capital letter, one lower case, one number and a special character';
 
         // Error count
         let errors = 0;
