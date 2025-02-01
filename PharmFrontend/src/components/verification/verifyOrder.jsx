@@ -108,6 +108,11 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
     const VerifyOrder = async (e) => {
         e.preventDefault();
 
+        if (!allChecked) { //verification to make sure all checkboxes are selected. Better user experience
+            alert("To verify, select all checkboxes.")
+            return;
+        }
+
         //create an object for the verification with the Order number, status to change to, and the logged in user ID
         let verify = {
             RxNum: selectedOrder["Rx Number"],
@@ -152,7 +157,8 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
         // Check if all checkboxes are checked
         setAllChecked(rxNumChecked && patientNameChecked && drugNameChecked && physicianNameChecked && initiatorChecked && SIGChecked && SIGDescriptionChecked && 
         formChecked && routeChecked && prescribedDoseChecked && frequencyChecked && durationChecked && quantityChecked && startDateChecked && startTimeChecked && commentsChecked);
-    }, [rxNumChecked, patientNameChecked, drugNameChecked, physicianNameChecked, initiatorChecked, SIGChecked, SIGDescriptionChecked, formChecked, routeChecked, prescribedDoseChecked, frequencyChecked, durationChecked, quantityChecked, startDateChecked, startTimeChecked, commentsChecked]);
+    }, [rxNumChecked, patientNameChecked, drugNameChecked, physicianNameChecked, initiatorChecked, SIGChecked, SIGDescriptionChecked, formChecked, routeChecked, prescribedDoseChecked, 
+        frequencyChecked, durationChecked, quantityChecked, startDateChecked, startTimeChecked, commentsChecked]);
 
     return(
 
@@ -241,7 +247,7 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
                 <br></br>
 
                 <button className="button" id="reject" onClick={RejectOrder}>Reject</button>
-                <button className="button" id="verify" onClick={VerifyOrder} disabled={!allChecked}>Verify</button>
+                <button className="button" id="verify" onClick={VerifyOrder} >Verify</button>
 
             </form>
         </div>
