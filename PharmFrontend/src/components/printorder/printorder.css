@@ -1,11 +1,9 @@
 .RegularButton{
     border-radius: 0.4em;
     margin-right: 1em;
-    background-color: #829600;
 }
 .RegularButton a { 
     text-decoration: none;
-    background-color: #829600; 
     color:white; 
 }
 .Header{

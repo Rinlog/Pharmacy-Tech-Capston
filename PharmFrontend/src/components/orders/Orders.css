@@ -1,3 +1,4 @@
+
 div[class="scroll-table"]{
     padding-right:5.5em;
     padding-bottom:auto;
@@ -7,12 +8,12 @@ div[class="scroll-table"]{
 .ApprovedButtons{
     display: flex;
     justify-content: right;
-    margin-right: 10.1em;
+    margin-right: 15.4em;
     margin-bottom: 0.5em;
     gap:0.5em;
 }
 .glow{
-    box-shadow: 0 0 15px 4px #007599
+    box-shadow: 0 0 15px 4px var(--nbcc-ocean-blue)
 }
 .hide{
     display:none;

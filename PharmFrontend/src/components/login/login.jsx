@@ -112,8 +112,14 @@ const Login = () => {
             </form>
 
             <form className='regular-form'>
-                <h3>Don't have an account? <button className="button" onClick={() => navigate('/signup')}>Sign Up</button></h3>
-                <h3>Forgot your password? <button className="button" onClick={handleForgotPassword}>Reset Password</button></h3>
+                <div className='d-flex justify-content-center'>
+                    <h3>Don't have an account?</h3> 
+                    <button className="button" onClick={() => navigate('/signup')}>Sign Up</button>
+                </div>
+                <div className='d-flex justify-content-center'>
+                    <h3>Forgot your password?</h3> 
+                    <button className="button" onClick={handleForgotPassword}>Reset Password</button>
+                </div>
             </form>
         </div>
     );

@@ -12,7 +12,7 @@ import UserManagement from '@components/userManagement/userManagement.jsx';
 import Logs from '@components/logs/logs.jsx';
 import Verification from '@components/verification/verification.jsx';
 import printOrder from './components/printorder/printorder';
-
+import 'bootstrap/dist/css/bootstrap.css'
 //css import
 import './App.css';
 
