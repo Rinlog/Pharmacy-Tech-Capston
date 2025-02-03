@@ -102,7 +102,6 @@ function ManageLoginStatus(){
         }
 
     }
-    
     function onClose(){
         setVisible(false);
         removeCookie("user");
