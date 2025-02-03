@@ -29,7 +29,7 @@ function ManageLoginStatus(){
             const idleInterval = setInterval(timerIncrement, 1000);
             function timerIncrement() {
                 idleRef += 1;
-                console.log(idleRef) //debug code that shows how many seconds have passed
+                //console.log(idleRef) //debug code that shows how many seconds have passed
                 if (idleRef > 119) { // 2 minute
                     // Do something here
                     clearInterval(idleInterval);
@@ -97,7 +97,7 @@ function ManageLoginStatus(){
                 }
             }
         } catch (error) {
-            console.log(error); //debugging
+            //console.log(error); //debugging
             alert("Could not log you in at this time. Please contact the system administrator.");
         }
 
