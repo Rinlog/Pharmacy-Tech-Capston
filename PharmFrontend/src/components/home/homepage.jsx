@@ -15,10 +15,10 @@ function Home() {
             <div className="home-content">
                 <div className="button-grid">
                     <div className="button-with-image">
+                    <img src="/images/medipills.jpg" alt="pills" className="pictures-rounded"/>
                         <Link to="/drugs" className="home-button">
                         Drugs
                         </Link>
-                        <img src="/images/medipills.jpg" alt="pills" className="pictures-rounded"/>
                     </div>
                     <div className="button-with-image">
                         <Link to="/physicians" className="home-button">
@@ -27,10 +27,10 @@ function Home() {
                         <img src="/images/phys.jpg" alt="Physicians" className="pictures-rounded"/>
                     </div>
                     <div className="button-with-image">
+                    <img src="/images/patients.jpg" alt="patients" className="pictures-rounded"/>
                         <Link to="/patients" className="home-button">
                         Patients
                         </Link>
-                        <img src="/images/patients.jpg" alt="patients" className="pictures-rounded"/>
                     </div>
                     <div className="button-with-image">
                         <Link to="/orders" className="home-button">
@@ -39,10 +39,10 @@ function Home() {
                         <img src="/images/orders.jpg" alt="orders" className="pictures-rounded"/>
                     </div>
                     <div className="button-with-image">
+                    <img src="/images/verification.jpg" alt="verification" className="pictures-rounded"/>
                         <Link to="/verification" className="home-button">
                         Verification
                         </Link>
-                        <img src="/images/verification.jpg" alt="verification" className="pictures-rounded"/>
                     </div>
                     <div></div>
                     
@@ -50,10 +50,10 @@ function Home() {
                         <>
                             <hr className="admin-separator" />
                             <div className="button-with-image">
+                            <img src="/images/usermanagement.jpg" alt="usermanagement" className="pictures-rounded"/>
                             <Link to="/usermanagement" className="home-button">
                                 User Management
                             </Link>
-                            <img src="/images/usermanagement.jpg" alt="usermanagement" className="pictures-rounded"/>
                             </div>
                         
                         

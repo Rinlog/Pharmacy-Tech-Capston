@@ -83,9 +83,15 @@ function AddOrder(){
                 body: JSON.stringify(order)
             });
             const data = await response.json();
-            alert(data.message);
-            return;
 
+            if (data.message == "Order successfully created.") {
+                alert(data.message);
+                location.reload();
+            }
+            else {
+                alert(data.message);
+                return;
+            }
         }
         catch (error){
             alert("Could not submit, please contact system administrator.");
