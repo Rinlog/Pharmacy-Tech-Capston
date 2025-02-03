@@ -4,8 +4,9 @@ html{
     --nbcc-ocean-blue: #007599;
     --nbcc-possi-blue: #a1d8e0;
     --nbcc-urban-green: #829600;
+    --nbcc-urban-greenDarkend: #5f6d01;
     --nbcc-field-gold: #eaab00;
-    --nbcc-dark-blue: #005E99;
+    --nbcc-nav: #005E99;
     --nbcc-font: 'Calibri', sans-serif;
   
     --text: #242424;
@@ -91,4 +92,19 @@ table tr:nth-child(even) td{
 
 form input[type="date"] {
     width: 64%;
+}
+.Modalbutton{
+    background-color: var(--nbcc-urban-green);
+    color: white;
+    border-radius: 5px;
+    border-color:grey;
+    cursor: pointer;
+}
+.Modalbutton:hover{
+    background-color: var(--nbcc-urban-greenDarkend) !important;
+    border-color:grey;
+}
+.Modalbutton:active{
+    background-color: var(--nbcc-urban-greenDarkend) !important;
+    border-color:grey;
 }

@@ -1,5 +1,5 @@
 .navbar {
-    background-color: var(--nbcc-dark-blue); /* nbcc color taken from website using paint*/
+    background-color: var(--nbcc-nav); /* nbcc color taken from website using paint*/
     padding: 10px 20px;
     display: flex;
     align-items: center;

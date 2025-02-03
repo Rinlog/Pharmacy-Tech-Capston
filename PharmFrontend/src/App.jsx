@@ -12,9 +12,11 @@ import UserManagement from '@components/userManagement/userManagement.jsx';
 import Logs from '@components/logs/logs.jsx';
 import Verification from '@components/verification/verification.jsx';
 import printOrder from './components/printorder/printorder';
-import 'bootstrap/dist/css/bootstrap.css'
+
 //css import
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.css'
+
 
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
@@ -22,6 +24,7 @@ import { AuthProvider } from '@components/login/AuthContext.jsx';
 import ProtectedRoute from '@components/login/ProtectedRoute.jsx';
 import UnProtectedRoute from '@components/login/UnprotectedRoute';
 import ManageLoginStatus from './components/login/ManageLoginStatus';
+
 function App() {
     return (
         <div className='page-container'>
