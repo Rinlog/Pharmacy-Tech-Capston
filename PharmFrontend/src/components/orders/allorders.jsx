@@ -285,7 +285,20 @@ function AllOrders(){
                     </div>
                 </div>
                 <div id="PrintImage">
-                    <Image src={PrintPreview} alt="Print Preview of Order" rounded fluid></Image>
+                <div className="d-flex2" id="Loading1">
+                        <div className="Loading Dot1">
+                            .
+                        </div>
+                        <div className="Loading Dot2">
+                            .
+                        </div>
+                        <div className="Loading Dot3">
+                            .
+                        </div>
+                    </div>
+                    {<Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoad={function(e){
+                        $("#Loading1").addClass("hide");
+                    }}></Image>}
                 </div>
             </Modal.Body>
             <Modal.Footer>
@@ -365,12 +378,21 @@ function AllOrders(){
                     </Form>
                 </div>
                 <div id="PrintImage">
-                    <p id="Loading">
-                        
-                    </p>
-                    <Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoad={function(e){
-                        $("#Loading").addClass("hide");
-                    }}></Image>
+                    <div className="d-flex2" id="Loading2">
+                        <div className="Loading Dot1">
+                            .
+                        </div>
+                        <div className="Loading Dot2">
+                            .
+                        </div>
+                        <div className="Loading Dot3">
+                            .
+                        </div>
+                    </div>
+                    {<Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoad={function(e){
+                        console.log("Ran");
+                        $("#Loading2").addClass("hide");
+                    }}></Image>}
                 </div>
             </Modal.Body>
             <Modal.Footer>

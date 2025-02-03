@@ -12,9 +12,43 @@ div[class="scroll-table"]{
     margin-bottom: 0.5em;
     gap:0.5em;
 }
+.d-flex2{
+    display: flex;
+}
 .glow{
     box-shadow: 0 0 15px 4px var(--nbcc-ocean-blue)
 }
 .hide{
     display:none;
+}
+/*Loading animation*/
+@keyframes LoadingAnim1{
+    0% {bottom:0px;}
+    25% {bottom:100px;}
+    50% {bottom: 0px;}
+    75% {bottom:100px;}
+    100% {bottom:0px;}
+
+}
+.Loading{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color:var(--nbcc-ocean-blue);
+    font-size: 15em;
+}
+.Dot1{
+    animation: LoadingAnim1 4s;
+    animation-iteration-count: infinite;
+}
+.Dot2{
+    animation: LoadingAnim1 4s;
+    animation-iteration-count: infinite;
+    animation-delay:0.25s;
+}
+.Dot3{
+    animation: LoadingAnim1 4s;
+    animation-iteration-count: infinite;
+    animation-delay:0.5s;
 }

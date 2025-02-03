@@ -63,6 +63,12 @@ button {
     border-radius: 5px;
     cursor: pointer;
 }
+button:hover{
+    background-color: var(--nbcc-urban-greenDarkend);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
 select {
     width: 90%;
