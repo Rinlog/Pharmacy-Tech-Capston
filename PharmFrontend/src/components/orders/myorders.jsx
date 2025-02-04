@@ -248,7 +248,7 @@ function MyOrders(){
             "SIGDescription": SIGDesc,
             "Form": formForm,
             "Route": route,
-            "PrescribedDose": formDose,
+            "Dose": formDose,
             "Frequency": frequency,
             "Duration": duration,
             "Quantity": quantity,
@@ -258,10 +258,9 @@ function MyOrders(){
 
         }
 
-        console.log("Dose being sent:", formDose); //Debugging
-
         //API call 
         try {
+
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Order/editorder' , {
                 method: 'POST',
                 headers: {
@@ -271,12 +270,11 @@ function MyOrders(){
             });
             const data = await response.json();
             alert(data.message);
-            location.reload();
+            openAmend(false);
             return;
 
         }
         catch (error){
-            Console.Log(error);
             alert("Could not submit, please contact system administrator.");
         }
     }
