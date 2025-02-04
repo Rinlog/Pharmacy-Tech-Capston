@@ -88,7 +88,7 @@ table {
 }
 
 th{
-    background-color: var(--nbcc-nav-item);
+    background-color: var(--nbcc-nav-item) !important;
     color:white;
     padding:0.4em 0em 0.2em 0em;
     font-size: 1.15em;
@@ -102,6 +102,9 @@ table tr:nth-child(even) td{
 
 form input[type="date"] {
     width: 64%;
+}
+label{
+    font-size:1.1em;
 }
 .Modalbutton{
     background-color: var(--nbcc-urban-green);
