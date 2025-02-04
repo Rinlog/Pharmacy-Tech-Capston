@@ -2,9 +2,10 @@ import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Import images correctly
-import camera from '../CarouselImage/boxes.jpg';
-import dog from '../CarouselImage/handing.jpg';
+import camera from '../CarouselImage/pharmtech.jpg';
+import dog from '../CarouselImage/crossedarms.jpg';
 import woman from '../CarouselImage/store.jpg';
+import papers from '../CarouselImage/papers.jpg';
 
 function IndividualIntervalsExample() {
   return (
@@ -14,6 +15,9 @@ function IndividualIntervalsExample() {
       </Carousel.Item>
       <Carousel.Item interval={5000}>
         <img className="d-block w-100" src={dog} alt="Medicine" height={300} width={400}/>
+      </Carousel.Item>
+      <Carousel.Item interval={5000}>
+        <img className="d-block w-100" src={papers} alt="Medicine" height={300} width={400}/>
       </Carousel.Item>
       <Carousel.Item>
         <img className="d-block w-100" src={woman} alt="Pills" height={300} width={400}/>
