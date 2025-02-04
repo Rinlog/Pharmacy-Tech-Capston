@@ -1733,6 +1733,7 @@ namespace PharmPracticumBackend.DL
                 cmd.Parameters.AddWithValue("@form", order.Form);
                 cmd.Parameters.AddWithValue("@route", order.Route);
                 cmd.Parameters.AddWithValue("@prescribedDose", order.PrescribedDose);
+                //Console.WriteLine($"prescribedDose: {order.PrescribedDose}"); //debugging
                 cmd.Parameters.AddWithValue("@frequency", order.Frequency);
                 cmd.Parameters.AddWithValue("@duration", order.Duration);
                 cmd.Parameters.AddWithValue("@quantity", order.Quantity);
@@ -1752,6 +1753,7 @@ namespace PharmPracticumBackend.DL
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 result = false;
                 return result;
             }
