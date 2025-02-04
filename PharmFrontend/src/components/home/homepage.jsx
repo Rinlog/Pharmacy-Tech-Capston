@@ -2,16 +2,17 @@ import "./Home.css";
 import { Link } from "react-router-dom";
 import { CheckAuth } from "@components/login/CheckAuth";
 import React from 'react'
+import IndividualIntervalsExample from './slide.jsx';
+
 function Home() {
     const authState = CheckAuth();
     //console.log('Home component:', authState); //debugging
     
     return (
+
         <div className="home-container">
-            {/* <header className="home-header">
-                <h1>Welcome to the NBCC Pharmaceutical Tech System!</h1>
-                </header> */}
-            {/*commenting this out for now*/}
+            
+            <IndividualIntervalsExample />
             <div className="home-content">
                 <div className="button-grid">
                     <div className="button-with-image">
