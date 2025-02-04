@@ -9,6 +9,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: sticky !important;
     top:0; /*needed*/
+    z-index: 1;
 }
 
 .navbar-logo {
@@ -47,7 +48,6 @@
 
 .navbar-links {
     display:flex;
-    flex-grow:1;
     align-items: center;
     justify-content: right;
     gap: 15px;
