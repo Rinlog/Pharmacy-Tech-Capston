@@ -246,7 +246,7 @@ function MyOrders(){
             "SIGDescription": SIGDesc,
             "Form": formForm,
             "Route": route,
-            "Dose": formDose,
+            "prescribedDose": formDose,
             "Frequency": frequency,
             "Duration": duration,
             "Quantity": quantity,
@@ -268,7 +268,7 @@ function MyOrders(){
             });
             const data = await response.json();
             alert(data.message);
-            openAmend(false);
+            location.reload();
             return;
 
         }
