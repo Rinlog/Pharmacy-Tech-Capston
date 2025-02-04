@@ -615,6 +615,7 @@ function AllOrders(){
                 <th>Start Date</th>
                 <th>Start Time</th>
                 <th>Comments</th>
+                <th></th>
             </tr>
         </thead>
     )

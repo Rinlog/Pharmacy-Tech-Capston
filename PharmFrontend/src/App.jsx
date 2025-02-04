@@ -12,7 +12,7 @@ import UserManagement from '@components/userManagement/userManagement.jsx';
 import Logs from '@components/logs/logs.jsx';
 import Verification from '@components/verification/verification.jsx';
 import printOrder from './components/printorder/printorder';
-
+import Footer from './components/footer/footer';
 //css import
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css'
@@ -55,8 +55,8 @@ function App() {
                             {/*admin routes*/}
                             <Route path="/usermanagement" element={<ProtectedRoute component={UserManagement} adminRequired />} />
                             <Route path="/logs" element={<ProtectedRoute component={Logs} adminRequired />} />
-
                         </Routes>
+                        <Footer/>
                     </Router>
                 </CookiesProvider>
             </AuthProvider>

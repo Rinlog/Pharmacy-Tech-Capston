@@ -23,12 +23,14 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
+        <Link to="/home">
         <img
           src="/images/logo-NBCC.png"
           alt="NBCC Logo"
           className="home-logo"
           style={{ height: "30px" }}
         />
+        </Link>
       </div>
 
       <div className="navbar-menu" id="navbarMenu">

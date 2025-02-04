@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import AuthContext from '@components/login/AuthContext.jsx';
-
+import $ from 'jquery';
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const Login = () => {
@@ -13,7 +13,6 @@ const Login = () => {
     const [cookies, setCookie] = useCookies(['user', 'admin']);
     const { setAuthState } = useContext(AuthContext);
     const navigate = useNavigate();
-
     const handleLogin = async (e) => {
         e.preventDefault();
         setEmailError('');

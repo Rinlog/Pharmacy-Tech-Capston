@@ -6,7 +6,9 @@ html{
     --nbcc-urban-green: #829600;
     --nbcc-urban-greenDarkend: #5f6d01;
     --nbcc-field-gold: #eaab00;
-    --nbcc-nav: #005E99;
+    --nbcc-nav: white;
+    --nbcc-nav-item:#012a3b;
+    --nbcc-background-nav-item: #005e99;
     --nbcc-font: 'Calibri', sans-serif;
   
     --text: #242424;
@@ -26,7 +28,7 @@ html{
 .page-container {
     margin: 20px auto 0 auto;
     width: 90%;
-    background-color: var(--nbcc-possi-blue);
+    background-color: white;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
@@ -85,15 +87,17 @@ table {
     background-color: #f2f2f2;
 }
 
-table, th, td, tbody {
-    border: 1px solid black;
+th{
+    background-color: var(--nbcc-nav-item);
+    color:white;
+    padding:0.4em 0em 0.2em 0em;
+    font-size: 1.15em;
 }
-
 table tr:nth-child(odd) td{
-    background-color: #b5b5b5;
+    background-color: white;
 }
 table tr:nth-child(even) td{
-    background-color: #909090;
+    background-color: #f8f8f8;
 }
 
 form input[type="date"] {

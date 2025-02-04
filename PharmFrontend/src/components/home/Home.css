@@ -1,7 +1,7 @@
 .home-container {
   text-align: center;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+  font-family: var(--nbcc-font);
+  background-color: #ffffff;
   padding: 20px;
   min-height: 100vh;
 }
@@ -52,12 +52,12 @@
 }
   
 .home-button, .one, .two, .three, .four, .five {
-  background-color: #005e99;
+  background-color: var(--nbcc-background-nav-item);
   color: white;
   text-decoration: none;
   padding: 10px 20px;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 1.2em;
   font-weight: bold;
   text-align: center;
   width: 300px;
