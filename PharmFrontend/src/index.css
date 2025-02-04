@@ -28,7 +28,7 @@ html{
 .page-container {
     margin: 20px auto 0 auto;
     width: 90%;
-    background-color: white;
+    background-color: rgb(235, 240, 252);
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);

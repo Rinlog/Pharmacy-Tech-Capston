@@ -43,7 +43,7 @@ use pharmtechDB;
 
 
 -- first we need to drop all the data except four users; me, dee, the 'deleted' user, and the test user
-DELETE FROM UserTable WHERE userID NOT IN ('FRBD00', 'FRDS00', '000000', 'FRLT01');
+--DELETE FROM UserTable WHERE userID NOT IN ('FRBD00', 'FRDS00', '000000', 'FRLT01');
 DELETE FROM OrderTable;
 DELETE FROM PhysicianTable;
 DELETE FROM SigTable;
@@ -136,15 +136,15 @@ VALUES ('JS0001', 'Jane', 'Smith', 'Fredericton', 'NB');
 
 -- Insert some dummy users
 -- The passwords are all unhashed 'password' so they can't be used to log in since the system expects a hashed password
-INSERT INTO UserTable (userID, fname, lname, email, password, campus, admin, active, createdDate, expirationDate)
-VALUES ('FRBB00', 'Bill', 'Billson', 'bill@mynbcc.ca', 'password', 'Fredericton', 1, 1, GETDATE(), NULL)
+--INSERT INTO UserTable (userID, fname, lname, email, password, campus, admin, active, createdDate, expirationDate)
+--VALUES ('FRBB00', 'Bill', 'Billson', 'bill@mynbcc.ca', 'password', 'Fredericton', 1, 1, GETDATE(), NULL)
 
-INSERT INTO UserTable (userID, fname, lname, email, password, campus, admin, active, createdDate, expirationDate)
-VALUES ('FRBB01', 'Bob', 'Bobson', 'bob@mynbcc.ca', 'password', 'Fredericton', 0, 0, GETDATE(), NULL)
+--INSERT INTO UserTable (userID, fname, lname, email, password, campus, admin, active, createdDate, expirationDate)
+--VALUES ('FRBB01', 'Bob', 'Bobson', 'bob@mynbcc.ca', 'password', 'Fredericton', 0, 0, GETDATE(), NULL)
 
-INSERT INTO UserTable (userID, fname, lname, email, password, campus, admin, active, createdDate, expirationDate)
-VALUES ('FRSS00', 'Sally', 'Sallyson', 'sally@nbcc.ca', 'password', 'Fredericton', 0, 1, GETDATE(), NULL)
+--INSERT INTO UserTable (userID, fname, lname, email, password, campus, admin, active, createdDate, expirationDate)
+--VALUES ('FRSS00', 'Sally', 'Sallyson', 'sally@nbcc.ca', 'password', 'Fredericton', 0, 1, GETDATE(), NULL)
 
-INSERT INTO UserTable (userID, fname, lname, email, password, campus, admin, active, createdDate, expirationDate)
-VALUES ('FRJJ00', 'Jane', 'Janeson', 'jane@nbcc.ca', 'password', 'Fredericton', 0, 0, GETDATE(), NULL)
+--INSERT INTO UserTable (userID, fname, lname, email, password, campus, admin, active, createdDate, expirationDate)
+--VALUES ('FRJJ00', 'Jane', 'Janeson', 'jane@nbcc.ca', 'password', 'Fredericton', 0, 0, GETDATE(), NULL)
 

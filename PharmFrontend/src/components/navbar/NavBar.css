@@ -7,6 +7,8 @@
     font-family: var(--nbcc-font);
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky !important;
+    top:0; /*needed*/
 }
 
 .navbar-logo {
@@ -20,7 +22,9 @@
 .navbar-logo:hover {
     color: #ffcc00;
 }
-
+.pl-5{
+    padding-left: 70px;
+}
 /* navbar toggler (for mobile responsiveness) we can make this better with some other things later */
 .navbar-toggler {
     background: none;
@@ -37,19 +41,22 @@
 .navbar-menu {
     display: flex;
     flex-wrap: wrap;
+    flex-grow:1;
+    justify-content: right;
 }
 
 .navbar-links {
-    display: flex;
+    display:flex;
+    flex-grow:1;
     align-items: center;
+    justify-content: right;
     gap: 15px;
 }
 
 .navbar-hometext{
     font-size: 20px;
     font-weight: bold;
-    color: white;
-    margin-right: 290px;
+    color: var(--nbcc-nav-item);
 }
 
 .navbar-item {

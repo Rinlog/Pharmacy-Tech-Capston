@@ -72,14 +72,16 @@ function Navbar() {
             </>
           )}
           {authState.loggedIn && isHomePage && (
-            <div className="logout-container">
-            <div className="navbar-hometext">
+            <div className="d-flex align-items-center justify-content-right flex-fill">
+              <div className="d-flex navbar-hometext justify-content-center flex-fill">
                 Welcome to the NBCC Pharmaceutical Tech System!
+              </div>
+              <div className="logout-container align-self-right pl-5">
+                <button className="navbar-button" onClick={Logout}>
+                    Logout
+                </button>
+              </div>
             </div>
-            <button className="navbar-button" onClick={Logout}>
-                Logout
-            </button>
-        </div>
           )}
         </div>
       </div>

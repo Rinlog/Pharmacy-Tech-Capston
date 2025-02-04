@@ -1,7 +1,6 @@
 .home-container {
   text-align: center;
   font-family: var(--nbcc-font);
-  background-color: #ffffff;
   padding: 20px;
   min-height: 100vh;
 }
