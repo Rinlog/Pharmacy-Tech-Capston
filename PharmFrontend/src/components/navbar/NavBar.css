@@ -75,7 +75,7 @@
 
 /* Navbar Button */
 .navbar-button {
-    background-color: rgba(255, 0, 0); /* red button */
+    background-color: rgba(255, 0, 0, 0.808); /* red button */
     color: var(--nbcc-nav-item);
     padding: 5px 10px;
     font-size:1.1em; 
