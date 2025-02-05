@@ -212,7 +212,7 @@ function Verification() {
     return(
 
         <div>
-            <h1>Verify Orders</h1>
+            <div className='page-header-name'>Verify Orders</div>
             <hr/>
 
             <input type="text" id="orderSearch" placeholder="Search Orders" value={search} onChange={e => setSearch(e.target.value)}/>

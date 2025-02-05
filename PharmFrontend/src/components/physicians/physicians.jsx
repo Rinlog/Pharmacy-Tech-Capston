@@ -195,7 +195,7 @@ function Physicians() {
     return(
 
         <div>
-            <h1>Physicians List</h1>
+            <div className='page-header-name'>Physicians List</div>
             <hr/>
 
             <input type="text" id="physicianSearch" placeholder="Search Physicians" value={search} onChange={e => setSearch(e.target.value)}/>
