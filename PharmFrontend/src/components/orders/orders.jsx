@@ -31,7 +31,7 @@ function Orders() {
     return(
 
         <div>
-            <h1>Orders</h1>
+            <div className='page-header-name'>Orders</div>
             <hr/>
 
             <button className="button" id="orderall" onClick={ChangeDisplay}>All Orders</button>

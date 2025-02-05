@@ -121,3 +121,15 @@ label{
     background-color: var(--nbcc-urban-greenDarkend) !important;
     border-color:grey;
 }
+
+.page-header-name {
+    font-size: 40px;
+    animation: slideUp 1s ease-in-out;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: scale(1.1);
+        opacity: 0;
+    }
+}

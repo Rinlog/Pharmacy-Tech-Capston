@@ -88,7 +88,7 @@ function Logs() {
     return(
 
         <div>
-            <h1>Logs List</h1>
+            <div className='page-header-name'>Logs List</div>
             <hr/>
 
             <form onSubmit={handleSubmit}>

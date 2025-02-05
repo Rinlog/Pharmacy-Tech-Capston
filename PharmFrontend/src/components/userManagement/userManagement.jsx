@@ -46,7 +46,7 @@ function UserManagement() {
     return(
 
         <div>
-            <h1>User Management</h1>
+            <div className='page-header-name'>User Management</div>
             <hr/>
             <br></br>
 

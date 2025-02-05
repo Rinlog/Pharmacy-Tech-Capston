@@ -216,7 +216,7 @@ function Patients() {
     return(
 
         <div>
-            <h1>Patients List</h1>
+            <div className='page-header-name'>Patients List</div>
             <hr/>
 
             <input type="text" id="patientSearch" placeholder="Search Patients" value={search} onChange={e => setSearch(e.target.value)}/>
