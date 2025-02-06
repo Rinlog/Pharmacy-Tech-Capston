@@ -7,7 +7,7 @@ import dog from '../CarouselImage/crossedarms.jpg';
 import woman from '../CarouselImage/store.jpg';
 import papers from '../CarouselImage/papers.jpg';
 
-function IndividualIntervalsExample() {
+function homepageslide() {
   return (
     <Carousel>
       <Carousel.Item interval={5000}>
@@ -26,4 +26,4 @@ function IndividualIntervalsExample() {
   );
 }
 
-export default IndividualIntervalsExample;
+export default homepageslide;

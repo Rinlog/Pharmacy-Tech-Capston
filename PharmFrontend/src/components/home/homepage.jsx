@@ -2,7 +2,7 @@ import "./Home.css";
 import { Link } from "react-router-dom";
 import { CheckAuth } from "@components/login/CheckAuth";
 import React from 'react'
-import IndividualIntervalsExample from './slide.jsx';
+import Homepageslide from './slide.jsx';
 
 function Home() {
     const authState = CheckAuth();
@@ -12,7 +12,7 @@ function Home() {
 
         <div className="home-container">
             
-            <IndividualIntervalsExample />
+            <Homepageslide />
             <div className="home-content">
                 <div className="button-grid">
                     <div className="button-with-image">
