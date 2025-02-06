@@ -2,8 +2,8 @@
 {
     public  class AuthConstants
     {
-        private readonly string key;
-
+        public readonly string key;
+        public readonly string header = "Key-Auth";
         public AuthConstants(IConfiguration configuration)
         {
             key = configuration.GetValue<String>("ExpectedHash:Hash");

@@ -3,7 +3,7 @@ import { Modal, Form, Button } from "react-bootstrap";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
-
+const ApiAccess = import.meta.env.VITE_APIAccess
 const ResetPasswordModal = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -19,6 +19,7 @@ const ResetPasswordModal = ({ isOpen, onClose }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth': ApiAccess
                 },
                 body: JSON.stringify({ Email: email }),
             });
