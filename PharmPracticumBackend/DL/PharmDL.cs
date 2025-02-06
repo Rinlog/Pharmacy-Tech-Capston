@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System.ComponentModel;
+using System.Globalization;
 
 
 namespace PharmPracticumBackend.DL
@@ -134,17 +135,35 @@ namespace PharmPracticumBackend.DL
                 string userID = await GetIDByEmailAsync(email);
 
 
-                //if this returns a valid userID, check if active
+                //if this returns a valid userID, check if expired, active, etc
                 if (userID != "")
                 {
 
-                    //check if user is active
-                    bool active = await IsUserActive(userID);
+                    //check if account is expired
+                    usersDTO userInfo = this.getUserbyID(userID);
+                    if (userInfo.ExpirationDate != "")
+                    {
+                        DateTime expirationDate = DateTime.ParseExact(userInfo.ExpirationDate, "G", CultureInfo.CreateSpecificCulture("en-CA"));
+                        DateTime CurrentDate = DateTime.Now;
+                        if (CurrentDate > expirationDate) //checks if account is expired
+                        {
+                            user.UserId = "expired";
+                            //deletes the user automatically when they try to login with an expired account
+                            if (userInfo.Active == "True")
+                            {
+                                this.DeleteUser(userID);
+                            }
+                            return user;
+                        }
+                    }
 
-                    Console.WriteLine(active.ToString());
+                    //check if user is active
                     //if not, return
+                    bool active = await IsUserActive(userID);
+                    Console.WriteLine(active.ToString());
                     if (!active)
                     {
+                        user.UserId = "account inactive";
                         return user;
                     }
 
@@ -166,29 +185,32 @@ namespace PharmPracticumBackend.DL
                             //if we don't get one, send back an empty user
                             if (string.IsNullOrEmpty(dbHash))
                             {
+                                user.UserId = "password error";
                                 return user;
                             }
-
-                            //if we do, run the check
-                            PasswordHasher<object> hasher = new PasswordHasher<object>();
-
-                            PasswordVerificationResult verified = hasher.VerifyHashedPassword(null, dbHash, pass);
                             
-                            Console.WriteLine("Is my password ok: " + verified);
-                            switch (verified)
-                            {
+                            //if we do, run the check
+                                PasswordHasher<object> hasher = new PasswordHasher<object>();
 
-                                case PasswordVerificationResult.Success:
-                                    //pull info
-                                    user = await GetLoginInfoAsync(userID);
+                                PasswordVerificationResult verified = hasher.VerifyHashedPassword(null, dbHash, pass);
 
-                                    //return user info we need (email, id, admin)
-                                    return user;
-                                case PasswordVerificationResult.Failed:
-                                    return user;
+                                Console.WriteLine("Is my password ok: " + verified);
 
-                            }
 
+                                switch (verified)
+                                {
+
+                                    case PasswordVerificationResult.Success:
+                                        //pull info
+                                        user = await GetLoginInfoAsync(userID);
+
+                                        //return user info we need (email, id, admin)
+                                        return user;
+                                    case PasswordVerificationResult.Failed:
+                                        user.UserId = "";
+                                        return user;
+                                }
+                            
                         }
 
                     }
@@ -316,8 +338,35 @@ namespace PharmPracticumBackend.DL
             
 
         }
+        public usersDTO getUserbyID(String id)
+        {
+            usersDTO usersDTO = new usersDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetUserInfo",conn);
+                cmd.Parameters.AddWithValue("@userID", id);
+                cmd.CommandType = CommandType.StoredProcedure;
 
-        //Get a user's info
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read()) {
+                    usersDTO.Admin = reader["admin"].ToString();
+                    usersDTO.FName = reader["fName"].ToString();
+                    usersDTO.LName = reader["lName"].ToString();
+                    usersDTO.Email = reader["email"].ToString();
+                    usersDTO.Active = reader["active"].ToString();
+                    usersDTO.Campus = reader["campus"].ToString();
+                    usersDTO.CreatedDate = reader["createdDate"].ToString();
+                    usersDTO.ExpirationDate = reader["expirationDate"].ToString();
+                }
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+            return usersDTO;
+        }
+        //auth a user
+
         public async Task<authUserDTO> GetLoginInfoAsync(string id)
         {
 

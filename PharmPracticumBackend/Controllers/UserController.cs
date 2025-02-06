@@ -40,8 +40,21 @@ namespace PharmPracticumBackend.Controllers
             //run DL command
             authUserDTO user = await _pharmDL.ValidateUserAsync(email, login.Password);
             //if we don't get a real user, we return that info
-            if (user.UserId == "") return Ok(new { message = "Wrong email or password entered." });
-            else return Ok(new { data = user });
+            switch (user.UserId)
+            {
+                case "expired": 
+                    return Ok(new { message = "Account has expired" });
+                case "password error":
+                    return Ok(new { message = "Account can not be logged into currently" });
+                case "account inactive":
+                    return Ok(new { message = "Account currently not active" });
+                case "":
+                    return Ok(new { message = "Wrong email or password entered." });
+                default:
+                    break;
+            }
+
+            return Ok(new { data = user });
 
         }
 

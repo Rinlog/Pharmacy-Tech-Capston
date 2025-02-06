@@ -1070,8 +1070,8 @@ GO
             -- Delete any reset codes
             DELETE FROM PasswordResetCodeTable WHERE userID = @userID;
 
-            -- Now, FINALLY, we can delete the user
-            DELETE FROM UserTable WHERE userID = @userID;
+            -- Now, FINALLY, we can delete the user(disable account)
+            UPDATE UserTable set active = 0 where userID = @userID;
         END;
         GO
 
