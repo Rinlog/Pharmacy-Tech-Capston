@@ -65,7 +65,7 @@ const ResetPasswordModal = ({ isOpen, onClose }) => {
                     </Form.Group>
 
                     <div className="d-flex justify-content-center">
-                        <Button type="button" onClick={handleForgotPassword} className='Modalbutton'>Send Reset Link</Button>
+                        <Button type="button" onClick={handleForgotPassword} className='ModalbuttonG'>Send Reset Link</Button>
                     </div>
                 </Form>
             </Modal.Body>
