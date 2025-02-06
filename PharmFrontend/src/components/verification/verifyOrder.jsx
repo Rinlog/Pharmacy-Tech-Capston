@@ -155,6 +155,16 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
     return(
 
         <div>
+         {/* Put the upload image part here */}
+
+         <h4>Upload image</h4>
+         <input type="file" name="file" accept="image/png, image/jpeg" /> {/*onChange={this.uploadHandler} */}
+         <button className="button" id="addImage" >Add Image</button>{/*onClick={RejectOrder}*/ }
+
+         
+       
+
+
             {/* Displays order info */}
             <form className="regular-form">
                 { /* Uneditable text boxes, just so the verifier (user) can check them against the prescription and checkboxes to check them off if theyre correct */}

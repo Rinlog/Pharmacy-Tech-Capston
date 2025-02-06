@@ -218,6 +218,7 @@ function Verification() {
 
             <i>&nbsp;&nbsp;*To verify an order, select it then fill out the verification form.</i>
             {content}
+
             
             {/* Displays when data has not been obtained */}
             {!dataObtained && (
@@ -249,11 +250,17 @@ function Verification() {
                                             name="selectedRow" 
                                             checked={selectedOrder.selected && item["Rx Number"] === selectedOrder["Rx Number"]}
                                             onChange={e => handleRadioChange(e, item)}
+
+
                                         />
                                     </td>
                                     {tableHeaders.map(header => (
                                         <td key={header}>{item[header]}</td>
+
+                                        
                                     ))}
+
+                                    
                                 </tr>
                             ))}
                         </tbody>
