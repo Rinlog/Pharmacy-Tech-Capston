@@ -237,7 +237,7 @@ function AllOrders(){
     }
 
     function ChoosePrintOption(e){
-        setPrinterOption(e) //purely for visuals
+        setPrinterOption(e) 
     }
 
     function ChoosePrintReason(e){
@@ -272,6 +272,7 @@ function AllOrders(){
                     <DropdownButton
                         onSelect={ChoosePrintOption}
                         title="Print Options"
+                        className="ModalDropDownB"
                     >
                         <Dropdown.Item eventKey={"Print To PDF"}>
                             Print To PDF
@@ -281,20 +282,20 @@ function AllOrders(){
                         </Dropdown.Item>
                     </DropdownButton>
                     <div id="PrinterOption">
-                        {PrinterOption}
+                        <label>{PrinterOption}</label>
                     </div>
                 </div>
                 <div id="PrintImage">
-                <div className="d-flex2" id="Loading1">
-                        <div className="Loading Dot1">
-                            .
-                        </div>
-                        <div className="Loading Dot2">
-                            .
-                        </div>
-                        <div className="Loading Dot3">
-                            .
-                        </div>
+                    <div className="d-flex2" id="Loading1">
+                            <div className="Loading Dot1">
+                                .
+                            </div>
+                            <div className="Loading Dot2">
+                                .
+                            </div>
+                            <div className="Loading Dot3">
+                                .
+                            </div>
                     </div>
                     {<Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoad={function(e){
                         $("#Loading1").addClass("hide");
@@ -302,10 +303,10 @@ function AllOrders(){
                 </div>
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button className="ModalbuttonB" onClick={handleClose}>
                 Cancel
             </Button>
-            <Button variant="primary" onClick={HandlePrint}>
+            <Button className="ModalbuttonG" onClick={HandlePrint}>
                 Print
             </Button>
              </Modal.Footer>
@@ -329,6 +330,7 @@ function AllOrders(){
                     <DropdownButton
                         onSelect={ChoosePrintOption}
                         title="Print Options"
+                        className="ModalDropDownB"
                     >
                         <Dropdown.Item eventKey={"Print To PDF"}>
                             Print To PDF
@@ -338,13 +340,14 @@ function AllOrders(){
                         </Dropdown.Item>
                     </DropdownButton>
                     <div id="PrinterOption">
-                        {PrinterOption}
+                        <label>{PrinterOption}</label>
                     </div>
                 </div>
                 <div className="PrintOptionsSection">
                     <DropdownButton
                         onSelect={ChoosePrintReason}
                         title="Reason for Reprinting"
+                        className="ModalDropDownB"
                     >
                         <Dropdown.Item eventKey={1}>
                             Insufficient Supply
@@ -357,7 +360,7 @@ function AllOrders(){
                         </Dropdown.Item>
                     </DropdownButton>
                     <div id="PrinterReason">
-                        {PrintReason}
+                        <label>{PrintReason}</label>
                     </div>
                 </div>
                 <div className="PrintQuantity">
@@ -396,10 +399,10 @@ function AllOrders(){
                 </div>
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button className="ModalbuttonB" onClick={handleClose}>
                 Cancel
             </Button>
-            <Button variant="primary" onClick={HandlePrint}>
+            <Button className="ModalbuttonG" onClick={HandlePrint}>
                 Print
             </Button>
              </Modal.Footer>

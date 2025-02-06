@@ -99,4 +99,9 @@
     max-width: 500px;
   }
 }
-
+.CarouselSizing{
+  margin:auto;
+  text-align: center;
+  width:800px !important;
+  height:300px !important; /*this should be same height as images*/
+}

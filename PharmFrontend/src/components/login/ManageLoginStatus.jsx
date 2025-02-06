@@ -151,7 +151,7 @@ function ManageLoginStatus(){
                     </div>
                     {passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{passwordError}</div>}
                     <div className='d-flex justify-content-center'>
-                        <Button type="button" onClick={HandleReLogin} className='Modalbutton'>Login</Button>
+                        <Button type="button" onClick={HandleReLogin} className='ModalbuttonG'>Login</Button>
                     </div>
                 </Form>
             </Modal.Body>

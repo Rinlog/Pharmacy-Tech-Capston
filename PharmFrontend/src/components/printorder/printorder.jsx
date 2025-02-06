@@ -166,8 +166,6 @@ function printOrder(){
     
     function ChoosePrintOption(e){
         
-        $("#PrinterOption").text("");
-        $("#PrinterOption").text(e);
         setPrinterOption(e);
     }
     let PrintModal = (
@@ -187,6 +185,7 @@ function printOrder(){
                     <DropdownButton
                         onSelect={ChoosePrintOption}
                         title="Print Options"
+                        className="ModalDropDownB"
                     >
                         <Dropdown.Item eventKey={"Print To PDF"}>
                             Print To PDF
@@ -196,18 +195,31 @@ function printOrder(){
                         </Dropdown.Item>
                     </DropdownButton>
                     <div id="PrinterOption">
-                        {PrinterOption}
+                        <label>{PrinterOption}</label>
                     </div>
                 </div>
                 <div id="PrintImage">
-                    <Image src={PrintPreview} alt="Print Preview of Order" rounded fluid></Image>
+                    <div className="d-flex2" id="Loading3">
+                            <div className="Loading Dot1">
+                                .
+                            </div>
+                            <div className="Loading Dot2">
+                                .
+                            </div>
+                            <div className="Loading Dot3">
+                                .
+                            </div>
+                    </div>
+                    {<Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoad={function(e){
+                        $("#Loading3").addClass("hide");
+                    }}></Image>}
                 </div>
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button className="ModalbuttonB" onClick={handleClose}>
                 Cancel
             </Button>
-            <Button variant="primary" onClick={HandlePrint}>
+            <Button className="ModalbuttonG" onClick={HandlePrint}>
                 Print
             </Button>
              </Modal.Footer>
@@ -225,8 +237,8 @@ function printOrder(){
                     <img src="/images/GreenVerified.png" alt="Verification checkmark" className="VerifiedImage"></img>
                 </div>
                 <div className="Buttons">
-                    <button type="button" id="Home" className="RegularButton"><a href="/home">Home</a></button>
-                    <button type="button" id="Print" onClick={handleShow} className='RegularButton'>Print</button>
+                    <button type="button" id="Home" ><a href="/home" className="HideATagDefaults">Home</a></button>
+                    <button type="button" id="Print" onClick={handleShow}>Print</button>
                 </div>
             </div>
     )

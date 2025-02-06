@@ -31,12 +31,12 @@ namespace PharmPracticumBackend.Controllers
             try
             {
                 ordersDTO order = _PharmDL.GetOrderByID(OrderID);
-                if (order.PrintStatusID != "") { 
-                    return Ok(false);
+                if (order.PrintStatusID == "" || order.PrintStatusID == null) {
+                    return Ok(true);
                 }
                 else
                 {
-                    return Ok(true);
+                    return Ok(false);
                 }
             }
             catch (Exception ex)

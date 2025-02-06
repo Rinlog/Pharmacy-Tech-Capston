@@ -34,9 +34,8 @@ namespace PharmPracticumBackend.DL
         //Opens connection
         private SqlConnection GetOpenConnection()
         {
-            Console.WriteLine("GetOpenConnection");
+
             var connection = new SqlConnection(_connectionString);
-            Console.WriteLine("Connection State: " + connection.State);
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();

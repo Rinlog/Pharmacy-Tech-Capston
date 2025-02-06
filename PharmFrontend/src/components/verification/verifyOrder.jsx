@@ -8,6 +8,7 @@ const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) { 
 
+    console.log(selectedOrder);
     //states for selected order
     const [rxNum, setRxNum] = useState('');
     const [patientName, setPatientName] = useState('');
@@ -97,8 +98,8 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
                 alert(data.message);
             }
             
-            setDisplay("main");
             setSelectedOrder({ "Rx Number": null, selected: false });
+            window.location.reload();
         }
         catch(error){
             console.error(error);

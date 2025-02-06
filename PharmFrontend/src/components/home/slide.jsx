@@ -9,20 +9,24 @@ import papers from '../CarouselImage/papers.jpg';
 
 function IndividualIntervalsExample() {
   return (
-    <Carousel>
-      <Carousel.Item interval={5000}>
-        <img className="d-block w-100" src={camera} alt="Camera" height={300} width={400}/>
-      </Carousel.Item>
-      <Carousel.Item interval={5000}>
-        <img className="d-block w-100" src={dog} alt="Medicine" height={300} width={400}/>
-      </Carousel.Item>
-      <Carousel.Item interval={5000}>
-        <img className="d-block w-100" src={papers} alt="Medicine" height={300} width={400}/>
-      </Carousel.Item>
-      <Carousel.Item>
-        <img className="d-block w-100" src={woman} alt="Pills" height={300} width={400}/>
-      </Carousel.Item>
-    </Carousel>
+    <div className='CarouselSizing'>
+        <div className='carousel slide'>
+        <Carousel>
+          <Carousel.Item interval={5000}>
+            <img className="d-block w-100" src={camera} alt="Camera" height={300} />
+          </Carousel.Item>
+          <Carousel.Item interval={5000}>
+            <img className="d-block w-100" src={dog} alt="Medicine" height={300} />
+          </Carousel.Item>
+          <Carousel.Item interval={5000}>
+            <img className="d-block w-100" src={papers} alt="Medicine" height={300} />
+          </Carousel.Item>
+          <Carousel.Item>
+            <img className="d-block w-100" src={woman} alt="Pills" height={300} />
+          </Carousel.Item>
+        </Carousel>
+    </div>
+    </div>
   );
 }
 

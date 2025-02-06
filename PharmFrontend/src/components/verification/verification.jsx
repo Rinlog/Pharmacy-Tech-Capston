@@ -150,7 +150,11 @@ function Verification() {
     // Wait for the selected order to change
     useEffect(() => {
         if(selectedOrder.selected){
-            setDisplay("verifyOrder");
+            //this allows the verify order section to re-render each time a dif radio button is pressed
+            setDisplay("main");
+            setTimeout(function(){
+                setDisplay("verifyOrder");
+            },100);
         }
     }, [selectedOrder]);
 
@@ -195,8 +199,6 @@ function Verification() {
         }
     }, [search, data]);
 
-    useEffect(() => {
-    }, [selectedOrder]);
 
     useEffect(() => {
         switch (display) {
