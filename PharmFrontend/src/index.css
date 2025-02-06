@@ -1,4 +1,3 @@
-
 /* Define constants for NBCC styles*/
 html{
     --nbcc-ocean-blue: #007599;
@@ -103,6 +102,9 @@ table tr:nth-child(even) td{
 form input[type="date"] {
     width: 64%;
 }
+
+/* ############# Modal Things ############### */
+
 .Modalbutton{
     background-color: var(--nbcc-urban-green);
     color: white;
@@ -119,6 +121,11 @@ form input[type="date"] {
     border-color:grey;
 }
 
+.modal-content{
+    border: #005e99 6px solid;
+}
+
+/* Animation for headers on page */
 .page-header-name {
     font-size: 40px;
     animation: slideUp 1s ease-in-out;
