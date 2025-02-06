@@ -7,9 +7,14 @@ import './Login.css'
 import $ from 'jquery';
 
 const ApiAccess = import.meta.env.VITE_APIAccess
+import ResetPasswordModal from '../modals/resetPasswordModal';
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const Login = () => {
+
+    // Modal things
+    const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -65,32 +70,6 @@ const Login = () => {
         }
     };
 
-    const handleForgotPassword = async (e) => {
-        e.preventDefault();
-        let email = prompt("Please enter your email address to reset your password:");
-        if (email) {
-            try {
-                const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/resetrequest', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Key-Auth':ApiAccess
-                    },
-                    body: JSON.stringify({ Email: email }),
-                });
-                const data = await response.json();
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    alert("Password reset instructions have been sent to your email.");
-                }
-            } catch (error) {
-                //console.log(error); //debugging
-                alert("Could not process your request at this time. Please contact the system administrator.");
-            }
-        }
-    };
-
     return (
         <div>
             <form className='regular-form' onSubmit={handleLogin}>
@@ -122,10 +101,18 @@ const Login = () => {
                     <button className="button" onClick={() => navigate('/signup')}>Sign Up</button>
                 </div>
                 <div className='d-flex justify-content-center'>
-                    <h3>Forgot your password?</h3> 
-                    <button className="button" onClick={handleForgotPassword}>Reset Password</button>
+                <h3>Forgot your password?</h3> 
+                <button type="button" className="button" onClick={() => setIsResetModalOpen(true)}>
+                    Reset Password
+                    </button>
+                    <ResetPasswordModal
+                        isOpen={isResetModalOpen} 
+                        onClose={() => setIsResetModalOpen(false)}
+                    />
                 </div>
             </form>
+
+            
         </div>
     );
 };
