@@ -111,6 +111,17 @@ form input[type="date"] {
 }
 
 /* ############# Modal Things ############### */
+.ModalDropDownB button{
+    background-color: var(--nbcc-ocean-blue) !important;
+    border-color:grey !important;
+    border-style: outset;
+    border-width: 0.15em;
+}
+.ModalDropDownB button:hover, .ModalDropDownY button:active, .ModalDropDownY button:focus{
+    background-color: var(--nbcc-ocean-blueDarkend) !important;
+    border-color: grey!important;
+    border-style: inset;
+}
 
 .ModalbuttonG{
     background-color: var(--nbcc-urban-green);
