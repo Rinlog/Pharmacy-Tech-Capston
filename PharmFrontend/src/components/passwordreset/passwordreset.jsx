@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function PasswordReset() {
 
     // Grab the code and userID from the URL
@@ -37,7 +38,8 @@ function PasswordReset() {
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/passwordreset', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify({
                     Code: code,

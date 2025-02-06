@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import AuthContext from '@components/login/AuthContext.jsx';
 import './Login.css'
+
 import $ from 'jquery';
+
+const ApiAccess = import.meta.env.VITE_APIAccess
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const Login = () => {
@@ -34,6 +37,7 @@ const Login = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify({ Email: email, Password: password }),
             });
@@ -70,6 +74,7 @@ const Login = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Key-Auth':ApiAccess
                     },
                     body: JSON.stringify({ Email: email }),
                 });

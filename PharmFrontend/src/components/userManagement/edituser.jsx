@@ -8,6 +8,7 @@ import { SanitizeName } from '@components/datasanitization/sanitization.jsx';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function EditUser() {
 
     //users from DB
@@ -50,6 +51,7 @@ function EditUser() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
             });
             const fetchedData = await response.json();
@@ -163,6 +165,7 @@ function EditUser() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(editedUser)
             });
@@ -200,6 +203,7 @@ function EditUser() {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Key-Auth':ApiAccess
                     },
                     body: JSON.stringify(userID)
                 });

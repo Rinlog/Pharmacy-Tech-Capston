@@ -5,6 +5,7 @@ import he from 'he';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = () => {} }) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -31,6 +32,7 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify({
                     "PhysicianID": physicianToDelete["Physician ID"]

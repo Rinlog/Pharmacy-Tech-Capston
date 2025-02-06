@@ -6,6 +6,7 @@ import he from 'he';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) { 
 
     console.log(selectedOrder);
@@ -85,6 +86,7 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(reject)
             });
@@ -128,6 +130,7 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(verify)
             });

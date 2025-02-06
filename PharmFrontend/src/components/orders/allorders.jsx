@@ -10,12 +10,14 @@ import Modal from 'react-bootstrap/Modal';
 import Dropdown from "react-bootstrap/Dropdown";
 import Image from "react-bootstrap/Image"
 import Form from "react-bootstrap/Form"
-import { DropdownButton } from "react-bootstrap";   
+import { Anchor, DropdownButton } from "react-bootstrap";   
+import axios from "axios";
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function AllOrders(){
 
     //Table structure variables
@@ -91,7 +93,8 @@ function AllOrders(){
             url:"https://"+BackendIP+':'+BackendPort+"/api/printer/GeneratePrintPreview",
             data: JSON.stringify(OrderID+"~!~"+PrintQuantity),
             headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                'Key-Auth':ApiAccess
             },
             success:function(data){
                 setPrintPreview(data);
@@ -152,7 +155,8 @@ function AllOrders(){
                 url:"https://"+BackendIP+':'+BackendPort+"/api/printer/VerifyUser",
                 data: JSON.stringify(Info),
                 headers:{
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    'Key-Auth':ApiAccess
                 },
                 success:function(data){
                     Verified = data;
@@ -175,11 +179,26 @@ function AllOrders(){
         if (PrinterOption.toLowerCase() === "print to pdf"){
             try{
                 if (OrderID != null){
-                    setTimeout(function(){
-                        window.location.reload()
-                    }
-                    ,1000)
-                    window.location = "https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderInfo="+OrderID+"~!~"+PrintStatusID;   
+                    let result = await axios({
+                        url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderInfo="+OrderID+"~!~"+PrintStatusID,
+                        method: "get",
+                        headers:{
+                            "Key-Auth":ApiAccess
+                        },
+                        responseType: 'blob'
+                    })
+                    const href = URL.createObjectURL(result.data); //creates a custom link to the file to download
+
+                    //stores it in an a tag which we then click through code
+                    const link = document.createElement('a');
+                    link.href = href;
+                    link.setAttribute('download', 'PrintedPDF.pdf');
+                    $("body").append(link)
+                    link.click();
+
+                    //now we remove both the generated link and a tag
+                    $("body").remove(link);
+                    URL.revokeObjectURL(href);
                 }
                 else{
                     alert("No order id Provided");
@@ -206,7 +225,8 @@ function AllOrders(){
                                 url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintOrder",
                                 data: JSON.stringify(+OrderID+"~!~"+PrintStatusID+"~!~"+PrintQuantity),
                                 headers:{
-                                    "Content-Type":"application/json"
+                                    "Content-Type":"application/json",
+                                    'Key-Auth':ApiAccess
                                 },
                                 success:function(data){
                                     alert(data)
@@ -416,7 +436,8 @@ function AllOrders(){
                 url:"https://"+BackendIP+':'+BackendPort+"/api/Order/GetOrdersVerifiedByUser",
                 data: JSON.stringify(cookies.user),
                 headers:{
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    'Key-Auth':ApiAccess
                 },
                 success:function(data){
                     
@@ -443,7 +464,8 @@ function AllOrders(){
                         userLName: '',
                     }),
                     headers:{
-                        "Content-Type":"application/json"
+                        "Content-Type":"application/json",
+                        'Key-Auth':ApiAccess
                     },
                     success:function(data){
                         CurrentOrderAmount+=1
@@ -484,7 +506,8 @@ function AllOrders(){
                     method:"POST",
                     url:"https://"+BackendIP+':'+BackendPort+"/api/Order/getorders",
                     headers:{
-                        "Content-Type":"application/json"
+                        "Content-Type":"application/json",
+                        'Key-Auth':ApiAccess
                     },
                     success:function(data){
                         setOrdersGotten(true);
@@ -512,7 +535,8 @@ function AllOrders(){
                             userLName: '',
                         }),
                         headers:{
-                            "Content-Type":"application/json"
+                            "Content-Type":"application/json",
+                            'Key-Auth':ApiAccess
                         },
                         success:function(data){
                             CurrentOrderAmount+=1

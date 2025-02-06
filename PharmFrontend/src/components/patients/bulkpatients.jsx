@@ -7,6 +7,7 @@ import { SanitizeInput } from '@components/datasanitization/sanitization';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function BulkPatients({setDisplay}) {
 
     const [excelFile, setExcelFile] = useState(null);
@@ -121,6 +122,7 @@ function BulkPatients({setDisplay}) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(formattedData),
             });

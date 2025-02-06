@@ -13,6 +13,7 @@ import { SanitizeEmail, SanitizeName } from '@components/datasanitization/saniti
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function Signup() {
 
     //states for form inputs
@@ -148,7 +149,8 @@ function Signup() {
                 const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/signup', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Key-Auth':ApiAccess
                     },
                     body: JSON.stringify({ FirstName: firstName, LastName: lastName, 
                         Password: password, Email: email, Campus: campus }),

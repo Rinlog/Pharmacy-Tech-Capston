@@ -7,6 +7,7 @@ import readXlsxFile from 'read-excel-file';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function AddUsers() {
 
     const [excelFile, setExcelFile] = useState(null);
@@ -82,6 +83,7 @@ function AddUsers() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(formattedData),
             });

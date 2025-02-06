@@ -7,6 +7,7 @@ import he from 'he';
 // Sanitization import
 import { SanitizeInput, SanitizeLength } from '@components/datasanitization/sanitization';
 
+const ApiAccess = import.meta.env.VITE_APIAccess
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
@@ -64,6 +65,7 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(editedDrug)
             });

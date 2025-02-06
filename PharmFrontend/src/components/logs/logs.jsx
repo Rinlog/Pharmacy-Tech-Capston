@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function Logs() {
 
     // UseStates for log data
@@ -33,6 +34,7 @@ function Logs() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
 
 
                 },                    

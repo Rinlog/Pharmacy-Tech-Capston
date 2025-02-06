@@ -10,8 +10,10 @@ import { DropdownButton } from "react-bootstrap";
 import { useCookies } from 'react-cookie';
 
 import { useParams } from "react-router-dom";
+import axios from "axios";
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function printOrder(){
     //this displays the print order page
 
@@ -23,7 +25,8 @@ function printOrder(){
                 url:"https://"+BackendIP+':'+BackendPort+"/api/printer/VerifyOrderNotPrinted",
                 data: JSON.stringify(OrderID),
                 headers:{
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    'Key-Auth':ApiAccess
                 },
                 success:function(data){
                    if (data == false){
@@ -60,7 +63,8 @@ function printOrder(){
                 url:"https://"+BackendIP+':'+BackendPort+"/api/printer/GeneratePrintPreview",
                 data: JSON.stringify(OrderID+"~!~"+undefined),
                 headers:{
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    'Key-Auth':ApiAccess
                 },
                 success:function(data){
                     setPrintPreview(data);
@@ -89,7 +93,8 @@ function printOrder(){
                 url:"https://"+BackendIP+':'+BackendPort+"/api/printer/VerifyUser",
                 data: JSON.stringify(Info),
                 headers:{
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    'Key-Auth':ApiAccess
                 },
                 success:function(data){
                     Verified = data;
@@ -112,11 +117,26 @@ function printOrder(){
         if (PrinterOption.toLowerCase() === "print to pdf"){
             try{
                 if (OrderID != null){
-                    setTimeout(function(){
-                        window.location.replace("/home")
-                    }
-                    ,1000)
-                    window.location = "https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderInfo="+OrderID+"~!~"+"1";   
+                    let result = await axios({
+                        url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderInfo="+OrderID+"~!~"+PrintStatusID,
+                        method: "get",
+                        headers:{
+                            "Key-Auth":ApiAccess
+                        },
+                        responseType: 'blob'
+                    })
+                    const href = URL.createObjectURL(result.data); //creates a custom link to the file to download
+
+                    //stores it in an a tag which we then click through code
+                    const link = document.createElement('a');
+                    link.href = href;
+                    link.setAttribute('download', 'PrintedPDF.pdf');
+                    $("body").append(link)
+                    link.click();
+
+                    //now we remove both the generated link and a tag
+                    $("body").remove(link);
+                    URL.revokeObjectURL(href);
                 }
                 else{
                     alert("No order id Provided");
@@ -140,7 +160,8 @@ function printOrder(){
                         url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintOrder",
                         data: JSON.stringify(OrderID+"~!~"+"5"+"~!~"+"1"),
                         headers:{
-                            "Content-Type":"application/json"
+                            "Content-Type":"application/json",
+                            'Key-Auth':ApiAccess
                         },
                         success:function(data){
                             alert(data)

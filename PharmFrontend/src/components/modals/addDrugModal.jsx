@@ -3,6 +3,7 @@ import { SanitizeEmail, SanitizeName, SanitizeDate, SanitizeInput, SanitizeLengt
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 const AddDrugModal = ({ isOpen, onClose}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -30,6 +31,7 @@ const AddDrugModal = ({ isOpen, onClose}) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
 
                 body: JSON.stringify({

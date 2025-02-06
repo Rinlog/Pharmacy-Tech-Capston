@@ -10,6 +10,7 @@ import { SanitizeInput } from '@components/datasanitization/sanitization';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
 
     //states for selected patient
@@ -88,6 +89,7 @@ function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(editedPatient)
             });

@@ -13,6 +13,7 @@ import DeleteDrugModal from '@components/modals/deleteDrugModal';
 import EditDrug from '@components/drugs/editdrug';
 import BulkDrugs from '@components/drugs/bulkdrugs';
 
+const ApiAccess = import.meta.env.VITE_APIAccess
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 function Drugs() {
@@ -54,6 +55,7 @@ function Drugs() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
             });
             // Get the data out of the response

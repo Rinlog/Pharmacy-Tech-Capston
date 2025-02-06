@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDelete = () => {} }) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -29,6 +30,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDel
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify({
                     "DIN": drugToDelete["DIN"]

@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function Confirmation() {
 
     // Grab the code and userID from the URL
@@ -19,7 +20,8 @@ function Confirmation() {
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/confirmation', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify({
                     Code: code,
@@ -39,7 +41,8 @@ function Confirmation() {
                     const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/bulkpassset', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Key-Auth':ApiAccess
                         },
                         body: JSON.stringify(userID),
                     });

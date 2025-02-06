@@ -12,6 +12,7 @@ import BulkPhysicians from '@components/physicians/bulkphysicians';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
@@ -51,6 +52,7 @@ function Physicians() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
             });
             // Get the data out of the response

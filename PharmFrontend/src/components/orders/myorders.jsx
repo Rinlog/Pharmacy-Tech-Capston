@@ -12,6 +12,7 @@ import PhysicianLookupModal from '@components/modals/physicianLookupModal.jsx';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function MyOrders(){
     // UseStates for data
     const [data, setData] = useState([]);
@@ -88,6 +89,7 @@ function MyOrders(){
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(user)
             });
@@ -108,6 +110,7 @@ function MyOrders(){
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Key-Auth':ApiAccess
                         },
                         body: JSON.stringify({
                             userID: item.initiator,
@@ -265,6 +268,7 @@ function MyOrders(){
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(order)
             });

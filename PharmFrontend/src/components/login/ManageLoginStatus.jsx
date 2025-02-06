@@ -11,6 +11,7 @@ import $ from 'jquery';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function ManageLoginStatus(){
 
     const authState = CheckAuth();
@@ -77,6 +78,7 @@ function ManageLoginStatus(){
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify({ Email: Email, Password: Pass }),
             });

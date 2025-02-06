@@ -9,6 +9,7 @@ import he from 'he';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -50,6 +51,7 @@ const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
             });
             // Get the data out of the response

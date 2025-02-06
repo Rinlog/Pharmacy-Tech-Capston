@@ -9,6 +9,7 @@ import PhysicianLookupModal from '@components/modals/physicianLookupModal.jsx';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function AddOrder(){
 
     //modal stuff
@@ -79,6 +80,7 @@ function AddOrder(){
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(order)
             });
