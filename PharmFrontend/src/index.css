@@ -112,7 +112,7 @@ form input[type="date"] {
 
 /* ############# Modal Things ############### */
 
-.Modalbutton{
+.ModalbuttonG{
     background-color: var(--nbcc-urban-green);
     color: white;
     border-radius: 5px;
