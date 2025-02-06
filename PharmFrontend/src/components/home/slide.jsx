@@ -7,7 +7,7 @@ import dog from '../CarouselImage/crossedarms.jpg';
 import woman from '../CarouselImage/store.jpg';
 import papers from '../CarouselImage/papers.jpg';
 
-function IndividualIntervalsExample() {
+function homepageslide() {
   return (
     <div className='CarouselSizing'>
         <div className='carousel slide'>
@@ -30,4 +30,4 @@ function IndividualIntervalsExample() {
   );
 }
 
-export default IndividualIntervalsExample;
+export default homepageslide;
