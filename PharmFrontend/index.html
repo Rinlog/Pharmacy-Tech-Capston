@@ -5,27 +5,10 @@
     <link rel="icon" type="image/ico" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NBCC Pharmtech System</title>
-    <style>
-      #loading {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        background: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.5rem;
-      }
-    </style>
   </head>
   <body>
     <div id="loading"></div> 
     <div id="root"></div>
-    <script type="module">
-      document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("loading").style.display = "none";
-      });
-    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
