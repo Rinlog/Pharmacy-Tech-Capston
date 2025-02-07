@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Signup from '@components/signup/signup.jsx';
 import Login from '@components/login/login.jsx';
 import Confirmation from '@components/confirmation/confirmation.jsx';
@@ -13,10 +14,8 @@ import Logs from '@components/logs/logs.jsx';
 import Verification from '@components/verification/verification.jsx';
 import printOrder from './components/printorder/printorder';
 import Footer from './components/footer/footer';
-//css import
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.css'
-
+import 'bootstrap/dist/css/bootstrap.css';
 
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
@@ -25,7 +24,25 @@ import ProtectedRoute from '@components/login/ProtectedRoute.jsx';
 import UnProtectedRoute from '@components/login/UnprotectedRoute';
 import ManageLoginStatus from './components/login/ManageLoginStatus';
 
+// added a spinner for screen
+const LoadingScreen = () => (
+    <div class="container">
+    <img src="/images/heart.gif" class="human-heart" alt="human heart" />
+</div>
+);
+
 function App() {
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // made a small delay for page load
+        setTimeout(() => setLoading(false), 1500); // 1.5 seconds
+    }, []);
+
+    if (loading) {
+        return <LoadingScreen />;
+    }
+
     return (
         <div className='page-container'>
             <AuthProvider>
