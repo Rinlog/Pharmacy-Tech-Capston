@@ -1,1 +1,502 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Comment CommentText="	Models&#xD;&#xA;">
+    <Position X="8.217" Y="0.5" Height="0.783" Width="1.7" />
+  </Comment>
+  <Comment CommentText="             Controllers&#xD;&#xA;">
+    <Position X="9.373" Y="7.675" Height="0.75" Width="1.7" />
+  </Comment>
+  <Class Name="PharmPracticumBackend.DTO.addOrderDTO">
+    <Position X="5.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CABAAAAAAAACAAAAAEAIAAAAIMAAAAAAAAAAgEFgIAA=</HashCode>
+      <FileName>DTO\addOrderDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.authUserDTO">
+    <Position X="8.75" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\authUserDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.bulkUserDTO">
+    <Position X="10.5" Y="5.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAIACAAAABAAAAAAAEAgAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>DTO\bulkUserDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.confirmationDTO">
+    <Position X="16.5" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\confirmationDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.drugsDTO">
+    <Position X="3.25" Y="5.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CAgAAAAAAAAAAAAAAAAKAAQAAIBAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\drugsDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.editedUserDTO">
+    <Position X="8.25" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAQgEAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\editedUserDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.loginDTO">
+    <Position X="0.5" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAQgAAAAAAAAiAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\loginDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.logRequestDTO">
+    <Position X="11" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>DTO\logRequestDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.logsDTO">
+    <Position X="16.25" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAIABQAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\logsDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.namesRequestDTO">
+    <Position X="0.5" Y="4.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CBAAACAAAAAAAAAAAAQAAAgAAEAAAAAAABLAAAAAIAA=</HashCode>
+      <FileName>DTO\namesRequestDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.ordersDTO">
+    <Position X="3.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CAAIAAAEAAASAAEAAEAoAAAAIMAAAAAAAAAAgEFoJCA=</HashCode>
+      <FileName>DTO\ordersDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.orderStatusChangeDTO">
+    <Position X="6" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>DTO\orderStatusChangeDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.passwordResetDTO">
+    <Position X="15.25" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAgAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\passwordResetDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.patientsDTO">
+    <Position X="13.75" Y="4.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACACABBAIBBAAIAAEAEAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\patientsDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.physiciansDTO">
+    <Position X="13.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAIAAAAAAAEAAAAAAAAAAAAAgAAIAA=</HashCode>
+      <FileName>DTO\physiciansDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.resetRequestDTO">
+    <Position X="6" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\resetRequestDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.signupDTO">
+    <Position X="8.5" Y="5.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAIACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAg=</HashCode>
+      <FileName>DTO\signupDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.DTO.usersDTO">
+    <Position X="11" Y="2" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIACAAgBAAAAAAAQAEQAAAAAAgAgAAAAAAAAA=</HashCode>
+      <FileName>DTO\usersDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.DemoController">
+    <Position X="4.75" Y="9" Width="2.75" />
+    <AssociationLine Name="_pharmDL" Type="PharmPracticumBackend.DL.PharmDL" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.5" Y="9.713" />
+        <Point X="7.84" Y="9.713" />
+        <Point X="7.84" Y="8.59" />
+        <Point X="8.032" Y="8.59" Type="JumpStart" />
+        <Point X="8.199" Y="8.59" Type="JumpEnd" />
+        <Point X="12.249" Y="8.59" Type="JumpStart" />
+        <Point X="12.415" Y="8.59" Type="JumpEnd" />
+        <Point X="13.553" Y="8.59" Type="JumpStart" />
+        <Point X="13.72" Y="8.59" Type="JumpEnd" />
+        <Point X="15.217" Y="8.59" Type="JumpStart" />
+        <Point X="15.383" Y="8.59" Type="JumpEnd" />
+        <Point X="16.479" Y="8.59" Type="JumpStart" />
+        <Point X="16.646" Y="8.59" Type="JumpEnd" />
+        <Point X="21.229" Y="8.59" Type="JumpStart" />
+        <Point X="21.396" Y="8.59" Type="JumpEnd" />
+        <Point X="21.781" Y="8.59" Type="JumpStart" />
+        <Point X="21.948" Y="8.59" Type="JumpEnd" />
+        <Point X="23.227" Y="8.59" />
+        <Point X="23.227" Y="3.625" />
+        <Point X="23.25" Y="3.625" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Controllers\DemoController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pharmDL" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.DrugController">
+    <Position X="0.75" Y="10.5" Width="3.75" />
+    <AssociationLine Name="_pharmDL" Type="PharmPracticumBackend.DL.PharmDL" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.5" Y="11.017" />
+        <Point X="4.623" Y="11.017" />
+        <Point X="4.623" Y="8.281" />
+        <Point X="5.938" Y="8.281" />
+        <Point X="5.938" Y="5.704" />
+        <Point X="5.332" Y="5.704" />
+        <Point X="5.332" Y="2.437" />
+        <Point X="5.418" Y="2.437" />
+        <Point X="5.418" Y="4.378" />
+        <Point X="8.168" Y="4.378" />
+        <Point X="8.168" Y="3.168" />
+        <Point X="10.756" Y="3.168" />
+        <Point X="10.756" Y="1.918" />
+        <Point X="13.668" Y="1.918" />
+        <Point X="13.668" Y="2.455" />
+        <Point X="15.168" Y="2.455" />
+        <Point X="15.168" Y="2.418" />
+        <Point X="16.168" Y="2.418" />
+        <Point X="16.168" Y="2.455" />
+        <Point X="18.668" Y="2.455" />
+        <Point X="18.668" Y="2.418" />
+        <Point X="23.156" Y="2.418" />
+        <Point X="23.156" Y="2.437" />
+        <Point X="23.25" Y="2.437" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_sanitization" Type="PharmPracticumBackend.Sanitization.SanitizationClass" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.5" Y="11.597" />
+        <Point X="4.623" Y="11.597" />
+        <Point X="4.623" Y="8.281" />
+        <Point X="5.938" Y="8.281" />
+        <Point X="5.938" Y="6.07" />
+        <Point X="8.418" Y="6.07" />
+        <Point X="8.418" Y="5.205" />
+        <Point X="10.332" Y="5.205" />
+        <Point X="10.332" Y="5.168" />
+        <Point X="13.606" Y="5.168" />
+        <Point X="13.606" Y="4.168" />
+        <Point X="18.417" Y="4.168" Type="JumpStart" />
+        <Point X="18.583" Y="4.168" Type="JumpEnd" />
+        <Point X="18.668" Y="4.168" />
+        <Point X="18.668" Y="5.776" />
+        <Point X="21.229" Y="5.776" Type="JumpStart" />
+        <Point X="21.396" Y="5.776" Type="JumpEnd" />
+        <Point X="21.781" Y="5.776" Type="JumpStart" />
+        <Point X="21.948" Y="5.776" Type="JumpEnd" />
+        <Point X="22.123" Y="5.776" />
+        <Point X="22.123" Y="4.625" />
+        <Point X="22" Y="4.625" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAQAAIAAAIAAEAAAAAAAEAAgAAAAAAAA=</HashCode>
+      <FileName>Controllers\DrugController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pharmDL" />
+      <Field Name="_sanitization" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.LogController">
+    <Position X="0.5" Y="9" Width="3.75" />
+    <AssociationLine Name="_pharmDL" Type="PharmPracticumBackend.DL.PharmDL" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.375" Y="9" />
+        <Point X="2.375" Y="7.339" />
+        <Point X="3.188" Y="7.339" />
+        <Point X="3.188" Y="5.704" />
+        <Point X="5.938" Y="5.704" />
+        <Point X="5.938" Y="6.051" />
+        <Point X="8.438" Y="6.051" />
+        <Point X="8.438" Y="5.188" />
+        <Point X="13.688" Y="5.188" />
+        <Point X="13.688" Y="4.188" />
+        <Point X="18.417" Y="4.187" Type="JumpStart" />
+        <Point X="18.583" Y="4.188" Type="JumpEnd" />
+        <Point X="18.688" Y="4.188" />
+        <Point X="18.688" Y="5.941" />
+        <Point X="21.229" Y="5.941" Type="JumpStart" />
+        <Point X="21.396" Y="5.941" Type="JumpEnd" />
+        <Point X="21.781" Y="5.941" Type="JumpStart" />
+        <Point X="21.948" Y="5.941" Type="JumpEnd" />
+        <Point X="22.157" Y="5.941" Type="JumpStart" />
+        <Point X="22.323" Y="5.941" Type="JumpEnd" />
+        <Point X="23.156" Y="5.941" />
+        <Point X="23.156" Y="5.548" />
+        <Point X="23.25" Y="5.548" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_sanitization" Type="PharmPracticumBackend.Sanitization.SanitizationClass" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.25" Y="9.713" />
+        <Point X="4.623" Y="9.713" />
+        <Point X="4.623" Y="8.668" />
+        <Point X="8.032" Y="8.668" Type="JumpStart" />
+        <Point X="8.199" Y="8.668" Type="JumpEnd" />
+        <Point X="12.249" Y="8.668" Type="JumpStart" />
+        <Point X="12.415" Y="8.668" Type="JumpEnd" />
+        <Point X="13.553" Y="8.668" Type="JumpStart" />
+        <Point X="13.72" Y="8.668" Type="JumpEnd" />
+        <Point X="15.217" Y="8.668" Type="JumpStart" />
+        <Point X="15.383" Y="8.668" Type="JumpEnd" />
+        <Point X="16.479" Y="8.668" Type="JumpStart" />
+        <Point X="16.646" Y="8.668" Type="JumpEnd" />
+        <Point X="21.229" Y="8.668" Type="JumpStart" />
+        <Point X="21.396" Y="8.668" Type="JumpEnd" />
+        <Point X="21.781" Y="8.668" Type="JumpStart" />
+        <Point X="21.948" Y="8.668" Type="JumpEnd" />
+        <Point X="22.24" Y="8.668" />
+        <Point X="22.24" Y="3.25" />
+        <Point X="22" Y="3.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAIAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\LogController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pharmDL" />
+      <Field Name="_sanitization" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.ManagementController">
+    <Position X="12.5" Y="9" Width="4" />
+    <AssociationLine Name="_sanitization" Type="PharmPracticumBackend.Sanitization.SanitizationClass" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.3" Y="9" />
+        <Point X="15.3" Y="7.719" />
+        <Point X="16.479" Y="7.719" Type="JumpStart" />
+        <Point X="16.646" Y="7.719" Type="JumpEnd" />
+        <Point X="18.668" Y="7.719" />
+        <Point X="18.668" Y="5.776" />
+        <Point X="18.5" Y="5.776" />
+        <Point X="18.5" Y="4.562" />
+        <Point X="18.75" Y="4.562" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.199" Y="0.16" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAIAAEAAAAAAAACAAAAAEAAgA=</HashCode>
+      <FileName>Controllers\ManagementController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pharmDL" />
+      <Field Name="_sanitization" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.OrderController">
+    <Position X="4.75" Y="11" Width="3.75" />
+    <AssociationLine Name="_pharmDL" Type="PharmPracticumBackend.DL.PharmDL" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="11.517" />
+        <Point X="8.623" Y="11.517" />
+        <Point X="8.623" Y="10.699" />
+        <Point X="12.332" Y="10.699" />
+        <Point X="12.332" Y="7.921" />
+        <Point X="13.668" Y="7.921" />
+        <Point X="13.668" Y="0.377" />
+        <Point X="27.023" Y="0.377" />
+        <Point X="27.023" Y="0.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_sanitization" Type="PharmPracticumBackend.Sanitization.SanitizationClass" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="12.097" />
+        <Point X="8.623" Y="12.097" />
+        <Point X="8.623" Y="11.188" />
+        <Point X="16.479" Y="11.188" Type="JumpStart" />
+        <Point X="16.646" Y="11.188" Type="JumpEnd" />
+        <Point X="21.312" Y="11.188" />
+        <Point X="21.312" Y="5.62" />
+        <Point X="19.833" Y="5.62" />
+        <Point X="19.833" Y="5.526" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAEAQAgAAAAAAAAAAAAIAAEAAAAAAAAgAAgAAAAAAA=</HashCode>
+      <FileName>Controllers\OrderController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pharmDL" />
+      <Field Name="_sanitization" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.PatientController">
+    <Position X="17" Y="8.75" Width="4.25" />
+    <AssociationLine Name="_sanitization" Type="PharmPracticumBackend.Sanitization.SanitizationClass" FixedToPoint="true">
+      <Path>
+        <Point X="21.25" Y="10.273" />
+        <Point X="21.865" Y="10.273" />
+        <Point X="21.865" Y="5.526" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIgAEAECEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\PatientController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pharmDL" />
+      <Field Name="_sanitization" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.PhysicianController">
+    <Position X="8.75" Y="11.25" Width="4.5" />
+    <AssociationLine Name="_pharmDL" Type="PharmPracticumBackend.DL.PharmDL" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.25" Y="12.25" />
+        <Point X="13.984" Y="12.25" />
+        <Point X="13.984" Y="11.194" />
+        <Point X="16.479" Y="11.194" Type="JumpStart" />
+        <Point X="16.646" Y="11.194" Type="JumpEnd" />
+        <Point X="21.5" Y="11.194" />
+        <Point X="21.5" Y="11" />
+        <Point X="23.227" Y="11" />
+        <Point X="23.227" Y="4.25" />
+        <Point X="23.25" Y="4.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_sanitization" Type="PharmPracticumBackend.Sanitization.SanitizationClass" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.25" Y="11.767" />
+        <Point X="13.984" Y="11.767" />
+        <Point X="13.984" Y="11.484" />
+        <Point X="16.562" Y="11.484" />
+        <Point X="16.562" Y="7.719" />
+        <Point X="18.668" Y="7.719" />
+        <Point X="18.668" Y="5.776" />
+        <Point X="18.5" Y="5.776" />
+        <Point X="18.5" Y="3.75" />
+        <Point X="18.75" Y="3.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.071" Y="0.043" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACABAAAAAAAAAAAAAAAKAAEAAAAIAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Controllers\PhysicianController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pharmDL" />
+      <Field Name="_sanitization" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.PrinterController" HideInheritanceLine="true">
+    <Position X="19" Y="11.25" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AJQAAAAAAAQAAAAAAAAAQAAAAAABgAgABABgAACABAA=</HashCode>
+      <FileName>Controllers\PrinterController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_PharmDL" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.UserController">
+    <Position X="14" Y="11.5" Width="4.75" />
+    <AssociationLine Name="_sanitization" Type="PharmPracticumBackend.Sanitization.SanitizationClass" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="16.375" Y="11.5" />
+        <Point X="16.375" Y="11.484" />
+        <Point X="16.562" Y="11.484" />
+        <Point X="16.562" Y="7.358" />
+        <Point X="18.585" Y="7.358" Type="JumpStart" />
+        <Point X="18.751" Y="7.358" Type="JumpEnd" />
+        <Point X="21.229" Y="7.358" Type="JumpStart" />
+        <Point X="21.396" Y="7.358" Type="JumpEnd" />
+        <Point X="21.781" Y="7.358" Type="JumpStart" />
+        <Point X="21.948" Y="7.358" Type="JumpEnd" />
+        <Point X="22.24" Y="7.358" />
+        <Point X="22.24" Y="5.188" />
+        <Point X="22.206" Y="5.188" Type="JumpStart" />
+        <Point X="22.04" Y="5.188" Type="JumpEnd" />
+        <Point X="22" Y="5.188" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAIAAEAAAACAAAIRAQAgAAAAA=</HashCode>
+      <FileName>Controllers\UserController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pharmDL" />
+      <Field Name="_sanitization" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.Controllers.VerifyController">
+    <Position X="8" Y="9" Width="4.25" />
+    <AssociationLine Name="_sanitization" Type="PharmPracticumBackend.Sanitization.SanitizationClass" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="12.25" Y="9.812" />
+        <Point X="12.418" Y="9.812" />
+        <Point X="12.418" Y="8.668" />
+        <Point X="13.553" Y="8.668" Type="JumpStart" />
+        <Point X="13.72" Y="8.668" Type="JumpEnd" />
+        <Point X="15.217" Y="8.668" Type="JumpStart" />
+        <Point X="15.383" Y="8.668" Type="JumpEnd" />
+        <Point X="16.479" Y="8.668" Type="JumpStart" />
+        <Point X="16.646" Y="8.668" Type="JumpEnd" />
+        <Point X="18.668" Y="8.668" />
+        <Point X="18.668" Y="5.125" />
+        <Point X="18.75" Y="5.125" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAIAAEAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\VerifyController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pharmDL" />
+      <Field Name="_sanitization" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PharmPracticumBackend.DL.PharmDL">
+    <Position X="23.25" Y="0.5" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AAREQAAkAQBAKAAEEAAgAAAAM4gECCQICBEgAoUAAqk=</HashCode>
+      <FileName>DL\PharmDL.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PharmPracticumBackend.Sanitization.SanitizationClass">
+    <Position X="18.75" Y="2.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>EACAAAAAAAIIAAAAAAFAAEAAAAAAAAAAAAEgAAABABA=</HashCode>
+      <FileName>Sanitization\Sanitization.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
