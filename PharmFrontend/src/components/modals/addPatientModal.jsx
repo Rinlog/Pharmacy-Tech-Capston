@@ -14,7 +14,7 @@ const AddPatientModal = ({ isOpen, onClose}) => {
         let fName = SanitizeLength(SanitizeInput(document.getElementById('firstName').value));
         let lName = SanitizeLength(SanitizeInput(document.getElementById('lastName').value));
         let dob = SanitizeLength(SanitizeInput(document.getElementById('dob').value));
-        let sex = SanitizeLength(SanitizeInput(document.getElementById('sex').value));
+        let sex = document.getElementById('sex').value;
         let address = SanitizeLength(SanitizeInput(document.getElementById('address').value));
         let city = SanitizeLength(SanitizeInput(document.getElementById('city').value));
         let hospital = SanitizeLength(SanitizeInput(document.getElementById('hospital').value));
@@ -111,7 +111,12 @@ const AddPatientModal = ({ isOpen, onClose}) => {
                                 <label>Last Name</label> <br></br>
                                 <input type="text" id="lastName" tabIndex={2} required /> <br></br>
                                 <label>Sex</label> <br></br>
-                                <input type="text" id="sex" tabIndex={4} required /> <br></br>
+                                <select class="form-select" id="sex" tabIndex={4} required>
+                                    <option value=""></option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                    <option value="O">Other</option>
+                                </select>
                                 <label>City</label> <br></br>
                                 <input type="text" id="city" tabIndex={6} required /> <br></br>
                                 {/* Empty line to match up with the left side*/}
