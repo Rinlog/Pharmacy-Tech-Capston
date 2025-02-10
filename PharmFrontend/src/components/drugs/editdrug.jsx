@@ -87,7 +87,6 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
                 setModalMessage(data.message | "Error updating drug");
                 setIsEditDrugOpen(true);
             }
-            getDrugs(); //used for refreshing drug menu
 
         }
         catch(error){
