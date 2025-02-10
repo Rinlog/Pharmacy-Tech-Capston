@@ -6,10 +6,12 @@ import he from 'he';
 
 // Sanitization import
 import { SanitizeInput, SanitizeLength } from '@components/datasanitization/sanitization';
+import SubmitEditDrugModal from '../modals/submitEditDrugModal';
 
 const ApiAccess = import.meta.env.VITE_APIAccess
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
+
 function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
 
     //states for selected drug
@@ -21,6 +23,10 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
     const [concentration, setConcentration] = useState('');
     const [referenceBrand, setReferenceBrand] = useState('');
     const [containerSize, setContainerSize] = useState('');
+
+    //Modal things
+    const [isEditDrugModalOpen, setIsEditDrugOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     //What to do when data is selected
     const handleSelect = (rowData) => {
@@ -40,6 +46,8 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
             handleSelect(selectedDrug);
         }
     }, [selectedDrug]);
+
+    
 
     //submit changes to drug
     const SubmitEdit = async (e) => {
@@ -69,27 +77,24 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
                 },
                 body: JSON.stringify(editedDrug)
             });
-
-            if (response.ok){
-                alert("Drug edited successfully");
+            
+            if (response.ok) {
+                setModalMessage("Drug edited successfully!");
+                setIsEditDrugOpen(true);
             }
             else{
-                // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setModalMessage(data.message | "Error updating drug");
+                setIsEditDrugOpen(true);
             }
-            
-            setDisplay("main");
-            getDrugs();
-            setSelectedDrug({ "DIN": null, selected: false });
+            getDrugs(); //used for refreshing drug menu
 
         }
         catch(error){
             console.error(error);
-        }
-
-
-        
+            setModalMessage(error.message || "An error has occurred.");
+            setIsEditDrugOpen(true);     
+        }  
     }
 
     return(
@@ -130,9 +135,21 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
                 <input type="text" id="containerSize" value={containerSize} onChange={(e) => setContainerSize(e.target.value)} required/>
                 <br></br>
 
-                <button className="button">Submit Changes</button>
-
+                <button type="submit" className="button">
+                    Submit Changes
+                    </button>   
             </form>
+
+            <SubmitEditDrugModal
+                    isOpen={isEditDrugModalOpen}
+                    message={modalMessage}
+                    onClose={() => {
+                        setIsEditDrugOpen(false);
+                        setDisplay("main");
+                        setSelectedDrug({ "DIN": null, selected: false });
+                        getDrugs();
+                    }}
+                    />
         </div>
 
     )
