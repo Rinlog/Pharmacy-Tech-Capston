@@ -240,7 +240,7 @@ namespace PharmPracticumBackend.DL
 
                 // Make sure the campus is valid
                 //                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  IMPORTANT  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                // This list will need to be updated AS WELL AS the list in the insertUser stored procedure in the DB
+                // This list will need to be updated AS WELL AS the list in the insertUser stored procedure in the DB, and also front end to let user know (bulk add users page)
                 // If there is a mismatch it will not work as intended, either not accepting valid campuses (according to the DB)
                 // Or the back-end accepting campuses whose codes will be set to XX in the user ID
                 List<string> validCampuses = new List<string> { "Fredericton", "St. John", "Moncton", "St. Andrews", "Miramichi", "Woodstock" };
@@ -443,6 +443,11 @@ namespace PharmPracticumBackend.DL
                     if (signRes.Equals("Email already exists")) 
                     {
                         user.InsertResult = "Email already in use for " + user.Email;
+                        user.IsInserted = "N";
+                    }
+                    else if (signRes.Contains("Invalid Campus"))
+                    {
+                        user.InsertResult = "Invalid Campus for " + user.Email;
                         user.IsInserted = "N";
                     }
                     //if user inserted, return success

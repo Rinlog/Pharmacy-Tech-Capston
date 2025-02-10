@@ -139,15 +139,39 @@ function BulkPhysicians({setDisplay}) {
         }
         catch (error) {
             console.error("Error reading Excel file:", error);
+            alert("Only excel files are currently supported");
         }
 
     }
 
     return(
 
-        <div>
-            <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
-            <button className="button" type="button" onClick={handleAdd}>Add Physicians</button><br></br><br></br>
+        <div>         
+            <div>
+                <h2>Format</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>City</th>
+                            <th>Province</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John</td>
+                            <td>Doe</td>
+                            <td>Moncton</td>
+                            <td>NB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
+                <button className="button" type="button" onClick={handleAdd}>Add Physicians</button><br></br><br></br>
+            </div>
         </div>
 
     )

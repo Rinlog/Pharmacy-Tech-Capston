@@ -413,7 +413,6 @@ function AllOrders(){
                         </div>
                     </div>
                     {<Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoad={function(e){
-                        console.log("Ran");
                         $("#Loading2").addClass("hide");
                     }}></Image>}
                 </div>

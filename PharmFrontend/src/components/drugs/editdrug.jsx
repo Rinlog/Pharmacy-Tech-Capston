@@ -10,7 +10,7 @@ import { SanitizeInput, SanitizeLength } from '@components/datasanitization/sani
 const ApiAccess = import.meta.env.VITE_APIAccess
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
-function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
+function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
 
     //states for selected drug
     const [din, setDin] = useState('');
@@ -80,6 +80,7 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
             }
             
             setDisplay("main");
+            getDrugs();
             setSelectedDrug({ "DIN": null, selected: false });
 
         }

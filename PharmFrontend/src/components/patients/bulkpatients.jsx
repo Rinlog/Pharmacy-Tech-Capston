@@ -160,6 +160,7 @@ function BulkPatients({setDisplay}) {
         }
         catch (error) {
             console.error("Error reading Excel file:", error);
+            alert("Only excel files are currently supported");
         }
 
     }
@@ -167,8 +168,45 @@ function BulkPatients({setDisplay}) {
     return(
 
         <div>
-            <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
-            <button className="button" type="button" onClick={handleAdd}>Add Patients</button><br></br><br></br>
+            <div>
+                <h2>Format</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Date of Birth</th>
+                            <th>Sex</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>Hospital</th>
+                            <th>Room #</th>
+                            <th>Unit #</th>
+                            <th>Allergies</th>
+                            <th>Conditions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John</td>
+                            <td>Doe</td>
+                            <td>1990-01-25</td>
+                            <td>M</td>
+                            <td>123 Main St.</td>
+                            <td>Fredericton</td>
+                            <td>NBCC Lab</td>
+                            <td>123</td>
+                            <td>456</td>
+                            <td>Peanuts</td>
+                            <td>Broken Leg</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
+                <button className="button" type="button" onClick={handleAdd}>Add Patients</button><br></br><br></br>
+            </div>
         </div>
 
     )

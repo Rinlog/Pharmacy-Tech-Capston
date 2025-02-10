@@ -149,15 +149,48 @@ function BulkDrugs({setDisplay}) {
         }
         catch (error) {
             console.error("Error reading Excel file:", error);
+            alert("Only excel files are currently supported");
         }
 
     }
 
     return(
 
+        
         <div>
-            <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
-            <button className="button" type="button" onClick={handleAdd}>Add Drugs</button><br></br><br></br>
+            <div>
+                <h2>Format</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DIN</th>
+                            <th>Drug Name</th>
+                            <th>Dosage</th>
+                            <th>Strength</th>
+                            <th>Manufacturer</th>
+                            <th>Concentration</th>
+                            <th>Reference Brand</th>
+                            <th>Container Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12345678</td>
+                            <td>Tylenol</td>
+                            <td>1 Pill</td>
+                            <td>500mg</td>
+                            <td>Johnson & Johnson</td>
+                            <td>50mg/mL</td>
+                            <td>Tylenol</td>
+                            <td>100mL</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
+                <button className="button" type="button" onClick={handleAdd}>Add Drugs</button><br></br><br></br>
+            </div>
         </div>
 
     )

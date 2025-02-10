@@ -162,9 +162,6 @@ function Drugs() {
         }
     }, [search, data]);
 
-    useEffect(() => {
-    }, [selectedDrug]);
-
     // Update the data when the modals are closed
     useEffect(() => {
         const fetchData = async () => {
@@ -201,7 +198,7 @@ function Drugs() {
                 setContent(<BulkDrugs setDisplay={setDisplay} />);
                 break;
             case "editDrug":
-                setContent(<EditDrug key={selectedDrug["DIN"]} setDisplay={setDisplay} setSelectedDrug={setSelectedDrug} selectedDrug={selectedDrug} />)
+                setContent(<EditDrug key={selectedDrug["DIN"]} setDisplay={setDisplay} setSelectedDrug={setSelectedDrug} selectedDrug={selectedDrug } getDrugs={GetDrugs} />)
                 break;
         }
     }, [display, setContent]);

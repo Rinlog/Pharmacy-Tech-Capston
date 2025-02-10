@@ -52,7 +52,7 @@ function AddUsers() {
 
             //if headers don't match expexted, send error
             if (!identical){
-                alert("Invalid Spreadsheet Format. Please check headers.");
+                alert("Invalid Spreadsheet Format. Please check headers");
                 return;
             }
 
@@ -100,6 +100,7 @@ function AddUsers() {
 
         } catch (error) {
             console.error("Error reading Excel file:", error);
+            alert("Only excel files are currently supported");
         }
 
     }
@@ -107,8 +108,43 @@ function AddUsers() {
     return(
 
         <div>
+        <div>
+            <h2>Valid Campus Locations</h2>
+            <ul>
+                <li>Fredericton</li>
+                <li>St. John</li>
+                <li>Moncton</li>
+                <li>St. Andrews</li>
+                <li>Miramichi</li>
+                <li>Woodstock</li>
+            </ul>
+        </div>
+        <div>
+            <h2>Format</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>FirstName</th>
+                        <th>LastName</th>
+                        <th>Email</th>
+                        <th>Campus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>test@mynbcc.ca</td>
+                        <td>Moncton</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
             <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
             <button className="button" type="button" onClick={handleAdd}>Add Users</button>
+        </div>
         </div>
 
     )

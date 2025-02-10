@@ -1577,14 +1577,12 @@ GO
                 comments = @comments
             WHERE rxNum = @rxNum;
 
-            -- Update the status of the order
+            -- Update the status of the order this will also log it
             EXEC setOrderStatus @userID, @rxNum, 'Amended';
 
              -- Update the image path of the order
             EXEC setOrderImage @rxNum, @imagePath;
 
-            -- Log the amendment
-            EXEC generateLog @userID, @rxNum, 'Amended';
         END;
         GO
 
