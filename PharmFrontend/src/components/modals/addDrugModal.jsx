@@ -76,7 +76,7 @@ const AddDrugModal = ({ isOpen, onClose}) => {
     return (
         isOpen && (
             <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight, width: '60%' }}>
+                <div className="modal-content" style={{ height: modalHeight, width: '30%' }}>
                     <span className="close" onClick={handleClose}>&times;</span>
 
                     <form onSubmit={handleSubmit} style={{ width: '90%'}}>

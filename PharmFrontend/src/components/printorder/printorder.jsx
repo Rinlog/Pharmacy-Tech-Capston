@@ -118,7 +118,7 @@ function printOrder(){
             try{
                 if (OrderID != null){
                     let result = await axios({
-                        url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderInfo="+OrderID+"~!~"+PrintStatusID,
+                        url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderInfo="+OrderID+"~!~"+"1",
                         method: "get",
                         headers:{
                             "Key-Auth":ApiAccess
@@ -137,6 +137,7 @@ function printOrder(){
                     //now we remove both the generated link and a tag
                     $("body").remove(link);
                     URL.revokeObjectURL(href);
+                    window.location.replace("/home")
                 }
                 else{
                     alert("No order id Provided");

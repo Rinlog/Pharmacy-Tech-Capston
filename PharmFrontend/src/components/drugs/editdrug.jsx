@@ -70,7 +70,7 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
                 body: JSON.stringify(editedDrug)
             });
 
-            if (response.ok) {
+            if (response.ok){
                 alert("Drug edited successfully");
             }
             else{

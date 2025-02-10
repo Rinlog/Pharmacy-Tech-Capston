@@ -20,9 +20,6 @@ div[class="scroll-table"] table{
 .d-flex2{
     display: flex;
 }
-.glow{
-    box-shadow: 0 0 10px 4px var(--nbcc-field-gold)
-}
 .hide{
     display:none;
 }

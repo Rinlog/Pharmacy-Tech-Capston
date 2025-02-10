@@ -486,14 +486,14 @@ function AllOrders(){
         }
     }
     function SetDisplayAllOrders(){
-        $("#AllOrders").addClass("glow")
-        $("#VerifiedByMe").removeClass("glow")
+        $("#AllOrders").addClass("selected")
+        $("#VerifiedByMe").removeClass("selected")
         setDisplayAllVerifiedOrders(true);
         setDisplayMyVerifiedOrders(false);
     }
     function SetDisplayMyOrders(){
-        $("#AllOrders").removeClass("glow")
-        $("#VerifiedByMe").addClass("glow")
+        $("#AllOrders").removeClass("selected")
+        $("#VerifiedByMe").addClass("selected")
         setDisplayAllVerifiedOrders(false);
         setDisplayMyVerifiedOrders(true);
     }
@@ -663,7 +663,7 @@ function AllOrders(){
             <h2>Approved</h2>
             <div className="ApprovedButtons">
                 <button id="VerifiedByMe" className="" onClick={SetDisplayMyOrders}>Verified by Me</button>
-                <button id="AllOrders" className="glow" onClick={SetDisplayAllOrders}>All Orders</button>
+                <button id="AllOrders" className="selected" onClick={SetDisplayAllOrders}>All Orders</button>
             </div>
             <div className="scroll-table">
                 <table>

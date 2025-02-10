@@ -25,7 +25,9 @@ html{
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     text-align: center;
 }
-
+.selected{
+    border-width:0.3em;
+}
 .page-container {
     margin: 20px auto 0 auto;
     width: 90%;
@@ -109,7 +111,9 @@ table tr:nth-child(even) td{
 form input[type="date"] {
     width: 64%;
 }
-
+label{
+    font-size:1.1em;
+}
 /* ############# Modal Things ############### */
 .ModalDropDownB button{
     background-color: var(--nbcc-ocean-blue) !important;

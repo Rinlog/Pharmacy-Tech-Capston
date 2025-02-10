@@ -5,6 +5,8 @@ import AddUsers from "@components/userManagement/addusers.jsx";
 //react imports
 import { useState, useEffect } from "react";
 
+//jquery
+import $ from 'jquery';
 function UserManagement() {
 
     //states that manage what is shown
@@ -18,9 +20,13 @@ function UserManagement() {
         let select = e.target.id;
         
         if (select === "userAdd"){
+            $("#userAdd").addClass("selected");
+            $("#userEdit").removeClass("selected");
             setDisplay("userAdd");
         }
         if (select === "userEdit"){
+            $("#userAdd").removeClass("selected");
+            $("#userEdit").addClass("selected");
             setDisplay("userEdit");
         }
 

@@ -68,7 +68,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDel
         <>
         {isOpen && (
             <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight }}>
+                <div className="modal-content" style={{ height: modalHeight,  width:400}}>
                     <span className="close" onClick={handleClose}>&times;</span>
                     <h1>Are you sure you want to delete {drugToDelete["Drug Name"]}?</h1>
                     <button onClick={handleDeleteDrug}>Delete</button>
@@ -78,7 +78,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDel
         )}
         {isSecondModalOpen && (
             <div className={`modal ${isSecondModalOpen ? 'isOpen' : ''}`} style={{ display: isSecondModalOpen ? 'flex' : 'none' }}>
-            <div className="modal-content" style={{ height: modalHeight }}>
+            <div className="modal-content" style={{ height: modalHeight,  width:400 }}>
                 <span className="close" onClick={handleCancelDelete}>&times;</span>
                 <h1>Are you REALLY sure you want to delete this drug? This will delete ALL orders accociated with the drug.</h1>
                 <button onClick={handleConfirmDelete}>Yes</button>

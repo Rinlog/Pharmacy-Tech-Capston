@@ -43,7 +43,7 @@ const ResetPasswordModal = ({ isOpen, onClose }) => {
         show={isOpen} 
         onHide={onClose} 
         size="md" 
-        centered backdrop="static"
+        centered
         >
             <Modal.Header closeButton>
                 <Modal.Title>

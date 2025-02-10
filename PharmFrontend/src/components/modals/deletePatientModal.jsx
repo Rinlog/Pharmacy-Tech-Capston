@@ -66,7 +66,7 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, onDelete = () =>
         <>
         {isOpen && (
             <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight }}>
+                <div className="modal-content" style={{ height: modalHeight,  width:400 }}>
                     <span className="close" onClick={handleClose}>&times;</span>
                     <h1>Are you sure you want to delete {patientToDelete["First Name"]} {patientToDelete["Last Name"]}?</h1>
                     <button onClick={handleDeletePatient}>Delete</button>
@@ -76,7 +76,7 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, onDelete = () =>
         )}
         {isSecondModalOpen && (
             <div className={`modal ${isSecondModalOpen ? 'isOpen' : ''}`} style={{ display: isSecondModalOpen ? 'flex' : 'none' }}>
-            <div className="modal-content" style={{ height: modalHeight }}>
+            <div className="modal-content" style={{ height: modalHeight,  width:400 }}>
                 <span className="close" onClick={handleCancelDelete}>&times;</span>
                 <h1>Are you REALLY sure you want to delete this patient?</h1>
                 <button onClick={handleConfirmDelete}>Yes</button>

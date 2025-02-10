@@ -9,7 +9,7 @@ import AllOrders from '@components/orders/allorders.jsx';
 
 function Orders() {
 
-    const [content, setContent] = useState(null);
+    const [content, setContent] = useState(<AllOrders></AllOrders>);
 
     //change mode depending on content that should show
     const ChangeDisplay = (e) =>{
@@ -17,12 +17,21 @@ function Orders() {
         let select = e.target.id;
         
         if (select === "orderall"){
+            $("#orderall").addClass("selected");
+            $("#ordermy").removeClass("selected");
+            $("#orderadd").removeClass("selected");
             setContent(<AllOrders></AllOrders>);
         }
         else if (select === "ordermy"){
+            $("#orderall").removeClass("selected");
+            $("#ordermy").addClass("selected");
+            $("#orderadd").removeClass("selected");
             setContent(<MyOrders></MyOrders>);
         }
         else if (select === "orderadd"){
+            $("#orderall").removeClass("selected");
+            $("#ordermy").removeClass("selected");
+            $("#orderadd").addClass("selected");
             setContent(<AddOrder></AddOrder>);
         }
 
@@ -34,7 +43,7 @@ function Orders() {
             <div className='page-header-name'>Orders</div>
             <hr/>
 
-            <button className="button" id="orderall" onClick={ChangeDisplay}>All Orders</button>
+            <button className="button selected" id="orderall" onClick={ChangeDisplay}>All Orders</button>
             <button className="button" id="ordermy" onClick={ChangeDisplay}>My Orders</button>
             <button className="button" id="orderadd" onClick={ChangeDisplay}>Add Order</button>
 
