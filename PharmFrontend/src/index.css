@@ -114,6 +114,14 @@ form input[type="date"] {
 label{
     font-size:1.1em;
 }
+
+.form-select {
+    height: auto;
+    width: 12em;
+    padding: 4px;
+    font-size: 16px;
+}
+
 /* ############# Modal Things ############### */
 .ModalDropDownB button{
     background-color: var(--nbcc-ocean-blue) !important;
