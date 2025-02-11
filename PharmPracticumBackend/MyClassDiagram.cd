@@ -112,14 +112,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="PharmPracticumBackend.DTO.resetRequestDTO">
-    <Position X="6" Y="6.25" Width="1.5" />
+    <Position X="6" Y="6.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DTO\resetRequestDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="PharmPracticumBackend.DTO.signupDTO">
-    <Position X="8.5" Y="5.25" Width="1.75" />
+    <Position X="8" Y="5.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAEAIACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAg=</HashCode>
       <FileName>DTO\signupDTO.cs</FileName>
@@ -139,22 +139,22 @@
         <Point X="7.5" Y="9.713" />
         <Point X="7.84" Y="9.713" />
         <Point X="7.84" Y="8.59" />
-        <Point X="8.032" Y="8.59" Type="JumpStart" />
-        <Point X="8.199" Y="8.59" Type="JumpEnd" />
         <Point X="12.249" Y="8.59" Type="JumpStart" />
         <Point X="12.415" Y="8.59" Type="JumpEnd" />
-        <Point X="13.553" Y="8.59" Type="JumpStart" />
+        <Point X="13.554" Y="8.59" Type="JumpStart" />
         <Point X="13.72" Y="8.59" Type="JumpEnd" />
         <Point X="15.217" Y="8.59" Type="JumpStart" />
         <Point X="15.383" Y="8.59" Type="JumpEnd" />
         <Point X="16.479" Y="8.59" Type="JumpStart" />
-        <Point X="16.646" Y="8.59" Type="JumpEnd" />
+        <Point X="16.645" Y="8.59" Type="JumpEnd" />
         <Point X="21.229" Y="8.59" Type="JumpStart" />
-        <Point X="21.396" Y="8.59" Type="JumpEnd" />
-        <Point X="21.781" Y="8.59" Type="JumpStart" />
+        <Point X="21.395" Y="8.59" Type="JumpEnd" />
+        <Point X="21.782" Y="8.59" Type="JumpStart" />
         <Point X="21.948" Y="8.59" Type="JumpEnd" />
-        <Point X="23.227" Y="8.59" />
-        <Point X="23.227" Y="3.625" />
+        <Point X="23.01" Y="8.59" />
+        <Point X="23.01" Y="3.625" />
+        <Point X="23.044" Y="3.625" Type="JumpStart" />
+        <Point X="23.21" Y="3.625" Type="JumpEnd" />
         <Point X="23.25" Y="3.625" />
       </Path>
     </AssociationLine>
@@ -172,27 +172,21 @@
       <Path>
         <Point X="4.5" Y="11.017" />
         <Point X="4.623" Y="11.017" />
-        <Point X="4.623" Y="8.281" />
-        <Point X="5.938" Y="8.281" />
-        <Point X="5.938" Y="5.704" />
-        <Point X="5.332" Y="5.704" />
-        <Point X="5.332" Y="2.437" />
-        <Point X="5.418" Y="2.437" />
-        <Point X="5.418" Y="4.378" />
-        <Point X="8.168" Y="4.378" />
-        <Point X="8.168" Y="3.168" />
-        <Point X="10.756" Y="3.168" />
-        <Point X="10.756" Y="1.918" />
-        <Point X="13.668" Y="1.918" />
-        <Point X="13.668" Y="2.455" />
-        <Point X="15.168" Y="2.455" />
-        <Point X="15.168" Y="2.418" />
-        <Point X="16.168" Y="2.418" />
-        <Point X="16.168" Y="2.455" />
-        <Point X="18.668" Y="2.455" />
-        <Point X="18.668" Y="2.418" />
-        <Point X="23.156" Y="2.418" />
-        <Point X="23.156" Y="2.437" />
+        <Point X="4.623" Y="10.699" />
+        <Point X="12.332" Y="10.699" />
+        <Point X="12.332" Y="8.59" />
+        <Point X="13.554" Y="8.59" Type="JumpStart" />
+        <Point X="13.72" Y="8.59" Type="JumpEnd" />
+        <Point X="15.217" Y="8.59" Type="JumpStart" />
+        <Point X="15.383" Y="8.59" Type="JumpEnd" />
+        <Point X="16.479" Y="8.59" Type="JumpStart" />
+        <Point X="16.645" Y="8.59" Type="JumpEnd" />
+        <Point X="21.229" Y="8.59" Type="JumpStart" />
+        <Point X="21.395" Y="8.59" Type="JumpEnd" />
+        <Point X="21.782" Y="8.59" Type="JumpStart" />
+        <Point X="21.948" Y="8.59" Type="JumpEnd" />
+        <Point X="23.127" Y="8.59" />
+        <Point X="23.127" Y="2.437" />
         <Point X="23.25" Y="2.437" />
       </Path>
     </AssociationLine>
@@ -214,8 +208,8 @@
         <Point X="18.668" Y="4.168" />
         <Point X="18.668" Y="5.776" />
         <Point X="21.229" Y="5.776" Type="JumpStart" />
-        <Point X="21.396" Y="5.776" Type="JumpEnd" />
-        <Point X="21.781" Y="5.776" Type="JumpStart" />
+        <Point X="21.395" Y="5.776" Type="JumpEnd" />
+        <Point X="21.782" Y="5.776" Type="JumpStart" />
         <Point X="21.948" Y="5.776" Type="JumpEnd" />
         <Point X="22.123" Y="5.776" />
         <Point X="22.123" Y="4.625" />
@@ -236,27 +230,25 @@
     <AssociationLine Name="_pharmDL" Type="PharmPracticumBackend.DL.PharmDL" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="2.375" Y="9" />
-        <Point X="2.375" Y="7.339" />
-        <Point X="3.188" Y="7.339" />
-        <Point X="3.188" Y="5.704" />
-        <Point X="5.938" Y="5.704" />
-        <Point X="5.938" Y="6.051" />
-        <Point X="8.438" Y="6.051" />
-        <Point X="8.438" Y="5.188" />
-        <Point X="13.688" Y="5.188" />
-        <Point X="13.688" Y="4.188" />
-        <Point X="18.417" Y="4.187" Type="JumpStart" />
-        <Point X="18.583" Y="4.188" Type="JumpEnd" />
-        <Point X="18.688" Y="4.188" />
-        <Point X="18.688" Y="5.941" />
-        <Point X="21.229" Y="5.941" Type="JumpStart" />
-        <Point X="21.396" Y="5.941" Type="JumpEnd" />
-        <Point X="21.781" Y="5.941" Type="JumpStart" />
-        <Point X="21.948" Y="5.941" Type="JumpEnd" />
-        <Point X="22.157" Y="5.941" Type="JumpStart" />
-        <Point X="22.323" Y="5.941" Type="JumpEnd" />
-        <Point X="23.156" Y="5.941" />
-        <Point X="23.156" Y="5.548" />
+        <Point X="2.375" Y="8.59" />
+        <Point X="4.54" Y="8.59" Type="JumpStart" />
+        <Point X="4.706" Y="8.59" Type="JumpEnd" />
+        <Point X="12.249" Y="8.59" Type="JumpStart" />
+        <Point X="12.415" Y="8.59" Type="JumpEnd" />
+        <Point X="13.554" Y="8.59" Type="JumpStart" />
+        <Point X="13.72" Y="8.59" Type="JumpEnd" />
+        <Point X="15.217" Y="8.59" Type="JumpStart" />
+        <Point X="15.383" Y="8.59" Type="JumpEnd" />
+        <Point X="16.479" Y="8.59" Type="JumpStart" />
+        <Point X="16.645" Y="8.59" Type="JumpEnd" />
+        <Point X="21.229" Y="8.59" Type="JumpStart" />
+        <Point X="21.395" Y="8.59" Type="JumpEnd" />
+        <Point X="21.782" Y="8.59" Type="JumpStart" />
+        <Point X="21.948" Y="8.59" Type="JumpEnd" />
+        <Point X="22.875" Y="8.59" />
+        <Point X="22.875" Y="5.548" />
+        <Point X="22.927" Y="5.548" Type="JumpStart" />
+        <Point X="23.21" Y="5.548" Type="JumpEnd" />
         <Point X="23.25" Y="5.548" />
       </Path>
     </AssociationLine>
@@ -264,22 +256,20 @@
       <Path>
         <Point X="4.25" Y="9.713" />
         <Point X="4.623" Y="9.713" />
-        <Point X="4.623" Y="8.668" />
-        <Point X="8.032" Y="8.668" Type="JumpStart" />
-        <Point X="8.199" Y="8.668" Type="JumpEnd" />
-        <Point X="12.249" Y="8.668" Type="JumpStart" />
-        <Point X="12.415" Y="8.668" Type="JumpEnd" />
-        <Point X="13.553" Y="8.668" Type="JumpStart" />
-        <Point X="13.72" Y="8.668" Type="JumpEnd" />
-        <Point X="15.217" Y="8.668" Type="JumpStart" />
-        <Point X="15.383" Y="8.668" Type="JumpEnd" />
-        <Point X="16.479" Y="8.668" Type="JumpStart" />
-        <Point X="16.646" Y="8.668" Type="JumpEnd" />
-        <Point X="21.229" Y="8.668" Type="JumpStart" />
-        <Point X="21.396" Y="8.668" Type="JumpEnd" />
-        <Point X="21.781" Y="8.668" Type="JumpStart" />
-        <Point X="21.948" Y="8.668" Type="JumpEnd" />
-        <Point X="22.24" Y="8.668" />
+        <Point X="4.623" Y="8.59" />
+        <Point X="12.249" Y="8.59" Type="JumpStart" />
+        <Point X="12.415" Y="8.59" Type="JumpEnd" />
+        <Point X="13.554" Y="8.59" Type="JumpStart" />
+        <Point X="13.72" Y="8.59" Type="JumpEnd" />
+        <Point X="15.217" Y="8.59" Type="JumpStart" />
+        <Point X="15.383" Y="8.59" Type="JumpEnd" />
+        <Point X="16.479" Y="8.59" Type="JumpStart" />
+        <Point X="16.645" Y="8.59" Type="JumpEnd" />
+        <Point X="21.229" Y="8.59" Type="JumpStart" />
+        <Point X="21.395" Y="8.59" Type="JumpEnd" />
+        <Point X="21.782" Y="8.59" Type="JumpStart" />
+        <Point X="21.948" Y="8.59" Type="JumpEnd" />
+        <Point X="22.24" Y="8.59" />
         <Point X="22.24" Y="3.25" />
         <Point X="22" Y="3.25" />
       </Path>
@@ -300,7 +290,7 @@
         <Point X="15.3" Y="9" />
         <Point X="15.3" Y="7.719" />
         <Point X="16.479" Y="7.719" Type="JumpStart" />
-        <Point X="16.646" Y="7.719" Type="JumpEnd" />
+        <Point X="16.645" Y="7.719" Type="JumpEnd" />
         <Point X="18.668" Y="7.719" />
         <Point X="18.668" Y="5.776" />
         <Point X="18.5" Y="5.776" />
@@ -341,7 +331,7 @@
         <Point X="8.623" Y="12.097" />
         <Point X="8.623" Y="11.188" />
         <Point X="16.479" Y="11.188" Type="JumpStart" />
-        <Point X="16.646" Y="11.188" Type="JumpEnd" />
+        <Point X="16.645" Y="11.188" Type="JumpEnd" />
         <Point X="21.312" Y="11.188" />
         <Point X="21.312" Y="5.62" />
         <Point X="19.833" Y="5.62" />
@@ -438,8 +428,8 @@
         <Point X="18.585" Y="7.358" Type="JumpStart" />
         <Point X="18.751" Y="7.358" Type="JumpEnd" />
         <Point X="21.229" Y="7.358" Type="JumpStart" />
-        <Point X="21.396" Y="7.358" Type="JumpEnd" />
-        <Point X="21.781" Y="7.358" Type="JumpStart" />
+        <Point X="21.395" Y="7.358" Type="JumpEnd" />
+        <Point X="21.782" Y="7.358" Type="JumpStart" />
         <Point X="21.948" Y="7.358" Type="JumpEnd" />
         <Point X="22.24" Y="7.358" />
         <Point X="22.24" Y="5.188" />
@@ -464,12 +454,12 @@
         <Point X="12.25" Y="9.812" />
         <Point X="12.418" Y="9.812" />
         <Point X="12.418" Y="8.668" />
-        <Point X="13.553" Y="8.668" Type="JumpStart" />
+        <Point X="13.554" Y="8.668" Type="JumpStart" />
         <Point X="13.72" Y="8.668" Type="JumpEnd" />
         <Point X="15.217" Y="8.668" Type="JumpStart" />
         <Point X="15.383" Y="8.668" Type="JumpEnd" />
         <Point X="16.479" Y="8.668" Type="JumpStart" />
-        <Point X="16.646" Y="8.668" Type="JumpEnd" />
+        <Point X="16.645" Y="8.668" Type="JumpEnd" />
         <Point X="18.668" Y="8.668" />
         <Point X="18.668" Y="5.125" />
         <Point X="18.75" Y="5.125" />

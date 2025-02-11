@@ -9,6 +9,7 @@ using PdfSharp;
 using PdfSharp.Pdf;
 using PdfSharp.Drawing;
 using System.Text.Json.Serialization;
+using NetBarcode;
 namespace PharmPracticumBackend.Controllers
 {
     [Route("api/[controller]")]
@@ -269,7 +270,7 @@ namespace PharmPracticumBackend.Controllers
                 Graphics drawing = Graphics.FromImage(bitmap);
                 drawing.Clear(Color.White);
                 Brush textBrush = new SolidBrush(Color.Black);
-                int NumberOfLinesToDraw = 18;
+                int NumberOfLinesToDraw = 19;
                 Font font = new Font("Arial", 15);
                 Font BoldFont = new Font("Arial", 15, FontStyle.Bold);
 
@@ -285,21 +286,21 @@ namespace PharmPracticumBackend.Controllers
                             drawing.DrawString(patient.HospitalName, BoldFont, textBrush, RightSideTextPoint);
                             break;
                         case 1:
-                        case 9:
-                        case 16:
+                        case 10:
+                        case 17:
                             drawing.DrawString(patient.LName + ", " + patient.FName, font, textBrush, StartingPoint);
                             drawing.DrawString(patient.PPR, font, textBrush, RightSideNumberPoint);
                             break;
                         case 2:
-                        case 11:
+                        case 12:
                             drawing.DrawString(drug.Name, font, textBrush, StartingPoint);
                             break;
                         case 3:
-                        case 12:
+                        case 13:
                             drawing.DrawString(order.PrescribedDose, font, textBrush, StartingPoint);
                             break;
                         case 4:
-                        case 15:
+                        case 16:
                             drawing.DrawString(".....................................................................................................", font, textBrush, StartingPoint);
                             break;
                         case 5:
@@ -311,32 +312,25 @@ namespace PharmPracticumBackend.Controllers
                             drawing.DrawString("FILL BY: " + order.Initiator, font, textBrush, RightSideTextPoint);
                             break;
                         case 7:
-                            Pen BarCodePen = new Pen(textBrush, 2f);
-                            PointF StartingPointCopy = StartingPoint;
-                            StartingPointCopy.X += 10f;
-                            StartingPointCopy.Y += 5f;
-                            PointF EndPoint = StartingPoint;
-                            EndPoint.X += 10f;
-                            EndPoint.Y += 35f;
-                            for (int j = 0; j < 40; j++)
-                            {
-                                drawing.DrawLine(BarCodePen, StartingPointCopy, EndPoint);
-                                EndPoint.X += +5f;
-                                StartingPointCopy.X += 5f;
-                            }
+                            Barcode barcode = new Barcode(order.RxNum, NetBarcode.Type.Code128, false);
+                            Image img = barcode.GetImage();
+                            PointF CustomStartingPoint = StartingPoint;
+                            CustomStartingPoint.X += 5;
+                            CustomStartingPoint.Y += 5;
+                            drawing.DrawImage(img, CustomStartingPoint);
                             break;
-                        case 8:
+                        case 9:
                             drawing.DrawString("CHECK BY: " + order.Verifier, font, textBrush, RightSideTextPoint);
                             break;
-                        case 10:
-                        case 17:
+                        case 11:
+                        case 18:
                             drawing.DrawString(patient.UnitNumber + " " + patient.RoomNumber, font, textBrush, StartingPoint);
                             drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
                             break;
-                        case 13:
+                        case 14:
                             drawing.DrawString(drug.DIN, font, textBrush, StartingPoint);
                             break;
-                        case 14:
+                        case 15:
                             drawing.DrawString("FILL BY:" + order.Initiator + " " + order.DateSubmitted.Substring(0, 9), font, textBrush, StartingPoint);
                             drawing.DrawString("CHECK BY:" + order.Verifier + " " + order.DateVerified.Substring(0, 9), font, textBrush, RightSideTextPoint);
                             break;
