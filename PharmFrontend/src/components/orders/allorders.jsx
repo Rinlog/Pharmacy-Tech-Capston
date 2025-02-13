@@ -218,6 +218,7 @@ function AllOrders(){
                     //now we remove both the generated link and a tag
                     $("body").remove(link);
                     URL.revokeObjectURL(href);
+                    handleClose(); //reloads and closes modal
                 }
                 else{
                     alert("No order id Provided");
@@ -249,7 +250,7 @@ function AllOrders(){
                                 },
                                 success:function(data){
                                     alert(data)
-                                    window.location.replace("/home")
+                                    handleClose(); //reloads and closes modal
                                 }
                             });
                         },1000)
