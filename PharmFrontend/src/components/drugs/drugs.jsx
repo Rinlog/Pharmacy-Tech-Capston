@@ -12,6 +12,7 @@ import AddDrugModal from '@components/modals/addDrugModal';
 import DeleteDrugModal from '@components/modals/deleteDrugModal';
 import EditDrug from '@components/drugs/editdrug';
 import BulkDrugs from '@components/drugs/bulkdrugs';
+import AlertModal from '../modals/alertModal';
 
 const ApiAccess = import.meta.env.VITE_APIAccess
 const BackendIP = import.meta.env.VITE_BackendIP
@@ -34,6 +35,8 @@ function Drugs() {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedDrug, setSelectedDrug] = useState({ "DIN": null, selected: false });
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     // Map the headers to the data for the table
     const headerMapping = {
@@ -63,7 +66,8 @@ function Drugs() {
 
             // If there is an issue with the response, alert the user
             if(response.status != 200) {
-                alert(fetchedData.message);
+                setAlertMessage(fetchedData.message);
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -97,7 +101,8 @@ function Drugs() {
 
             }
         } catch (error) {
-            alert("Error getting drugs. Please try again.");
+            setAlertMessage("Error getting drugs. Please try again.");
+            setIsAlertModalOpen(true);
             console.error(error);
             setDataObtained(false);
         }
@@ -117,7 +122,8 @@ function Drugs() {
             setIsDeleteModalOpen(true);
         }
         else {
-            alert("Please select a drug to delete.");
+            setAlertMessage("Please select a drug to delete.");
+            setIsAlertModalOpen(true);
         }
     }
 
@@ -184,7 +190,8 @@ function Drugs() {
                 setDisplay("editDrug");
             }
             else {
-                alert("Please select a drug to edit.");
+                setAlertMessage("Please select a drug to edit.");
+                setIsAlertModalOpen(true);
             }
         }
     }
@@ -231,6 +238,13 @@ function Drugs() {
                             drugToDelete={selectedDrug}
                             setDrugToDelete={setSelectedDrug}
                         />
+
+                        <AlertModal
+                            isOpen={isAlertModalOpen}
+                            message={alertMessage}
+                            onClose={() => setIsAlertModalOpen(false)}
+                        />
+
                     <br/><br/>
                     <i>&nbsp;&nbsp;*For editing or deleting a drug, select a drug from the table below, then click the corresponding button.</i>
                 </div>

@@ -6,7 +6,7 @@ import he from 'he';
 
 // Sanitization import
 import { SanitizeInput, SanitizeLength } from '@components/datasanitization/sanitization';
-import SubmitEditDrugModal from '../modals/submitEditDrugModal';
+import AlertModal from '../modals/alertModal';
 
 const ApiAccess = import.meta.env.VITE_APIAccess
 const BackendIP = import.meta.env.VITE_BackendIP
@@ -139,7 +139,7 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
                     </button>   
             </form>
 
-            <SubmitEditDrugModal
+            <AlertModal
                     isOpen={isEditDrugModalOpen}
                     message={modalMessage}
                     onClose={() => {
