@@ -97,9 +97,9 @@ table {
 
 th{
     background-color: var(--nbcc-nav-item) !important;
-    color:white;
-    padding:0.4em 0em 0.2em 0em;
-    font-size: 1.15em;
+    color:white !important;
+    padding:0.4em 0em 0.2em 0em !important;
+    font-size: 1.15em !important;
 }
 table tr:nth-child(odd) td{
     background-color: white;
