@@ -60,6 +60,7 @@ const AddDrugModal = ({ isOpen, onClose}) => {
         }
         catch (error) {
             console.error(error);
+            alert("An error has occured, please try again later")
         }
     }
 
