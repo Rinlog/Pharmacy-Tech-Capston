@@ -9,6 +9,7 @@ import AddPhysicianModal from '@components/modals/addPhysicianModal';
 import DeletePhysicianModal from '@components/modals/deletePhysicianModal';
 import EditPhysician from '@components/physicians/editphysician';
 import BulkPhysicians from '@components/physicians/bulkphysicians';
+import AlertModal from '../modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -34,6 +35,8 @@ function Physicians() {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedPhysician, setSelectedPhysician] = useState({ "Physician ID": null, selected: false });
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     // Map the headers to the data for the table
     const headerMapping = {
@@ -60,7 +63,8 @@ function Physicians() {
 
             // If there is an issue with the response, alert the user
             if(response.status != 200) {
-                alert(fetchedData.message);
+                setAlertMessage(fetchedData.message);
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -89,7 +93,8 @@ function Physicians() {
 
             }
         } catch (error) {
-            alert("Error getting physicians. Please try again.");
+            setAlertMessage("Error getting physicians. Please try again.");
+            setIsAlertModalOpen(true);
             console.error(error);
             setDataObtained(false);
         }
@@ -109,7 +114,8 @@ function Physicians() {
             setIsDeleteModalOpen(true);
         }
         else {
-            alert("Please select a physician to delete.");
+            setAlertMessage("Please select a physician to delete.");
+            setIsAlertModalOpen(true);
         }
     }
 
@@ -175,7 +181,8 @@ function Physicians() {
                 setDisplay("editPhysician");
             }
             else {
-                alert("Please select a physician to edit.");
+                setAlertMessage("Please select a physician to edit.");
+                setIsAlertModalOpen(true);
             }
         }
     }
@@ -220,6 +227,12 @@ function Physicians() {
                             onClose={() => setIsDeleteModalOpen(false)}
                             onDelete={() => GetPhysicians()} //added for refresh
                             physicianToDelete={selectedPhysician}
+                        />
+
+                        <AlertModal
+                            isOpen={isAlertModalOpen}
+                            message={alertMessage}
+                            onClose={() => setIsAlertModalOpen(false)}
                         />
                     <br/><br/>
                     <i>&nbsp;&nbsp;*For editing or deleting a physician, select a physician from the table below, then click the corresponding button.</i>

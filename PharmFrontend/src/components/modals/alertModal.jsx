@@ -1,6 +1,6 @@
 import { Modal, Button } from "react-bootstrap";
 
-const SubmitEditDrugModal = ({ isOpen, message, onClose }) => {
+const AlertModal = ({ isOpen, message, onClose }) => {
     return (
         <Modal 
             show={isOpen} 
@@ -11,12 +11,12 @@ const SubmitEditDrugModal = ({ isOpen, message, onClose }) => {
         >
             <Modal.Header closeButton>
                 <Modal.Title>
-                    <h4>Drug Edit Status</h4>
+                    <h3>Important!</h3>
                 </Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
-                <p>{message}</p>
+                <h5>{message}</h5>
             </Modal.Body>
 
             <div className="d-flex justify-content-center">
@@ -28,4 +28,4 @@ const SubmitEditDrugModal = ({ isOpen, message, onClose }) => {
     );
 };
 
-export default SubmitEditDrugModal;
+export default AlertModal;
