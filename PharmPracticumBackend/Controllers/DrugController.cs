@@ -54,10 +54,14 @@ namespace PharmPracticumBackend.Controllers
             {
                 return Ok(result);
             }
-
-            Console.WriteLine(result);
-
-            return BadRequest(new { message = "Drug could not be added." });
+            else if (result.Equals("Drug not added"))
+            {
+                return BadRequest(new { message = "Drug not added, please make sure DIN number is unique" }); //DIN number is only fail scenario besides an exception being throwns
+            }
+            else
+            {
+                return BadRequest(new { message = "Drug could not be added." }); //display this if exception occured
+            }
         }
 
         [HttpPost("editdrug")]
