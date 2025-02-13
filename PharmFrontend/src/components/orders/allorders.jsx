@@ -1,5 +1,5 @@
-import React from "react";
-import $ from 'jquery';
+import React, { useCallback } from "react";
+import $, { grep } from 'jquery';
 import {useState} from 'react';
 import { useEffect } from "react";
 import './Orders.css';
@@ -35,6 +35,7 @@ function AllOrders(){
 
     const [myNamedData, setMyNamedData] = useState([])
     const [MyApprovedOrder, setMyApprovedOrders] = useState([])
+    const [Reload, setReload] = useState(false);
     //Printing Related Variables
     const [show, setShow] = useState(false);
     const [reprintShow, setReprintShow] = useState(false);
@@ -114,8 +115,26 @@ function AllOrders(){
         setDisplayPrintQuantity(false)
         setPrintQuantity("")
     }
+    //handles reloading when table structure is modified
+    useEffect(function(){
+        //these regrab all data and re-generate tables
+        if (Reload == true){
+            LoadAllOrders();
+            LoadVerifiedByMe();
+            setReload(false);
+        }
+    },[Reload])
+
+    function ReloadTable(){
+        setApprovedOrders([]);
+        setRejectedOrders([]);
+        setMyApprovedOrders([]);
+        setOtherOrders([]);
+        setReload(true);
+    }
     const handleClose = () => {
-        ClearPrintInfo()
+        ClearPrintInfo();
+        ReloadTable();
     }
     const handleShow = async (e) => {
         let button = e.currentTarget;
@@ -428,7 +447,111 @@ function AllOrders(){
          </Modal>
     );
     //GENERATING TABLE STRUCTURE
-    async function LoadVerifiedByMe(GenerateTableFunction){
+    function GenerateTables(Data,NamedData,Type){
+        let OrderNumber = 0;
+        //Now that we have all the data we will output it
+        Data.forEach(function(Order){
+            let CurrentOrder = (
+                <tr key={Order.rxNum}>
+                    <td>{he.decode(Order.rxNum)}</td>
+                    <td>{he.decode(Order.ppr)}</td>
+                    <td>{he.decode(NamedData[OrderNumber].patientLName)}</td>
+                    <td>{he.decode(NamedData[OrderNumber].patientFName)}</td>
+                    <td>{he.decode(NamedData[OrderNumber].din)}</td>
+                    <td>{he.decode(NamedData[OrderNumber].drugName)}</td>
+                    <td>{he.decode(NamedData[OrderNumber].physicianID)}</td>
+                    <td>{he.decode(NamedData[OrderNumber].physicianLName)}</td>
+                    <td>{he.decode(Order.status)}</td>
+                    <td>{he.decode(Order.dateSubmitted)}</td>
+                    <td>{he.decode(Order.sig)}</td>
+                    <td>{he.decode(Order.sigDescription)}</td>
+                    <td>{he.decode(Order.form)}</td>
+                    <td>{he.decode(Order.route)}</td>
+                    <td>{he.decode(Order.prescribedDose)}</td>
+                    <td>{he.decode(Order.frequency)}</td>
+                    <td>{he.decode(Order.duration)}</td>
+                    <td>{he.decode(Order.quantity)}</td>
+                    <td>{he.decode(Order.startDate)}</td>
+                    <td>{he.decode(Order.startTime)}</td>
+                    <td>{he.decode(Order.comments)}</td>
+                    {Order.status == "Approved" && Order.printStatusID == "" && cookies.user == Order.verifier&&(
+                        <td><button id="PrintOrder" orderid={Order.rxNum} onClick={handleShow}>Print</button></td>
+                    )}
+                    {Order.status == "Approved" && Order.printStatusID != "" && cookies.user == Order.verifier&&(
+                        <td><button id="RePrintOrder" orderid={Order.rxNum} onClick={handleShow}>Reprint</button></td>
+                    )}
+                    {Order.status == "Approved" && cookies.user != Order.verifier &&(
+                        <td></td>
+                    )}
+                </tr>
+
+            )
+            if (Order.status == "Approved"){
+                if (Type == "All"){
+                    ApprovedOrder.push(CurrentOrder);
+                }
+                else{
+                    MyApprovedOrder.push(CurrentOrder)
+                }
+            }
+            else if (Order.status == "Rejected"){
+                RejectedOrder.push(CurrentOrder)
+            }
+            else{
+                OtherOrder.push(CurrentOrder);
+            }
+            OrderNumber+=1
+        })
+        
+    }
+
+    async function LoadAllOrders(){
+        let Data = await $.ajax({
+            method:"POST",
+            url:"https://"+BackendIP+':'+BackendPort+"/api/Order/getorders",
+            headers:{
+                "Content-Type":"application/json",
+                'Key-Auth':ApiAccess
+            },
+            success:function(data){
+                setOrdersGotten(true);
+            }});
+        Data = Data.data; //a weird line because of how the previous team wrote code... too late to change structure
+
+        let OrderAmount = Data.length;
+        let CurrentOrderAmount = 0;
+        Data.forEach(async Order => {
+                await $.ajax({
+                method:"POST",
+                url:"https://"+BackendIP+':'+BackendPort+"/api/Management/getnames",
+                data:JSON.stringify({
+                    userID: Order.initiator,
+                    ppr: Order.ppr,
+                    physicianID: Order.physicianID,
+                    din: Order.din,
+                    // We also need to pass through empty strings for the other fields since the API expects them
+                    patientFName: '',
+                    patientLName: '',
+                    drugName: '',
+                    physicianFName: '',
+                    physicianLName: '',
+                    userFName: '',
+                    userLName: '',
+                }),
+                headers:{
+                    "Content-Type":"application/json",
+                    'Key-Auth':ApiAccess
+                },
+                success:function(data){
+                    CurrentOrderAmount+=1
+                    NamedData.push(data)
+                    if (CurrentOrderAmount == OrderAmount){
+                        GenerateTables(Data,NamedData,"All")
+                    }
+                }});
+        });
+    }
+    async function LoadVerifiedByMe(){
         try{
             let Data = await $.ajax({
                 method:"POST",
@@ -470,7 +593,7 @@ function AllOrders(){
                         CurrentOrderAmount+=1
                         myNamedData.push(data)
                         if (CurrentOrderAmount == OrderAmount){
-                            GenerateTableFunction(Data,myNamedData,"My")
+                            GenerateTables(Data,myNamedData,"My")
                         }
                     }});
         })
@@ -501,108 +624,8 @@ function AllOrders(){
         setonlyOne(onlyOne+1);
         if (onlyOne == 1){
             try{
-                let Data = await $.ajax({
-                    method:"POST",
-                    url:"https://"+BackendIP+':'+BackendPort+"/api/Order/getorders",
-                    headers:{
-                        "Content-Type":"application/json",
-                        'Key-Auth':ApiAccess
-                    },
-                    success:function(data){
-                        setOrdersGotten(true);
-                    }});
-                Data = Data.data; //a weird line because of how the previous team wrote code... too late to change structure
-
-                let OrderAmount = Data.length;
-                let CurrentOrderAmount = 0;
-                Data.forEach(async Order => {
-                        await $.ajax({
-                        method:"POST",
-                        url:"https://"+BackendIP+':'+BackendPort+"/api/Management/getnames",
-                        data:JSON.stringify({
-                            userID: Order.initiator,
-                            ppr: Order.ppr,
-                            physicianID: Order.physicianID,
-                            din: Order.din,
-                            // We also need to pass through empty strings for the other fields since the API expects them
-                            patientFName: '',
-                            patientLName: '',
-                            drugName: '',
-                            physicianFName: '',
-                            physicianLName: '',
-                            userFName: '',
-                            userLName: '',
-                        }),
-                        headers:{
-                            "Content-Type":"application/json",
-                            'Key-Auth':ApiAccess
-                        },
-                        success:function(data){
-                            CurrentOrderAmount+=1
-                            NamedData.push(data)
-                            if (CurrentOrderAmount == OrderAmount){
-                                GenerateTables(Data,NamedData,"All")
-                                LoadVerifiedByMe(GenerateTables)
-                            }
-                        }});
-                });
-                function GenerateTables(Data,NamedData,Type){
-                    let OrderNumber = 0;
-                    //Now that we have all the data we will output it
-                    Data.forEach(function(Order){
-                        let CurrentOrder = (
-                            <tr key={Order.rxNum}>
-                                <td>{he.decode(Order.rxNum)}</td>
-                                <td>{he.decode(Order.ppr)}</td>
-                                <td>{he.decode(NamedData[OrderNumber].patientLName)}</td>
-                                <td>{he.decode(NamedData[OrderNumber].patientFName)}</td>
-                                <td>{he.decode(NamedData[OrderNumber].din)}</td>
-                                <td>{he.decode(NamedData[OrderNumber].drugName)}</td>
-                                <td>{he.decode(NamedData[OrderNumber].physicianID)}</td>
-                                <td>{he.decode(NamedData[OrderNumber].physicianLName)}</td>
-                                <td>{he.decode(Order.status)}</td>
-                                <td>{he.decode(Order.dateSubmitted)}</td>
-                                <td>{he.decode(Order.sig)}</td>
-                                <td>{he.decode(Order.sigDescription)}</td>
-                                <td>{he.decode(Order.form)}</td>
-                                <td>{he.decode(Order.route)}</td>
-                                <td>{he.decode(Order.prescribedDose)}</td>
-                                <td>{he.decode(Order.frequency)}</td>
-                                <td>{he.decode(Order.duration)}</td>
-                                <td>{he.decode(Order.quantity)}</td>
-                                <td>{he.decode(Order.startDate)}</td>
-                                <td>{he.decode(Order.startTime)}</td>
-                                <td>{he.decode(Order.comments)}</td>
-                                {Order.status == "Approved" && Order.printStatusID == "" && cookies.user == Order.verifier&&(
-                                    <td><button id="PrintOrder" orderid={Order.rxNum} onClick={handleShow}>Print</button></td>
-                                )}
-                                {Order.status == "Approved" && Order.printStatusID != "" && cookies.user == Order.verifier&&(
-                                    <td><button id="RePrintOrder" orderid={Order.rxNum} onClick={handleShow}>Reprint</button></td>
-                                )}
-                                {Order.status == "Approved" && cookies.user != Order.verifier &&(
-                                    <td></td>
-                                )}
-                            </tr>
-    
-                        )
-                        if (Order.status == "Approved"){
-                            if (Type == "All"){
-                                ApprovedOrder.push(CurrentOrder);
-                            }
-                            else{
-                                MyApprovedOrder.push(CurrentOrder)
-                            }
-                        }
-                        else if (Order.status == "Rejected"){
-                            RejectedOrder.push(CurrentOrder)
-                        }
-                        else{
-                            OtherOrder.push(CurrentOrder);
-                        }
-                        OrderNumber+=1
-                    })
-                    
-                }
+                LoadAllOrders();
+                LoadVerifiedByMe();
 
             }
             catch(ex){
