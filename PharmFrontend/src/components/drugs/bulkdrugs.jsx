@@ -4,18 +4,22 @@ import { useState } from 'react';
 // Other imports
 import readXlsxFile from 'read-excel-file';
 import { SanitizeInput, SanitizeLength } from '@components/datasanitization/sanitization';
+import AlertModal from '../modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-function BulkDrugs({setDisplay}) {
+function BulkDrugs({setDisplay, getDrugs}) {
 
     const [excelFile, setExcelFile] = useState(null);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     const handleAdd = async () => {
 
         if (!excelFile) {
-            alert("Please select a file.");
+            setAlertMessage("Please select a file.");
+            setIsAlertModalOpen(true);
             return;
         }
 
@@ -63,7 +67,8 @@ function BulkDrugs({setDisplay}) {
 
             // If headers don't match expected, send error
             if (!identical){
-                alert("Invalid Spreadsheet Format. Please check headers.");
+                setAlertMessage("Invalid Spreadsheet Format. Please check headers.");
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -77,7 +82,8 @@ function BulkDrugs({setDisplay}) {
 
                     // Check for empty columns
                     if (!rawData[i][j]) {
-                        alert(`Empty cell found at row ${i + 1}, column ${j + 1}`);
+                        setAlertMessage(`Empty cell found at row ${i + 1}, column ${j + 1}`);
+                        setIsAlertModalOpen(true);
                         return;
                     }
                     // Use the mapping to get the changed key names
@@ -90,7 +96,8 @@ function BulkDrugs({setDisplay}) {
                     // Cut the length of the data to the max for the database (255 for all fields except DIN)
                     if (key == "DIN" && !/^\d{8}$/.test(rawData[i][j])) {
                         // If the DIN is not 8 digits, send an error
-                        alert(`DIN must be an 8 digit number at row ${i + 1}, column ${j + 1}`);
+                        setAlertMessage(`DIN must be an 8 digit number at row ${i + 1}, column ${j + 1}`);
+                        setIsAlertModalOpen(true);
                         return;
                     }
                     else {
@@ -109,7 +116,8 @@ function BulkDrugs({setDisplay}) {
 
             }
 
-            alert("Please wait. Do not refresh the page.");
+            //setAlertMessage("Please wait. Do not refresh the page.");
+            //setIsAlertModalOpen(true);
 
             // API call
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Drug/bulkdrug' , {
@@ -122,34 +130,40 @@ function BulkDrugs({setDisplay}) {
             });
 
             const data = await response.json();
+
+            console.log('Response status:', response.status);
+            console.log('Response data:', data);
            
             if (response.status !== 200) {
                 // Alert out the message sent from the API
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
-            else{
-                let totalResponse = "";
+            
+            let totalResponse = "";
 
-                // Get the info for any rows that may have failed
-                for (const element of data.data){
-                    totalResponse += element + "\n";
-                }
-
-                // If there were no failures, this will be empty so lets just say success
-                if (totalResponse === "") {
-                    totalResponse = "All drugs added successfully!";
-                }
-                
-                alert(totalResponse);
+            // Get the info for any rows that may have failed
+            for (const element of data.data){
+                totalResponse += element + "\n";
+            }
+            
+            // If there were no failures, this will be empty so lets just say success
+            if (!totalResponse.trim()) {
+                totalResponse = "All drugs added successfully!";
+            }
+            else {
+                totalResponse = "Some drugs could not be added. Please review the file.";
             }
 
             // Set the display back to the main page
-            setDisplay("main");
+            setAlertMessage(totalResponse);
+            setIsAlertModalOpen(true);
 
         }
         catch (error) {
             console.error("Error reading Excel file:", error);
-            alert("Only excel files are currently supported");
+            setAlertMessage("An error occurred while processing the request. Please check the file format.");
+            setIsAlertModalOpen(true);
         }
 
     }
@@ -187,6 +201,15 @@ function BulkDrugs({setDisplay}) {
                     </tbody>
                 </table>
             </div>
+            <AlertModal
+                            isOpen={isAlertModalOpen}
+                            message={alertMessage}
+                            onClose={() => {
+                                setIsAlertModalOpen(false);
+                                setDisplay("main");
+                                getDrugs();
+                            }}
+                        />
             <div>
                 <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
                 <button className="button" type="button" onClick={handleAdd}>Add Drugs</button><br></br><br></br>

@@ -202,7 +202,7 @@ function Drugs() {
                 setContent(null);
                 break;
             case "bulkDrug":
-                setContent(<BulkDrugs setDisplay={setDisplay} />);
+                setContent(<BulkDrugs setDisplay={setDisplay} getDrugs={GetDrugs}/>);
                 break;
             case "editDrug":
                 setContent(<EditDrug key={selectedDrug["DIN"]} setDisplay={setDisplay} setSelectedDrug={setSelectedDrug} selectedDrug={selectedDrug } getDrugs={GetDrugs} />)
@@ -233,7 +233,7 @@ function Drugs() {
                     <button id="deleteDrug" onClick={handleDeleteClick}>Delete Drug</button>
                         <DeleteDrugModal 
                             isOpen={isDeleteModalOpen} 
-                            onClose={() => setIsDeleteModalOpen(false)} 
+                            onClose={() => setIsDeleteModalOpen(false)}
                             onDelete={() => GetDrugs()} //added for refresh
                             drugToDelete={selectedDrug}
                             setDrugToDelete={setSelectedDrug}
