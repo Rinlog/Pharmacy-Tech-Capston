@@ -9,6 +9,7 @@ import AddPatientModal from '@components/modals/addPatientModal';
 import DeletePatientModal from '@components/modals/deletePatientModal';
 import EditPatient from '@components/patients/editpatient';
 import BulkPatients from '@components/patients/bulkpatients';
+import AlertModal from '../modals/alertModal';
 
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
@@ -35,6 +36,8 @@ function Patients() {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState({ "Patient ID": null, selected: false });
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     // Map the headers to the data for the table
     const headerMapping = {
@@ -68,7 +71,8 @@ function Patients() {
 
             // If there is an issue with the response, alert the user
             if(response.status != 200) {
-                alert(fetchedData.message);
+                setAlertMessage(fetchedData.message);
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -110,7 +114,8 @@ function Patients() {
 
             }
         } catch (error) {
-            alert("Error getting patients. Please try again.");
+            setAlertMessage("Error getting patients. Please try again.");
+            setIsAlertModalOpen(true);
             console.error(error);
             setDataObtained(false);
         }
@@ -130,7 +135,8 @@ function Patients() {
             setIsDeleteModalOpen(true);
         }
         else {
-            alert("Please select a patient to delete.");
+            setAlertMessage("Please select a patient to delete.");
+            setIsAlertModalOpen(true);
         }
     }
 
@@ -196,7 +202,8 @@ function Patients() {
                 setDisplay("editPatient");
             }
             else {
-                alert("Please select a patient to edit.");
+                setAlertMessage("Please select a patient to edit.");
+                setIsAlertModalOpen(true);
             }
         }
     }
@@ -241,6 +248,12 @@ function Patients() {
                             onDelete={() => GetPatients()}
                             onClose={() => setIsDeleteModalOpen(false)} 
                             patientToDelete={selectedPatient}
+                        />
+
+                        <AlertModal
+                            isOpen={isAlertModalOpen}
+                            message={alertMessage}
+                            onClose={() => setIsAlertModalOpen(false)}
                         />
                     <br/><br/>
                     <i>&nbsp;&nbsp;*For editing or deleting a patient, select a patient from the table below, then click the corresponding button.</i>
