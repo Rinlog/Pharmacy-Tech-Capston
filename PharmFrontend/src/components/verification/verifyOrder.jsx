@@ -3,13 +3,14 @@ import { useState, useEffect } from 'react';
 
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
+import AlertModal from '../modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) { 
+function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder, GetOrders}) { 
 
-    console.log(selectedOrder);
+    //console.log(selectedOrder);
     //states for selected order
     const [rxNum, setRxNum] = useState('');
     const [patientName, setPatientName] = useState('');
@@ -47,6 +48,8 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
     const [commentsChecked, setCommentsChecked] = useState(false);
 
     const [allChecked, setAllChecked] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     useEffect(() => {
         if (selectedOrder) {
@@ -92,16 +95,18 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
             });
 
             if (response.ok) {
-                alert("Order rejected successfully");
+                setAlertMessage("Order rejected successfully");
+                setIsAlertModalOpen(true);
             }
             else{
                 // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
             
-            setSelectedOrder({ "Rx Number": null, selected: false });
-            window.location.reload();
+            
+            //window.location.reload();
         }
         catch(error){
             console.error(error);
@@ -112,7 +117,8 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
         e.preventDefault();
 
         if (!allChecked) { //verification to make sure all checkboxes are selected. Better user experience
-            alert("To verify, select all checkboxes.")
+            setAlertMessage("To verify, select all checkboxes.");
+            setIsAlertModalOpen(true);
             return;
         }
 
@@ -141,19 +147,17 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
             else{
                 // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
             
-            setDisplay("main");
-            setSelectedOrder({ "Rx Number": null, selected: false });
+            
+            //setSelectedOrder({ "Rx Number": null, selected: false });
 
         }
         catch(error){
             console.error(error);
         }
-
-
-        
     }
 
     // Check if all checkboxes are checked
@@ -254,6 +258,24 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
                 <button className="button" id="verify" onClick={VerifyOrder} >Verify</button>
 
             </form>
+
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {setIsAlertModalOpen(false)
+                    //if not all checkboxes are selected dont refresh the page
+                    if (alertMessage !== "To verify, select all checkboxes."){ 
+                        setSelectedOrder({ "Rx Number": null, selected: false });
+                        setDisplay("main");
+                        GetOrders();
+                    }
+                    else {
+                        setSelectedOrder({ "Rx Number": null, selected: false });
+                        GetOrders();
+                    }          
+                    }}
+            />
+
         </div>
 
     )

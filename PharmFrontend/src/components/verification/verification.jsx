@@ -23,6 +23,9 @@ function Verification() {
     const [display, setDisplay] = useState("main");
     const [content, setContent] = useState(null);
 
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
     const [selectedOrder, setSelectedOrder] = useState({ "Rx Number": null, selected: false });
 
     // Map the headers to the data for the table
@@ -63,7 +66,8 @@ function Verification() {
 
             // If there is an issue with the response, alert the user
             if(response.status != 200) {
-                alert(fetchedData.message);
+                setAlertMessage(fetchedData.message);
+                isAlertModalOpen(true);
             }
 
             // Filter for only orders that are not verified (submitted or amended)
@@ -137,7 +141,8 @@ function Verification() {
 
             }
         } catch (error) {
-            alert("Error getting orders. Please try again.");
+            setAlertMessage("Error getting orders. Please try again.");
+            isAlertModalOpen(true);
             console.error(error);
             setDataObtained(false);
         }
@@ -209,7 +214,7 @@ function Verification() {
                 setContent(null);
                 break;
             case "verifyOrder":
-                setContent(<VerifyOrder setDisplay={setDisplay} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder}/>);
+                setContent(<VerifyOrder setDisplay={setDisplay} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} GetOrders={GetOrders}/>);
                 break;
         }
     }, [display]); //remove setContent
