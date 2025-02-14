@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 
 //sanitize import
 import { SanitizeName } from '@components/datasanitization/sanitization.jsx'; 
+import AlertModal from '../modals/alertModal';
 
 //other imports
 
@@ -16,6 +17,10 @@ function EditUser() {
 
     //state to ensure data has been obtained and set
     const [dataObtained, setDataObtained] = useState(false);
+
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     //table data
     const headerMapping = {
@@ -82,7 +87,8 @@ function EditUser() {
                 setDataObtained(true);
             }
         } catch (error) {
-            alert("Could not obtain user data at this time.\nPlease contact system administrator.");
+            setAlertMessage("Could not obtain user data at this time. \nPlease contact system administrator.");
+            isAlertModalOpen(true);
             console.log(error);
         }
     }
@@ -171,11 +177,12 @@ function EditUser() {
             });
             const data = await response.json();
 
-            alert(data.message);
+            setAlertMessage(data.message);
+            setIsAlertModalOpen(true);
 
             //remove form and refresh table
             setEditing(false);
-            GetUsers();
+            //GetUsers();
         }
         catch{
             return;
@@ -209,7 +216,8 @@ function EditUser() {
                 });
                 const data = await response.json();
 
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
 
                 //remove form and refresh table
                 setEditing(false);
@@ -347,6 +355,14 @@ function EditUser() {
                     </tbody>
                     
                 </table>
+
+                <AlertModal
+                        isOpen={isAlertModalOpen}
+                        message={alertMessage}
+                        onClose={() => {setIsAlertModalOpen(false)
+                                        GetUsers();
+                        }}
+                    />
                 </>
             )}
         </div>
