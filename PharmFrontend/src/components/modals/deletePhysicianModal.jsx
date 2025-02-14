@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
+import AlertModal from "./alertModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -10,6 +11,9 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
+
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
 
     const handleDeletePhysician = () => {
         setSecondModalOpen(true);
@@ -41,14 +45,16 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
             });
 
             if (response.ok) {
-                alert("Physician deleted successfully");
-                onDelete(); //added for refresh
-                onClose();
+                setAlertMessage("Physician deleted successfully");
+                setIsAlertModalOpen(true);
+                //onDelete(); //added for refresh
+                //onClose();
             }
             else{
                 // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
         }
         catch (error) {
@@ -87,6 +93,17 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
             </div>
         </div>
     )}
+
+    <AlertModal
+        isOpen={isAlertModalOpen}
+        message={alertMessage}
+        onClose={() => {setIsAlertModalOpen(false)
+                if (alertMessage === "Physician deleted successfully") {
+                    onDelete();
+                    onClose();
+                }
+    }}
+    />
     </>
     );
 }

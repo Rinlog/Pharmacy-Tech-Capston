@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { SanitizeName } from "@components/datasanitization/sanitization";
 
 import { SanitizeInput, SanitizeLength } from "@components/datasanitization/sanitization";
+import AlertModal from "./alertModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -9,6 +10,9 @@ const ApiAccess = import.meta.env.VITE_APIAccess
 const AddPhysicianModal = ({ isOpen, onClose}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
+
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
 
     const AddPhysician = async () => {
 
@@ -39,13 +43,15 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
             
             if(response.status === 200) {
                 // Alert the user that the physician was added
-                alert("Physician Added");
+                setAlertMessage("Physician Added");
+                setIsAlertModalOpen(true);
                 // Close the modal
-                onClose();
+                //onClose();
             }
             else{// Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
             
         }
@@ -102,6 +108,16 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
 
                         <button type="submit">Add Physician</button>
                     </form>
+
+                    <AlertModal
+                        isOpen={isAlertModalOpen}
+                        message={alertMessage}
+                        onClose={() => {setIsAlertModalOpen(false)
+                            if (alertMessage === "Physician Added") {
+                                onClose();
+                            }}
+                        }
+                    />
                 </div>
             </div>
         )
