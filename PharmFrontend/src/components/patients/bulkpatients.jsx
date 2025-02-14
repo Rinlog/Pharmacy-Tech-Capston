@@ -4,18 +4,23 @@ import { useState } from 'react';
 // Other imports
 import readXlsxFile from 'read-excel-file';
 import { SanitizeInput } from '@components/datasanitization/sanitization';
+import AlertModal from '../modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-function BulkPatients({setDisplay}) {
+function BulkPatients({setDisplay, getPatients}) {
 
     const [excelFile, setExcelFile] = useState(null);
+
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     const handleAdd = async () => {
 
         if (!excelFile) {
-            alert("Please select a file.");
+            setAlertMessage("Please select a file.");
+            setIsAlertModalOpen(true);
             return;
         }
 
@@ -65,7 +70,8 @@ function BulkPatients({setDisplay}) {
 
             // If headers don't match expected, send error
             if (!identical){
-                alert("Invalid Spreadsheet Format. Please check headers.");
+                setAlertMessage("Invalid Spreadsheet Format. Please check headers.");
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -80,7 +86,8 @@ function BulkPatients({setDisplay}) {
 
                     // Check for empty columns
                     if (!rawData[i][j]) {
-                        alert(`Empty cell found at row ${i + 1}, column ${j + 1}`);
+                        setAlertMessage(`Empty cell found at row ${i + 1}, column ${j + 1}`);
+                        setIsAlertModalOpen(true);
                         return;
                     }
                     // Use the mapping to get the changed key names
@@ -115,7 +122,8 @@ function BulkPatients({setDisplay}) {
 
             }
 
-            alert("Please wait. Do not refresh the page.");
+            //setAlertMessage("Please wait. Do not refresh the page.");
+            //setIsAlertModalOpen(true);
 
             // API call
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Patient/bulkpatient' , {
@@ -127,17 +135,12 @@ function BulkPatients({setDisplay}) {
                 body: JSON.stringify(formattedData),
             });
 
-            // Make sure the response is ok
-            if (!response.ok) {
-                alert("Error adding patients. Please try again." + response.statusText + " " + response.status + "!");
-                return;
-            }
-
             const data = await response.json();
-           
-            if (!response.ok) {
-                // Alert out the message sent from the API
-                alert(data.message);
+
+            // Make sure the response is ok
+            if (!response.status !== 200) {
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
 
             let totalResponse = "";
@@ -148,19 +151,24 @@ function BulkPatients({setDisplay}) {
             }
 
             // If there were no failures, this will be empty so lets just say success
-            if (totalResponse === "") {
+            if (totalResponse.response !== "") {
                 totalResponse = "All patients added successfully!";
             }
+            else {
+                totalResponse = "Some patients could not be added. Please review the file.";
+            }
             
-            alert(totalResponse);
+            setAlertMessage(totalResponse);
+            setIsAlertModalOpen(true);
 
             // Set the display back to the main page
-            setDisplay("main");
+            //setDisplay("main");
 
         }
         catch (error) {
             console.error("Error reading Excel file:", error);
-            alert("Only excel files are currently supported");
+            setAlertMessage("Only excel files are currently supported");
+            setIsAlertModalOpen(true);
         }
 
     }
@@ -203,11 +211,21 @@ function BulkPatients({setDisplay}) {
                     </tbody>
                 </table>
             </div>
+
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {
+                    setIsAlertModalOpen(false)
+                    setDisplay("main");
+                    getPatients();
+            }}
+            />
             <div>
                 <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
                 <button className="button" type="button" onClick={handleAdd}>Add Patients</button><br></br><br></br>
             </div>
-        </div>
+</div>
 
     )
 

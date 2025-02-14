@@ -131,8 +131,8 @@ function BulkDrugs({setDisplay, getDrugs}) {
 
             const data = await response.json();
 
-            console.log('Response status:', response.status);
-            console.log('Response data:', data);
+            //console.log('Response status:', response.status);
+            //console.log('Response data:', data);
            
             if (response.status !== 200) {
                 // Alert out the message sent from the API
@@ -202,14 +202,14 @@ function BulkDrugs({setDisplay, getDrugs}) {
                 </table>
             </div>
             <AlertModal
-                            isOpen={isAlertModalOpen}
-                            message={alertMessage}
-                            onClose={() => {
-                                setIsAlertModalOpen(false);
-                                setDisplay("main");
-                                getDrugs();
-                            }}
-                        />
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {
+                    setIsAlertModalOpen(false);
+                    setDisplay("main");
+                    getDrugs();
+                }}
+            />
             <div>
                 <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
                 <button className="button" type="button" onClick={handleAdd}>Add Drugs</button><br></br><br></br>

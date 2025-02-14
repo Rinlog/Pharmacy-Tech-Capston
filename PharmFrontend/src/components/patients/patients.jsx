@@ -214,7 +214,7 @@ function Patients() {
                 setContent(null);
                 break;
             case "bulkPatient":
-                setContent(<BulkPatients setDisplay={setDisplay} />);
+                setContent(<BulkPatients setDisplay={setDisplay} getPatients={GetPatients}/>);
                 break;
             case "editPatient":
                 setContent(<EditPatient key={selectedPatient["Patient ID"]} setDisplay={setDisplay} setSelectedPatient={setSelectedPatient} selectedPatient={selectedPatient} />)
