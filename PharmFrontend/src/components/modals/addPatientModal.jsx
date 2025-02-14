@@ -111,7 +111,7 @@ const AddPatientModal = ({ isOpen, onClose}) => {
                                 <label>Last Name</label> <br></br>
                                 <input type="text" id="lastName" tabIndex={2} required /> <br></br>
                                 <label>Sex</label> <br></br>
-                                <select class="form-select" id="sex" tabIndex={4} required>
+                                <select className="form-select" id="sex" tabIndex={4} required>
                                     <option value=""></option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>

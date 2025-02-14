@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
+import AlertModal from "./alertModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-const DeletePatientModal = ({ isOpen, onClose, patientToDelete, onDelete = () => {} }) => {
+const DeletePatientModal = ({ isOpen, onClose, patientToDelete, GetPatients, onDelete = () => {} }) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
+
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
 
     const handleDeletePatient = () => {
         setSecondModalOpen(true);
@@ -38,14 +42,16 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, onDelete = () =>
             });
 
             if (response.ok) {
-                alert("Patient deleted successfully");
-                onDelete(); //added for refresh
-                onClose();
+                setAlertMessage("Patient deleted successfully");
+                setIsAlertModalOpen(true);
+                //onDelete(); //added for refresh
+                //onClose();
             }
             else{
                 // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
         }
         catch (error) {
@@ -84,6 +90,16 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, onDelete = () =>
             </div>
         </div>
     )}
+
+    <AlertModal
+        isOpen={isAlertModalOpen}
+        message={alertMessage}
+        onClose={() => {setIsAlertModalOpen(false)
+                if (alertMessage === "Patient deleted successfully") {
+                    GetPatients();
+                }
+    }}
+    />
     </>
     );
 }

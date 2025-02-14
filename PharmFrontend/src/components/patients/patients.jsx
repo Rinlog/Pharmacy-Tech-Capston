@@ -248,6 +248,7 @@ function Patients() {
                             onDelete={() => GetPatients()}
                             onClose={() => setIsDeleteModalOpen(false)} 
                             patientToDelete={selectedPatient}
+                            GetPatients = {GetPatients}
                         />
 
                         <AlertModal
