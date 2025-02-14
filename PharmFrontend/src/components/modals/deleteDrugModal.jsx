@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import AlertModal from "./alertModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -7,6 +8,9 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDel
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
+
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     const handleDeleteDrug = () => {
         setSecondModalOpen(true);
@@ -38,7 +42,8 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDel
             });
     
             if (response.ok) {
-                alert("Drug deleted successfully");
+                setAlertMessage("Drug deleted successfully");
+                setIsAlertModalOpen(true);
                 onDelete(); //added for refresh?
                 setDrugToDelete({ "DIN": null, selected: false });
                 
@@ -47,7 +52,8 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDel
             }
             else {
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
         }
         catch (error) {
@@ -86,6 +92,12 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDel
             </div>
         </div>
     )}
+
+    <AlertModal
+        isOpen={isAlertModalOpen}
+        message={alertMessage}
+        onClose={() => setIsAlertModalOpen(false)}
+    />
     </>
     );
 }
