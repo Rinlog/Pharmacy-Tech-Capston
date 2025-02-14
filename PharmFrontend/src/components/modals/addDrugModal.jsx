@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { SanitizeEmail, SanitizeName, SanitizeDate, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
+import AlertModal from "./alertModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -8,12 +9,16 @@ const AddDrugModal = ({ isOpen, onClose}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
 
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+
     const AddDrug = async () => {
 
         // Sanitize the inputs
             // DIN must be an 8 digit number
             if(!/^\d{8}$/.test(document.getElementById('DIN').value)){
-                alert("DIN must be an 8 digit number");
+                setAlertMessage("DIN must be an 8 digit number");
+                setIsAddModalOpen(true);
                 return;
             }
             let din = SanitizeLength(SanitizeInput(document.getElementById('DIN').value));
@@ -48,19 +53,22 @@ const AddDrugModal = ({ isOpen, onClose}) => {
             
             if(response.status === 200) {
                 // Alert the user that the drug was added
-                alert("Drug Added");
+                setAlertMessage("Drug Added");
+                setIsAddModalOpen(true);
                 // Close the modal
-                onClose();
+                //onClose();
             }
             else{// Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAddModalOpen(true);
             }
             
         }
         catch (error) {
             console.error(error);
-            alert("An error has occured, please try again later")
+            setAlertMessage("An error has occurred, please try again later");
+            setIsAddModalOpen(true);
         }
     }
 
@@ -119,6 +127,18 @@ const AddDrugModal = ({ isOpen, onClose}) => {
 
                         <button type="submit">Add Drug</button>
                     </form>
+
+                    <AlertModal
+                        isOpen={isAddModalOpen}
+                        message={alertMessage}
+                        onClose={() => {setIsAddModalOpen(false);
+                            if (alertMessage === "Drug Added") {
+                                onClose();
+                            }
+                        }
+                                    
+                    }
+                    />
                 </div>
             </div>
         )
