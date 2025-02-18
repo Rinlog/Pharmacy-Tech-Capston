@@ -40,7 +40,7 @@ function UserManagement() {
                 setContent(null);
                 break;
             case "userAdd":
-                setContent(<AddUsers></AddUsers>)
+                setContent(<AddUsers setDisplay={setDisplay}></AddUsers>)
                 break;
             case "userEdit":
                 setContent(<EditUser></EditUser>)

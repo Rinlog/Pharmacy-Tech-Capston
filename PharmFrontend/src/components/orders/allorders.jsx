@@ -14,11 +14,16 @@ import { Anchor, DropdownButton } from "react-bootstrap";
 import axios from "axios";
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
+import AlertModal from "../modals/alertModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
 function AllOrders(){
+
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     //Table structure variables
     const [OrdersGotten,setOrdersGotten] = useState(false);
@@ -156,10 +161,12 @@ function AllOrders(){
         }
         catch(ex){
             if (ex.responseText != null){
-                alert(ex.responseText);
+                setAlertMessage(ex.responseText);
+                setIsAlertModalOpen(true);
             }
             else{
-                alert("Sorry, something went wrong");
+                setAlertMessage("Sorry, something went wrong");
+                setIsAlertModalOpen(true);
             }
         }
 
@@ -184,16 +191,22 @@ function AllOrders(){
         }
         catch(ex){
             if (ex.responseText != null){
-                alert(ex.responseText);
+                setAlertMessage(ex.responseText);
+                setIsAlertModalOpen(true);
                 return;
             }
             else{
                 console.log(ex);
-                alert("could not connect to backend servers");
+                setAlertMessage("could not connect to backend servers");
+                setIsAlertModalOpen(true);
                 return;
             }
         }
-        if (Verified == false){alert("Can not print an order that wasn't verified by you");return;}
+        if (Verified === false) {
+            setAlertMessage("Can not print an order that wasn't verified by you");
+            setIsAlertModalOpen(true);
+            return;
+        }
         //first is print to pdf
         if (PrinterOption.toLowerCase() === "print to pdf"){
             try{
@@ -221,15 +234,18 @@ function AllOrders(){
                     handleClose(); //reloads and closes modal
                 }
                 else{
-                    alert("No order id Provided");
+                    setAlertMessage("No order id Provided");
+                    setIsAlertModalOpen(true);
                 }
             }
             catch(ex){
                 if (ex.responseText != undefined){
-                    alert(ex.responseText);
+                    setAlertMessage(ex.responseText);
+                    setIsAlertModalOpen(true);
                 }
                 else{
-                    alert("Could not connect to backend servers")
+                    setAlertMessage("Could not connect to backend servers");
+                    setIsAlertModalOpen(true);
                 }
             }
         }
@@ -237,7 +253,11 @@ function AllOrders(){
         else{
             try{
                 if (OrderID != null){
-                    if (isNaN(PrintQuantity)){alert(PrintQuantity + " is not a number"); return;}
+                    if (isNaN(PrintQuantity)) {
+                        setAlertMessage(PrintQuantity + " is not a number");
+                        setIsAlertModalOpen(true);
+                        return;
+                    }
                     if (PrintQuantity <10 && PrintQuantity > 0){
                         setTimeout(async function(){
                             await $.ajax({
@@ -249,27 +269,32 @@ function AllOrders(){
                                     'Key-Auth':ApiAccess
                                 },
                                 success:function(data){
-                                    alert(data)
+                                    setAlertMessage(data);
+                                    setIsAlertModalOpen(true);
                                     handleClose(); //reloads and closes modal
                                 }
                             });
                         },1000)
                     }
                     else{
-                        alert("please enter a quantity from 1 to 10");
+                        setAlertMessage("Please enter a quantity from 1 to 10");
+                        setIsAlertModalOpen(true);
                         return;
                     }
                 }
                 else{
-                    alert("No order id Provided");
+                    setAlertMessage("No order id Provided");
+                    setIsAlertModalOpen(true);
                 }
             }
             catch(ex){
                 if (ex.responseText != undefined){
-                    alert(ex.responseText);
+                    setAlertMessage(ex.responseText);
+                    setIsAlertModalOpen(true);
                 }
                 else{
-                    alert("Could not connect to backend servers")
+                    setAlertMessage("Could not connect to backend servers");
+                    setIsAlertModalOpen(true);
                 }
             }
             
@@ -601,10 +626,12 @@ function AllOrders(){
         }
         catch(ex){
             if (ex.responseText != null){
-                alert(ex.responseText);
+                setAlertMessage(ex.responseText);
+                setIsAlertModalOpen(true);
             }
             else{
-                alert("Failed to get orders")
+                setAlertMessage("Failed to get orders");
+                setIsAlertModalOpen(true);
                 return;
             }
         }
@@ -631,10 +658,12 @@ function AllOrders(){
             }
             catch(ex){
                 if (ex.responseText != null){
-                    alert(ex.responseText);
+                    setAlertMessage(ex.responseText);
+                    setIsAlertModalOpen(true);
                 }
                 else{
-                    alert("Failed to get orders")
+                    setAlertMessage("Failed to get orders");
+                    setIsAlertModalOpen(true);
                     return;
                 }
             }
@@ -708,6 +737,12 @@ function AllOrders(){
                     </tbody>
                 </table>
             </div>
+
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {setIsAlertModalOpen(false)}}
+            />
         </div>
     );
     return(
