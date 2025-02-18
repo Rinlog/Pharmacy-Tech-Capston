@@ -80,7 +80,7 @@ function BulkPhysicians({setDisplay}) {
 
                     // Check for empty columns
                     if (!rawData[i][j]) {
-                        setAlertMessage("Empty cell found at row ${i + 1}, column ${j + 1}");
+                        setAlertMessage(`Empty cell found at row ${i + 1}, column ${j + 1}`);
                         setIsAlertModalOpen(true);
                         return;
                     }

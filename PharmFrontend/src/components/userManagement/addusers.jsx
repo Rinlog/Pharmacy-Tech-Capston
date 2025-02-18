@@ -3,19 +3,25 @@ import { useState } from 'react';
 
 //other imports
 import readXlsxFile from 'read-excel-file';
-
+import AlertModal from '../modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-function AddUsers() {
+function AddUsers({ setDisplay }) {
 
     const [excelFile, setExcelFile] = useState(null);
+    const [fileSubmitted, setFileSubmitted] = useState(false);
 
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+    
     const handleAdd = async () => {
 
         if (!excelFile) {
-            alert("Please select a file.");
+            setAlertMessage("Please select a file.");
+            setIsAlertModalOpen(true);
             return;
         }
 
@@ -50,9 +56,10 @@ function AddUsers() {
                 identical = false;
             }
 
-            //if headers don't match expexted, send error
+            //if headers don't match expected, send error
             if (!identical){
-                alert("Invalid Spreadsheet Format. Please check headers");
+                setAlertMessage("Invalid Spreadsheet Format. Please check headers");
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -65,7 +72,8 @@ function AddUsers() {
                 for (let j = 0; j < keys.length; j++) {
                     //check for empty columns
                     if (!rawData[i][j]) {
-                        alert(`Empty cell found at row ${i + 1}, column ${j + 1}`);
+                        setAlertMessage(`Empty cell found at row ${i + 1}, column ${j + 1}`);
+                        setIsAlertModalOpen(true);
                         return;
                     }
                     //Assign each column to keys
@@ -76,7 +84,7 @@ function AddUsers() {
 
             }
 
-            alert("Please wait. Do not refresh the page.");
+            //alert("Please wait. Do not refresh the page.");
 
             //api call
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/bulkadd' , {
@@ -95,12 +103,15 @@ function AddUsers() {
                 totalResponse += element + "\n";
             }
             
-            alert(totalResponse);
+            setAlertMessage(totalResponse);
+            setFileSubmitted(true);
+            setIsAlertModalOpen(true);
 
 
         } catch (error) {
             console.error("Error reading Excel file:", error);
-            alert("Only excel files are currently supported");
+            setAlertMessage("Only excel files are currently supported");
+            setIsAlertModalOpen(true);
         }
 
     }
@@ -145,6 +156,18 @@ function AddUsers() {
             <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
             <button className="button" type="button" onClick={handleAdd}>Add Users</button>
         </div>
+
+        <AlertModal
+            isOpen={isAlertModalOpen}
+            message={alertMessage}
+            onClose={() => {
+                setIsAlertModalOpen(false)
+
+                if (fileSubmitted) {
+                    setDisplay("userEdit");
+                }
+            }}
+        />
         </div>
 
     )
