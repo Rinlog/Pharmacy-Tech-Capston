@@ -5,7 +5,6 @@ import AuthContext from '@components/login/AuthContext.jsx';
 const UnProtectedRoute = ({ component: Component}) => {
     const { authState } = useContext(AuthContext);
     const { loggedIn, isAdmin } = authState;
-
     //console.log('UnProtectedRoute:', { loggedIn}); //debugging
 
     // check if the user is logged in

@@ -225,7 +225,8 @@ namespace PharmPracticumBackend.Controllers
                     return BadRequest("No valid printers detected");
                 }
 
-                return Ok("Succefullly Printed");
+                //if you change this message change the frontend verification one as well, aka on print order page and all orders page
+                return Ok("Succefully Printed");
             }
             catch (Exception ex)
             {

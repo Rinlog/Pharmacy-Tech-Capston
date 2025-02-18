@@ -2,17 +2,18 @@ import { Link, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { CheckAuth } from "@components/login/CheckAuth";
+import AuthContext from '@components/login/AuthContext.jsx';
+import { useContext } from 'react';
 import "./Navbar.css";
 
 function Navbar() {
   const authState = CheckAuth();
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(['user', 'admin']);
   const location = useLocation(); // Get the current route
   const Logout = () => {
-
-    removeCookie("user")
-    removeCookie("admin")
+    logout(); //uses authcontext logout function
     navigate("/login");
     //window.location.reload(); //commented this out testing to see if i need it still
   };
