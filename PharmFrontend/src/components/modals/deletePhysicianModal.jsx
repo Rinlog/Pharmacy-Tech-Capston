@@ -59,6 +59,8 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
         }
         catch (error) {
             console.log(error);
+            setAlertMessage("An error occurred while deleting the user.");
+            setIsAlertModalOpen(true);
         }
     }
 

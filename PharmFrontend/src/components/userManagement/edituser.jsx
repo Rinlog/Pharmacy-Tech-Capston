@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 //sanitize import
 import { SanitizeName } from '@components/datasanitization/sanitization.jsx'; 
 import AlertModal from '../modals/alertModal';
+import DeleteUserModal from '../modals/deleteUserModal';
 
 //other imports
 
@@ -21,6 +22,9 @@ function EditUser() {
     //Modal things
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [pendingDelete, setPendingDelete] = useState(false);
+    const [selectedUser, setSelectedUser] = useState({ "User ID": null, selected: false });
 
     //table data
     const headerMapping = {
@@ -190,52 +194,15 @@ function EditUser() {
         
     }
 
-    const HandleDelete = async (e) => {
-
-        e.preventDefault();
-
-        let confirmTwo = false;
-        //prompt user to confirm twice
-        let confirmOne = confirm("Deleting a user will remove all associated records created by that user.\nAre you sure you wish to delete?");
-        if (confirmOne) {
-            confirmTwo = confirm("Are you absolutely sure?")
-        }
-        else return;
-        if (confirmTwo){
-
-            //api call
-            try {
-
-                const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Management/deleteuser' , {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Key-Auth':ApiAccess
-                    },
-                    body: JSON.stringify(userID)
-                });
-                const data = await response.json();
-
-                setAlertMessage(data.message);
-                setIsAlertModalOpen(true);
-
-                //remove form and refresh table
-                setEditing(false);
-                GetUsers();
-
-            }
-            catch{
-                return;
-            }
-
-
-            
-        }
-        else return;
-    
-
-    }
-
+    // Modified section of EditUser.jsx
+    const HandleDelete = () => {
+        setSelectedUser({
+            "User ID": userID,
+            "First Name": firstName,
+            "Last Name": lastName
+        });
+        setIsDeleteModalOpen(true);
+    };
 
     return(
 
@@ -304,7 +271,16 @@ function EditUser() {
                         <button className="button" type="submit">Submit Changes</button>
 
                         <button className="button" type="button" onClick={HandleDelete}>Delete User</button>
-
+                        <DeleteUserModal
+                            isOpen={isDeleteModalOpen}
+                            onClose={() => setIsDeleteModalOpen(false)}
+                            userToDelete={selectedUser}
+                            onDelete={() => {
+                                //setIsDeleteModalOpen(false);
+                                setEditing(false);
+                                GetUsers();
+                            }}
+                        />
                     </form>
                     </>
                 )}
