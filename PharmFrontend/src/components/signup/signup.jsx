@@ -10,6 +10,7 @@ import { NullCheck, CheckEmail, VarMatch, PassRequirements, CheckNBCCEmail } fro
 
 //sanitization import
 import { SanitizeEmail, SanitizeName } from '@components/datasanitization/sanitization.jsx'; 
+import AlertModal from '../modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -23,6 +24,10 @@ function Signup() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [email, setEmail] = useState('');
     const [campus, setCampus] = useState('Fredericton');
+
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     // Navigation
     const navigate = useNavigate();
@@ -159,11 +164,13 @@ function Signup() {
     
                 // Redirect to login page if successful
                 if (data.message === 'User added successfully') {
-                    alert('User added successfully, check your email for confirmation link');
-                    navigate('/login');
+                    setAlertMessage("User added successfully, check your email for confirmation link");
+                    setIsAlertModalOpen(true);
+                    //navigate('/login');
                 }
                 else {
-                    alert(data.message + ', please try again');
+                    setAlertMessage(data.message + ", please try again");
+                    setIsAlertModalOpen(true);
                 }
             }
             catch (error) {
@@ -278,12 +285,20 @@ function Signup() {
                         <span className='error passwordConfirm'></span>
                     </div>
                 </div>
+                <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {
+                        setIsAlertModalOpen(false);
+
+                    if (alertMessage === "User added successfully, check your email for confirmation link") {
+                        navigate('/login')}}
+                    }
+                />
                 <br></br>
                 <button className="button" type="submit">Submit</button>
                 <button className="button" onClick={() => navigate('/login')}>Back</button>
-
             </form>
-
         </div>
 
     )
