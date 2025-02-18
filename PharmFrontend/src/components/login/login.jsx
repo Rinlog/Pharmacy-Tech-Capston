@@ -8,12 +8,15 @@ import $ from 'jquery';
 
 const ApiAccess = import.meta.env.VITE_APIAccess
 import ResetPasswordModal from '../modals/resetPasswordModal';
+import AlertModal from '../modals/alertModal';
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const Login = () => {
 
     // Modal things
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -48,9 +51,11 @@ const Login = () => {
             });
             const data = await response.json();
             if (data.message === "Wrong email or password entered.") {
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             } else if (data.message) {
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             } else {
                 setCookie('user', data.data.userId, { path: '/', sameSite: 'none', secure: true});
                 setCookie('admin', data.data.admin, { path: '/', sameSite: 'none', secure: true});
@@ -66,7 +71,8 @@ const Login = () => {
             }
         } catch (error) {
             //console.log(error); //debugging
-            alert("Could not log you in at this time. Please contact the system administrator.");
+            setAlertMessage("Could not log you in at this time. Please contact the system administrator.");
+            setIsAlertModalOpen(true);
         }
     };
 
@@ -111,7 +117,11 @@ const Login = () => {
                     />
                 </div>
             </form>
-
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {setIsAlertModalOpen(false)}}
+            />
             
         </div>
     );
