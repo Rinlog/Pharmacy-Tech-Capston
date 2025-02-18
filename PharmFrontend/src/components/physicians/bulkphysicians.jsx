@@ -4,6 +4,7 @@ import { useState } from 'react';
 // Other imports
 import readXlsxFile from 'read-excel-file';
 import { SanitizeInput } from '@components/datasanitization/sanitization';
+import AlertModal from '../modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -12,10 +13,15 @@ function BulkPhysicians({setDisplay}) {
 
     const [excelFile, setExcelFile] = useState(null);
 
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
     const handleAdd = async () => {
 
         if (!excelFile) {
-            alert("Please select a file.");
+            setAlertMessage("Please select a file.");
+            setIsAlertModalOpen(true);
             return;
         }
 
@@ -58,7 +64,8 @@ function BulkPhysicians({setDisplay}) {
 
             // If headers don't match expected, send error
             if (!identical){
-                alert("Invalid Spreadsheet Format. Please check headers.");
+                setAlertMessage("Invalid Spreadsheet Format. Please check headers.");
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -73,7 +80,8 @@ function BulkPhysicians({setDisplay}) {
 
                     // Check for empty columns
                     if (!rawData[i][j]) {
-                        alert(`Empty cell found at row ${i + 1}, column ${j + 1}`);
+                        setAlertMessage("Empty cell found at row ${i + 1}, column ${j + 1}");
+                        setIsAlertModalOpen(true);
                         return;
                     }
                     // Use the mapping to get the changed key names
@@ -94,7 +102,7 @@ function BulkPhysicians({setDisplay}) {
 
             }
 
-            alert("Please wait. Do not refresh the page.");
+            //alert("Please wait. Do not refresh the page.");
 
             // API call
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/bulkphysician' , {
@@ -108,7 +116,8 @@ function BulkPhysicians({setDisplay}) {
 
             // Make sure the response is ok
             if (!response.ok) {
-                alert("Error adding physicians. Please try again." + response.statusText + " " + response.status + "!");
+                setAlertMessage("Error adding physicians. Please try again." + response.statusText + " " + response.status + "!");
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -116,7 +125,8 @@ function BulkPhysicians({setDisplay}) {
 
             if (!response.ok) {
                 // Alert out the message sent from the API
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
            
             let totalResponse = "";
@@ -131,15 +141,17 @@ function BulkPhysicians({setDisplay}) {
                 totalResponse = "All physicians added successfully!";
             }
             
-            alert(totalResponse);
+            setAlertMessage(totalResponse);
+            setIsAlertModalOpen(true);
 
             // Set the display back to the main page
-            setDisplay("main");
+            //setDisplay("main");
 
         }
         catch (error) {
             console.error("Error reading Excel file:", error);
-            alert("Only excel files are currently supported");
+            setAlertMessage("Only excel files are currently supported");
+            setIsAlertModalOpen(true);
         }
 
     }
@@ -172,6 +184,15 @@ function BulkPhysicians({setDisplay}) {
                 <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
                 <button className="button" type="button" onClick={handleAdd}>Add Physicians</button><br></br><br></br>
             </div>
+
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {
+                    setIsAlertModalOpen(false)
+                    setDisplay("main");
+            }}
+            />
         </div>
 
     )
