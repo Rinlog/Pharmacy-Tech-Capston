@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
+import AlertModal from "../modals/alertModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -8,6 +9,10 @@ function Confirmation() {
 
     // Grab the code and userID from the URL
     let { code, userID } = useParams();
+
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     // Navigation
     const navigate = useNavigate();
@@ -49,20 +54,24 @@ function Confirmation() {
                     const data = await response.json();
 
                     if (data.data === true) {
-                        alert("Account confirmed. You will need to reset your password to login.");
+                        setAlertMessage("Account confirmed. You will need to reset your password to login.");
+                        setIsAlertModalOpen(true);
                         window.location.href = '/login';
                     }
 
                 }
                 catch{
-                    alert("Account confirmed. You will need to reset your password to login.");
+                    setAlertMessage("Account confirmed. You will need to reset your password to login.");
+                    setIsAlertModalOpen(true);
                 }
 
-                alert('Account confirmed successfully');
+                setAlertMessage("Account confirmed successfully");
+                setIsAlertModalOpen(true);
                 navigate('/login');
             }
             else {
-                alert('Account confirmation failed');
+                setAlertMessage("Account confirmation failed");
+                setIsAlertModalOpen(true);
             }
         }
         catch (error) {
@@ -75,7 +84,15 @@ function Confirmation() {
             <h1>Account Confirmation</h1>
             <p>Thank you for signing up! Please click the button below to confirm your account.</p>
             <button>Confirm Account</button>
+
+        <AlertModal
+            isOpen={isAlertModalOpen}
+            message={alertMessage}
+            onClose={() => {setIsAlertModalOpen(false)}}
+        />
         </form>
+
+        
     )
 }
 
