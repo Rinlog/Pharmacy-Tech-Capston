@@ -6,10 +6,12 @@ import {useCookies} from 'react-cookie';
 import DrugLookupModal from '@components/modals/drugLookupModal.jsx';
 import PatientLookupModal from '@components/modals/patientLookupModal.jsx';
 import PhysicianLookupModal from '@components/modals/physicianLookupModal.jsx';
+import AlertModal from '@components/modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
+
 function AddOrder(){
 
     //modal stuff
@@ -21,6 +23,8 @@ function AddOrder(){
     const [patientIsOpen, setPatientIsOpen] = useState(false);
     const [physicianIsOpen, setPhysicianIsOpen] = useState(false);
 
+    const [AlertModalOpen, setAlertModalOpen] = useState(false);
+    const [AlertMessage, setAlertMessage] = useState();
     //form states from db
     const [formPatient, setFormPatient] = useState('');
     const [formDIN, setFormDIN] = useState('');
@@ -87,16 +91,18 @@ function AddOrder(){
             const data = await response.json();
 
             if (data.message == "Order successfully created.") {
-                alert(data.message);
-                location.reload();
+                setAlertMessage(data.message);
+                setAlertModalOpen(true);
             }
             else {
-                alert(data.message);
+                setAlertMessage(data.message);
+                setAlertModalOpen(true);
                 return;
             }
         }
         catch (error){
-            alert("Could not submit, please contact system administrator.");
+            setAlertMessage("Could not submit, please contact system administrator.");
+            setAlertModalOpen(true);
         }
         
     }
@@ -136,7 +142,16 @@ function AddOrder(){
     return(
 
         <div>
-            
+            <AlertModal
+                isOpen={AlertModalOpen}
+                message={AlertMessage}
+                onClose={function(){
+                    setAlertModalOpen(false);
+                    if (AlertMessage == "Order successfully created."){
+                        location.reload();
+                    }
+                }}
+            ></AlertModal>
             <form className="form" id="addorder" onSubmit={OnSubmit}>
 
                 <label htmlFor="orderPatient">Patient:</label>

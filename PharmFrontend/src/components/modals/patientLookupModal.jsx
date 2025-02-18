@@ -1,5 +1,6 @@
 //react imports
 import {useState, useEffect} from 'react';
+import AlertModal from '@components/modals/alertModal';
 
 //css
 import "@components/modals/modalStyles.css";
@@ -10,6 +11,7 @@ import he from 'he';
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
+
 const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
@@ -22,6 +24,9 @@ const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
 
+    //modal alert stuff
+    const [AlertModalOpen, setAlertModalOpen] = useState(false);
+    const [AlertMessage, setAlertMessage] = useState();
     // Map the headers to the data for the table
     const headerMapping = {
         "ppr": "Patient ID",
@@ -59,7 +64,8 @@ const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
 
             // If there is an issue with the response, alert the user
             if(response.status != 200) {
-                alert(fetchedData.message);
+                setAlertMessage(fetchedData.message);
+                setAlertModalOpen(true);
             }
 
             if (fetchedData.data.length > 0) {
@@ -96,8 +102,8 @@ const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
 
         }
         catch (error) {
-            alert("Error getting patients. Please try again.");
-            console.error(error);
+            setAlertMessage("Error getting patients. Please try again.")
+            setAlertModalOpen(true);
             setDataObtained(false);
         }
 
@@ -145,56 +151,66 @@ const PatientLookupModal = ({ patientIsOpen, setPatientIsOpen, setPatient}) => {
     return(
 
         patientIsOpen && (
-            <div className={`modal ${patientIsOpen ? 'isOpen' : ''}`} style={{ display: patientIsOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight, width: '60%' }}>
-                    <span className="close" onClick={CloseNoSelection}>&times;</span>    
+            <div>
+                <AlertModal
+                    isOpen={AlertModalOpen}
+                    message={AlertMessage}
+                    onClose={function(){
+                        setAlertModalOpen(false);
+                    }}
+                ></AlertModal>
+                <div className={`modal ${patientIsOpen ? 'isOpen' : ''}`} style={{ display: patientIsOpen ? 'flex' : 'none' }}>
+                    <div className="modal-content" style={{ height: modalHeight, width: '60%' }}>
+                        <span className="close" onClick={CloseNoSelection}>&times;</span>    
 
-                    {/* Displays when data has not been obtained */}
-                    {!dataObtained && (
-                        <label>{dataError ? "Error fetching data" : "Fetching Data..."}</label>
-                    )}
+                        {/* Displays when data has not been obtained */}
+                        {!dataObtained && (
+                            <label>{dataError ? "Error fetching data" : "Fetching Data..."}</label>
+                        )}
 
-                    {/* Displays when data has been obtained */}
-                    {dataObtained && (
-                        <>
-                    <input type="text" className="text-input" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)}></input>
+                        {/* Displays when data has been obtained */}
+                        {dataObtained && (
+                            <>
+                        <input type="text" className="text-input" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)}></input>
 
-                        <table>
-                            <thead>
-                                <tr>
-                                    {/* Empty column for radio buttons */}
-                                    <th></th>
-                                    {tableHeaders.map(header => (
-                                        <th key={header}>{header}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredData.map((item, index) => (
-                                    <tr key={index}>
-
-                                        {/* Add radio button for each row */}
-                                        <td>
-                                        <input
-                                            type="radio"
-                                            name="selectedRow"
-                                            onChange={() => handleSelect(item)}
-                                        />
-                                        </td>
-
+                            <table>
+                                <thead>
+                                    <tr>
+                                        {/* Empty column for radio buttons */}
+                                        <th></th>
                                         {tableHeaders.map(header => (
-                                            <td key={header}>{item[header]}</td>
+                                            <th key={header}>{header}</th>
                                         ))}
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        <button className="button" onClick={CloseWithSelection} disabled={radioChecked === false}>Confirm</button>
-                        </>
-                    )}
+                                </thead>
+                                <tbody>
+                                    {filteredData.map((item, index) => (
+                                        <tr key={index}>
 
-                    </div>
+                                            {/* Add radio button for each row */}
+                                            <td>
+                                            <input
+                                                type="radio"
+                                                name="selectedRow"
+                                                onChange={() => handleSelect(item)}
+                                            />
+                                            </td>
+
+                                            {tableHeaders.map(header => (
+                                                <td key={header}>{item[header]}</td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <button className="button" onClick={CloseWithSelection} disabled={radioChecked === false}>Confirm</button>
+                            </>
+                        )}
+
+                        </div>
+                </div>
             </div>
+            
         ) 
     )
 
