@@ -259,7 +259,6 @@ function AllOrders(){
                         return;
                     }
                     if (PrintQuantity <10 && PrintQuantity > 0){
-                        setTimeout(async function(){
                             await $.ajax({
                                 method:"POST",
                                 url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintOrder",
@@ -274,7 +273,6 @@ function AllOrders(){
                                     handleClose(); //reloads and closes modal
                                 }
                             });
-                        },1000)
                     }
                     else{
                         setAlertMessage("Please enter a quantity from 1 to 10");

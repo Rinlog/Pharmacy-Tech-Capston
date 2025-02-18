@@ -2,6 +2,7 @@
 import {useState, useEffect} from 'react';
 import {useCookies} from 'react-cookie';
 
+import AlertModal from '@components/modals/alertModal';
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
@@ -19,6 +20,10 @@ function MyOrders(){
     const [tableHeaders, setTableHeaders] = useState([]);
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
+
+    //modal alert stuff
+    const [AlertModalOpen, setAlertModalOpen] = useState(false);
+    const [AlertMessage, setAlertMessage] = useState();
 
     // Check the cookies
     const [cookies] = useCookies(['user', 'admin']);
@@ -98,7 +103,8 @@ function MyOrders(){
 
             // If there is an issue with the response, alert the user
             if(response.status != 200) {
-                alert(fetchedData.message);
+                setAlertMessage(fetchedData.message);
+                setAlertModalOpen(true);
             }
 
             if (fetchedData.data.length > 0) {
@@ -169,8 +175,8 @@ function MyOrders(){
 
             }
         } catch (error) {
-            alert("Error getting orders. Please try again.");
-            console.error(error);
+            setAlertMessage("Error getting orders. Please try again.")
+            setAlertModalOpen(true);
             setDataObtained(false);
         }
     }
@@ -273,13 +279,14 @@ function MyOrders(){
                 body: JSON.stringify(order)
             });
             const data = await response.json();
-            alert(data.message);
-            location.reload();
+            setAlertMessage(data.message);
+            setAlertModalOpen(true);
             return;
 
         }
         catch (error){
-            alert("Could not submit, please contact system administrator.");
+            setAlertMessage("Could not submit, please contact system administrator.")
+            setAlertModalOpen(true);
         }
     }
 
@@ -321,7 +328,16 @@ function MyOrders(){
     return(
 
         <div>
-            
+            <AlertModal
+                    isOpen={AlertModalOpen}
+                    message={AlertMessage}
+                    onClose={function(){
+                        setAlertModalOpen(false);
+                        if (AlertMessage == "Order successfuly amended."){
+                            location.reload();
+                        }
+                    }}
+            ></AlertModal>
             {/* Displays when data has not been obtained */}
             {!dataObtained && (
                         <label>{dataError ? "Error fetching data" : "Fetching Data..."}</label>
