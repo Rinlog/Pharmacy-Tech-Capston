@@ -1,5 +1,6 @@
 // React import
 import React, { useState, useEffect } from 'react';
+import AlertModal from '../modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -14,6 +15,10 @@ function Logs() {
     // UseStates for date range
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     // Map the headers to the data for the table
     const headerMapping = {
@@ -48,7 +53,8 @@ function Logs() {
 
             // If there is an issue with the response, alert the user
             if(response.status != 200) {
-                alert(fetchedData.message);
+                setAlertMessage(fetchedData.message);
+                setIsAlertModalOpen(true);
                 console.error(fetchedData.message);
                 return;
             }
@@ -76,7 +82,8 @@ function Logs() {
 
             }
         } catch (error) {
-            alert("Error getting logs. Please try again.");
+            setAlertMessage("Error getting logs. Please try again.");
+            setIsAlertModalOpen(true);
             console.error(error);
             setDataObtained(false);
         }
@@ -99,6 +106,12 @@ function Logs() {
                 <br/>
                 <button type="submit">Get Logs</button>
             </form>
+
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => setIsAlertModalOpen(false)}
+            />
 
 
             <br/><br/>
