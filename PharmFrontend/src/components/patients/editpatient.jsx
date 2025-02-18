@@ -1,12 +1,14 @@
 //react imports
 import { useState, useEffect } from 'react';
-
+import $ from 'jquery';
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
 // Sanitization import
 import { SanitizeInput } from '@components/datasanitization/sanitization';
 
+//modal alerts
+import AlertModal from '@components/modals/alertModal';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -26,6 +28,12 @@ function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
     const [unitNumber, setUnitNumber] = useState('');
     const [allergies, setAllergies] = useState('');
     const [conditions, setConditions] = useState('');
+
+    //validation
+    const [isValid, setIsValid] = useState(true);
+    //modal alert stuff
+    const [AlertModalOpen, setAlertModalOpen] = useState(false);
+    const [AlertMessage, setAlertMessage] = useState();
 
     //What to do when data is selected
     const handleSelect = (rowData) => {
@@ -82,6 +90,11 @@ function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
             Conditions: SanitizeInput(conditions)
         }
 
+        if (isValid == false){
+            setAlertMessage("Form is not valid, make sure to check each field");
+            setAlertModalOpen(true);
+            return;
+        }
         try{
 
             //api call
@@ -95,16 +108,17 @@ function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
             });
 
             if (response.ok) {
-                alert("Patient edited successfully");
+                setAlertMessage("Patient edited successfully");
+                setAlertModalOpen(true);
             }
             else{
                 // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setAlertModalOpen(true);
             }
             
-            setDisplay("main");
-            setSelectedPatient({ "Patient ID": null, selected: false });
+            
 
         }
         catch(error){
@@ -134,9 +148,24 @@ function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
                 <br></br>
 
                 <label htmlFor="sex">Sex:</label>
-                <input type="text" id="sex" value={sex} onChange={(e) => setSex(e.target.value)} required></input>
-                <br></br>
-
+                <input type="text" id="sex" value={sex} onChange={(e) => {
+                    let localSex = e.target.value.toLocaleUpperCase();
+                    setSex(localSex);
+                    if (localSex == "M" || localSex == "F" || localSex == "O"){
+                        $("#sexError").text("");
+                        $("#sex").removeClass("is-invalid");
+                        $("#sex").addClass("is-valid");
+                        setIsValid(true);
+                    }
+                    else{
+                        setIsValid(false);
+                        $("#sexError").text("")
+                        $("#sex").removeClass("is-valid");
+                        $("#sex").addClass("is-invalid");
+                        $("#sexError").text("Please enter a valid sex (M,F,O)");
+                    }
+                    }} required></input><br></br>
+                <div id="sexError" className='invalid-feedback'></div>
                 <label htmlFor="address">Address:</label>
                 <input type="text" id="address" value={address} onChange={(e) => setAddress(e.target.value)} required></input>
                 <br></br>
@@ -168,6 +197,17 @@ function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
                 <button className="button">Submit Changes</button>
 
             </form>
+            <AlertModal
+                isOpen={AlertModalOpen}
+                message={AlertMessage}
+                onClose={function(){
+                    setAlertModalOpen(false);
+                    if (AlertMessage == "Patient edited successfully"){
+                        setDisplay("main");
+                        setSelectedPatient({ "Patient ID": null, selected: false });
+                    }
+                }}
+            ></AlertModal>
         </div>
 
     )
