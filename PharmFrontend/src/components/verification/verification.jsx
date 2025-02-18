@@ -53,6 +53,7 @@ function Verification() {
     // Get the orders
     const GetOrders = async () => {
         try {
+            setDataObtained(false); //very important line, this forces react to re-render the orders by changing the visibility of them.
             // Call the API
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Order/getorders', {
                 method: 'POST',
