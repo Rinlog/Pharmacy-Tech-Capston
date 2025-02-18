@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
+import AlertModal from "./alertModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -7,6 +8,9 @@ const ApiAccess = import.meta.env.VITE_APIAccess
 const ResetPasswordModal = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
+
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     const handleForgotPassword = async () => {
         if (!email) {
@@ -26,15 +30,18 @@ const ResetPasswordModal = ({ isOpen, onClose }) => {
 
             const data = await response.json();
             if (!response.ok) {
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             } else {
-                alert("Password reset instructions have been sent to your email.");
+                setAlertMessage("Password reset instructions have been sent to your email.");
+                setIsAlertModalOpen(true);
                 setEmail("");
                 setEmailError("");
-                onClose();
+                //onClose();
             }
         } catch (error) {
-            alert("Could not process your request at this time. Please contact the system administrator.");
+            setAlertMessage("Could not process your request a this time. Please contact the system administrator.");
+            setIsAlertModalOpen(true);
         }
     };
 
@@ -66,6 +73,16 @@ const ResetPasswordModal = ({ isOpen, onClose }) => {
 
                     <div className="d-flex justify-content-center">
                         <Button type="button" onClick={handleForgotPassword} className='ModalbuttonG'>Send Reset Link</Button>
+
+                        <AlertModal
+                            isOpen={isAlertModalOpen}
+                            message={alertMessage}
+                            onClose={() => {{setIsAlertModalOpen(false)}
+                                if (alertMessage === "Password reset instructions have been sent to your email.") {
+                                    onClose();
+                                }
+                        }}
+                        />
                     </div>
                 </Form>
             </Modal.Body>

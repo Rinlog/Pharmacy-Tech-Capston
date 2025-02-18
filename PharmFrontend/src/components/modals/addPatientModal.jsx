@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { SanitizeName, SanitizeDate, SanitizeEmail, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
+import AlertModal from "./alertModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -7,6 +8,9 @@ const ApiAccess = import.meta.env.VITE_APIAccess
 const AddPatientModal = ({ isOpen, onClose}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
+
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     const AddPatient = async () => {
 
@@ -51,18 +55,22 @@ const AddPatientModal = ({ isOpen, onClose}) => {
             
             if(response.status === 200) {
                 // Alert the user that the patient was added
-                alert("Patient Added");
+                setAlertMessage("Patient Added");
+                setIsAlertModalOpen(true);
                 // Close the modal
-                onClose();
+                //onClose();
             }
             else{// Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
             
         }
         catch (error) {
             console.error(error);
+            setAlertMessage("An error has occurred. Please contact the administrator.");
+            setIsAlertModalOpen(true);
         }
     }
 
@@ -133,6 +141,14 @@ const AddPatientModal = ({ isOpen, onClose}) => {
 
                         <button type="submit" tabIndex={12}>Add Patient</button>
                     </form>
+
+                    <AlertModal
+                        isOpen={isAlertModalOpen}
+                        message={alertMessage}
+                        onClose={() => {setIsAlertModalOpen(false)
+                            onClose();
+                        }}
+                    />
                 </div>
             </div>
         )
