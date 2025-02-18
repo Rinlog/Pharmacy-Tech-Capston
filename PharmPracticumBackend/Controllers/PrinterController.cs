@@ -55,6 +55,10 @@ namespace PharmPracticumBackend.Controllers
             try
             {
                 String[] Info = InfoString.Split("~!~");
+                if (Info.Length != 2)
+                {
+                    return BadRequest("All required api fields are not specified");
+                }
                 ordersDTO order = _PharmDL.GetOrderByID(Info[1]);
                 if (order.RxNum == null) { return BadRequest("Order does not exist"); }
                 if (Info[0] == order.Verifier)
@@ -78,8 +82,13 @@ namespace PharmPracticumBackend.Controllers
         {
             try
             {
+                
                 //index 0 is the order id , index 1 is the print status code, index 2 is the quantity to print
                 String[] OrderInfoArray = OrderInfo.Split("~!~");
+                if (OrderInfoArray.Length != 3)
+                {
+                    return BadRequest("All required api fields are not specified");
+                }
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderInfoArray[0]);
                 if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderInfoArray[0]); }
 
@@ -110,6 +119,10 @@ namespace PharmPracticumBackend.Controllers
             {
                 //index 0 is the order id, index 1 is the quantity
                 String[] OrderInfoArray = OrderInfo.Split("~!~");
+                if (OrderInfoArray.Length != 2)
+                {
+                    return BadRequest("All required api fields are not specified");
+                }
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderInfoArray[0]);
                 if (ordersDTO.RxNum == null || ordersDTO.DateVerified == "" || ordersDTO.DateSubmitted == null) { return Ok("/images/PrintPreview/Default.png"); }
                 Bitmap img = CreateOrderImage(ordersDTO, OrderInfoArray[1]);
@@ -137,6 +150,10 @@ namespace PharmPracticumBackend.Controllers
             {
                 //index 0 is the order id , index 1 is the print status code
                 String[] OrderInfoArray = OrderInfo.Split("~!~");
+                if (OrderInfoArray.Length != 2)
+                {
+                    return BadRequest("All required api fields are not specified");
+                }
                 ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderInfoArray[0]);
                 if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderInfoArray[0]); }
 
