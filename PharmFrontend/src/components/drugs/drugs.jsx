@@ -29,8 +29,7 @@ function Drugs() {
 
     //table sorting
     const [column, setColumn] = useState(null);
-    const [sortOrder, setOrder] = useState('asc');
-
+    const [sortOrder, setOrder] = useState('desc');
     // UseStates to manage displaying the bulk add and edit functionality
     const [display, setDisplay] = useState("main");
     const [content, setContent] = useState(null);
@@ -131,31 +130,7 @@ function Drugs() {
         }
     }
 
-    // Get the drugs initially on page load
-    useEffect(() => {
-        GetDrugs();
-    }, []);
-
-    // Attempt to obtain drug data until success (max 3 attempts, 1 second interval)
-    useEffect(() => {
-        let attempts = 0;
-        const interval = setInterval(() => {
-            if (!dataObtained && attempts < 3) {
-                GetDrugs();
-                attempts++;
-            }
-            else {
-                if (attempts === 3) {
-                    // If we've tried 3 times and still haven't gotten the data, set an error to display
-                    setDataError(true);
-                }
-                clearInterval(interval);
-            }
-        }, 1000);
-
-        // Cleanup function
-        return () => clearInterval(interval);
-    }, []); // Empty dependency array to run the effect once on mount
+   
 
     // Filter drug data on search box input
     useEffect(() => {
@@ -172,12 +147,17 @@ function Drugs() {
         }
     }, [search, data]);
 
-    // Update the data when the modals are closed
+    // Update the data when the modals are closed this also loads the tabel in initially
     useEffect(() => {
         const fetchData = async () => {
             if (!isAddModalOpen && !isDeleteModalOpen) {
                 // If both modals are closed, fetch the data
                 await GetDrugs();
+                setTimeout(function(){
+                    if (column !== null){
+                        headerSort(selectedHeader,false); //tells it not to swap the order from asc/desc, just re-sort
+                    }
+                },10)
             }
         };
 
@@ -214,20 +194,8 @@ function Drugs() {
         }
     }, [display, setContent]);
 
-    //function to handle sorting when a header is clicked
-    const headerSort = (header) => {
-
-        //toggle sort order if clicking the same column, otherwise it will do ascending
-        let newSortOrder = 'asc';
-        if (column === header && sortOrder === 'asc') {
-            newSortOrder = 'desc';
-        }
-
-        setColumn(header);
-        setOrder(newSortOrder);
-
-        //copy and sort data
-        let sortedData = filteredData.sort((a, b) => {
+    function SortbyHeader(header,direction){
+        return filteredData.sort((a, b) => {
 
             let first = a[header];
             let second = b[header];
@@ -238,7 +206,7 @@ function Drugs() {
      
 
             //sort info for asc and dsc rows
-            if (newSortOrder === 'asc') {
+            if (direction === 'asc') {
                 
                 if (first > second ) {
                     return 1;
@@ -262,10 +230,36 @@ function Drugs() {
                     return 0;
                 }
             }
-    });
+        })
 
-    setFilteredData(sortedData);
-};
+    }
+    //function to handle sorting when a header is clicked
+    const headerSort = (header,swap) => {
+
+        //this sets a use state header so that when the page is updated it will re-sort
+
+        //toggle sort order if clicking the same column, otherwise it will do ascending
+        
+        if (swap == true){
+            let newSortOrder = 'asc';
+            if (column === header && sortOrder === 'asc') {
+                newSortOrder = 'desc';
+            }
+            setColumn(header);
+            setOrder(newSortOrder);
+            let sortedData = SortbyHeader(header,newSortOrder);
+            setFilteredData(sortedData);
+        }
+        else{
+            let sortedData = SortbyHeader(header,sortOrder);
+            setColumn(header);
+            setFilteredData(sortedData);
+
+        }
+        
+        
+        
+    };
 
     
     return(
@@ -323,7 +317,7 @@ function Drugs() {
                         <tr>
                             <th></th>
                             {tableHeaders.map(header => (
-                                <th key={header} onClick={() => headerSort(header)} style={{ cursor: 'pointer' }}>
+                                <th key={header} onClick={() => headerSort(header,true)} style={{ cursor: 'pointer' }}>
                                     {header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
                                 </th>
                             ))}
