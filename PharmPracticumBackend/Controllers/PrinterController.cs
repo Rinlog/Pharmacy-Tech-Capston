@@ -208,7 +208,8 @@ namespace PharmPracticumBackend.Controllers
                 fileToPrint = file;
                 //If printer will not print but it is visible on network make sure to update printer IP in Windows Printer Properties on the Ports Tab
                 PageSettings pageSettings = new PageSettings();
-                Margins mg = new Margins(0, 0, 0, 0);
+                pageSettings.PaperSize = new PaperSize("LabelSize", 300, 300);
+                Margins mg = new Margins(5, 0, 0, 0);
                 pageSettings.Margins = mg;
                 PrinterResolution printerResolution = new PrinterResolution();
                 printerResolution.X = 203;

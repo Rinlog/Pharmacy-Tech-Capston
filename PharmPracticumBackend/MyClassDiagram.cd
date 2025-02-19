@@ -49,7 +49,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="PharmPracticumBackend.DTO.loginDTO">
-    <Position X="0.5" Y="1.75" Width="2.25" />
+    <Position X="0.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAQgAAAAAAAAiAAAAAAAAAAA=</HashCode>
       <FileName>DTO\loginDTO.cs</FileName>
@@ -70,14 +70,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="PharmPracticumBackend.DTO.namesRequestDTO">
-    <Position X="0.5" Y="4.25" Width="2.5" />
+    <Position X="0.5" Y="5.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>CBAAACAAAAAAAAAAAAQAAAgAAEAAAAAAABLAAAAAIAA=</HashCode>
       <FileName>DTO\namesRequestDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="PharmPracticumBackend.DTO.ordersDTO">
-    <Position X="3.25" Y="0.5" Width="2" />
+    <Position X="2.75" Y="0.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>CAAIAAAEAAASAAEAAEAoAAAAIMAAAAAAAAAAgEFoJCA=</HashCode>
       <FileName>DTO\ordersDTO.cs</FileName>
@@ -230,25 +230,27 @@
     <AssociationLine Name="_pharmDL" Type="PharmPracticumBackend.DL.PharmDL" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="2.375" Y="9" />
-        <Point X="2.375" Y="8.59" />
-        <Point X="4.54" Y="8.59" Type="JumpStart" />
-        <Point X="4.706" Y="8.59" Type="JumpEnd" />
-        <Point X="12.249" Y="8.59" Type="JumpStart" />
-        <Point X="12.415" Y="8.59" Type="JumpEnd" />
-        <Point X="13.554" Y="8.59" Type="JumpStart" />
-        <Point X="13.72" Y="8.59" Type="JumpEnd" />
-        <Point X="15.217" Y="8.59" Type="JumpStart" />
-        <Point X="15.383" Y="8.59" Type="JumpEnd" />
-        <Point X="16.479" Y="8.59" Type="JumpStart" />
-        <Point X="16.645" Y="8.59" Type="JumpEnd" />
+        <Point X="2.375" Y="8.877" />
+        <Point X="4.54" Y="8.877" Type="JumpStart" />
+        <Point X="4.706" Y="8.877" Type="JumpEnd" />
+        <Point X="7.757" Y="8.877" Type="JumpStart" />
+        <Point X="7.923" Y="8.877" Type="JumpEnd" />
+        <Point X="12.249" Y="8.877" Type="JumpStart" />
+        <Point X="12.501" Y="8.877" Type="JumpEnd" />
+        <Point X="13.554" Y="8.877" Type="JumpStart" />
+        <Point X="13.72" Y="8.877" Type="JumpEnd" />
+        <Point X="15.217" Y="8.877" Type="JumpStart" />
+        <Point X="15.383" Y="8.877" Type="JumpEnd" />
+        <Point X="16.479" Y="8.877" Type="JumpStart" />
+        <Point X="16.645" Y="8.877" Type="JumpEnd" />
+        <Point X="16.918" Y="8.877" />
+        <Point X="16.918" Y="8.59" />
         <Point X="21.229" Y="8.59" Type="JumpStart" />
         <Point X="21.395" Y="8.59" Type="JumpEnd" />
         <Point X="21.782" Y="8.59" Type="JumpStart" />
         <Point X="21.948" Y="8.59" Type="JumpEnd" />
-        <Point X="22.875" Y="8.59" />
-        <Point X="22.875" Y="5.548" />
-        <Point X="22.927" Y="5.548" Type="JumpStart" />
-        <Point X="23.21" Y="5.548" Type="JumpEnd" />
+        <Point X="23.127" Y="8.59" />
+        <Point X="23.127" Y="5.548" />
         <Point X="23.25" Y="5.548" />
       </Path>
     </AssociationLine>
