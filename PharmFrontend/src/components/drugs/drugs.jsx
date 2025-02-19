@@ -27,6 +27,10 @@ function Drugs() {
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
 
+    //table sorting
+    const [column, setColumn] = useState(null);
+    const [sortOrder, setOrder] = useState('asc');
+
     // UseStates to manage displaying the bulk add and edit functionality
     const [display, setDisplay] = useState("main");
     const [content, setContent] = useState(null);
@@ -209,6 +213,60 @@ function Drugs() {
                 break;
         }
     }, [display, setContent]);
+
+    //function to handle sorting when a header is clicked
+    const headerSort = (header) => {
+
+        //toggle sort order if clicking the same column, otherwise it will do ascending
+        let newSortOrder = 'asc';
+        if (column === header && sortOrder === 'asc') {
+            newSortOrder = 'desc';
+        }
+
+        setColumn(header);
+        setOrder(newSortOrder);
+
+        //copy and sort data
+        let sortedData = filteredData.sort((a, b) => {
+
+            let first = a[header];
+            let second = b[header];
+
+            //convert to lowercase strings if there is upcase letters
+            first = String(first).toLowerCase();
+            second = String(second).toLowerCase();
+     
+
+            //sort info for asc and dsc rows
+            if (newSortOrder === 'asc') {
+                
+                if (first > second ) {
+                    return 1;
+                }
+                else if (first < second){
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
+            } 
+            else {
+
+                if (first < second) {
+                    return 1;
+                }
+                else if (first > second) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
+            }
+    });
+
+    setFilteredData(sortedData);
+};
+
     
     return(
 
@@ -261,15 +319,16 @@ function Drugs() {
             {dataObtained && (
                 <div className='scroll-table'>
                     <table>
-                        <thead>
-                            <tr>
-                                {/* Empty column for radio buttons */}
-                                <th></th>
-                                {tableHeaders.map(header => (
-                                    <th key={header}>{header}</th>
-                                ))}
-                            </tr>
-                        </thead>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            {tableHeaders.map(header => (
+                                <th key={header} onClick={() => headerSort(header)} style={{ cursor: 'pointer' }}>
+                                    {header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
                         <tbody>
                             {filteredData.map((item, index) => (
                                 <tr key={index}>
