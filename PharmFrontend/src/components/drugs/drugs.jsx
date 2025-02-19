@@ -155,7 +155,7 @@ function Drugs() {
                 await GetDrugs();
                 setTimeout(function(){
                     if (column !== null){
-                        headerSort(selectedHeader,false); //tells it not to swap the order from asc/desc, just re-sort
+                        headerSort(column,false); //tells it not to swap the order from asc/desc, just re-sort
                     }
                 },10)
             }
