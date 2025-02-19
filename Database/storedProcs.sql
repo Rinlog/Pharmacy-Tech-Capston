@@ -33,6 +33,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS isUserActive; 
 
     -- Checks (Complex)
+    DROP PROCEDURE IF EXISTS checkForPass;
     DROP PROCEDURE IF EXISTS checkPassword; 
     DROP PROCEDURE IF EXISTS checkConfirmationCode; 
     DROP PROCEDURE IF EXISTS checkResetCode; 
