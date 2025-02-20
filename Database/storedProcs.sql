@@ -64,6 +64,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS getAllDrugs; 
     DROP PROCEDURE IF EXISTS getAllOrders; 
     DROP PROCEDURE IF EXISTS getAllLogs; 
+    DROP PROCEDURE IF EXISTS getAllSIGS
     DROP PROCEDURE IF EXISTS getOrdersVerifiedByUser
     -- Specific Procedures
     DROP PROCEDURE IF EXISTS getLogs; 
@@ -1714,4 +1715,10 @@ GO
                 update OrderTable set PrintStatusID = @statusID where rxNum = @orderID;
             end;
     go
+
+    CREATE PROCEDURE dbo.getAllSIGS
+    -- will retrieve all sig codes from sig table
+    AS
+        select * from SIGTable;
+    GO
 

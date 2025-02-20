@@ -7,6 +7,7 @@ import DrugLookupModal from '@components/modals/drugLookupModal.jsx';
 import PatientLookupModal from '@components/modals/patientLookupModal.jsx';
 import PhysicianLookupModal from '@components/modals/physicianLookupModal.jsx';
 import AlertModal from '@components/modals/alertModal';
+import SIGLookupModal from "@components/modals/SIGLookupModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -22,6 +23,7 @@ function AddOrder(){
     const [drugIsOpen, setDrugIsOpen] = useState(false);
     const [patientIsOpen, setPatientIsOpen] = useState(false);
     const [physicianIsOpen, setPhysicianIsOpen] = useState(false);
+    const [SIGIsOpen, setSIGIsOpen] = useState(false);
 
     const [AlertModalOpen, setAlertModalOpen] = useState(false);
     const [AlertMessage, setAlertMessage] = useState();
@@ -176,7 +178,7 @@ function AddOrder(){
                 <input className="text-input" id="orderDose" required={true} value={formDose} onChange={(e) => setFormDose(e.target.value)}></input>
                 <label>{formDbDose}</label>
                 
-                <button type="button" className="button" id="drugBtn" onClick={() => setDrugIsOpen(true)}>Drugs</button>
+                <button type="button" className="button" id="drugBtn" onClick={() => setDrugIsOpen(true)}>Drug</button>
 
 
                 {drugIsOpen && (
@@ -222,10 +224,18 @@ function AddOrder(){
                 <br></br>
 
                 <label htmlFor="orderSIG">SIG:</label>
-                <input type="text" id="orderSIG" className="text-input" required={true} value={SIG} onChange={(e) => setSIG(e.target.value)}></input> <br></br>
+                <input type="text" id="orderSIG" className="text-input" required={true} readOnly={true} value={SIG} ></input>
+
+                <button type="button" className='button' onClick={function(e){setSIGIsOpen(true)}}>SIG Code</button><br></br>
+
+                <SIGLookupModal
+                    visible={SIGIsOpen}
+                    setVisible={setSIGIsOpen}
+                    setSig={setSIG}
+                />
 
                 <label htmlFor="orderStart">SIG Description:</label>
-                <input type="text" id="orderStart" className="text-input" required={true} value={SIGDesc} onChange={(e) => setSIGDesc(e.target.value)}></input> <br></br>
+                <input type="text" id="orderStart" className="text-input" required={true} readOnly={true} value={SIGDesc}></input> <br></br>
 
                 <label htmlFor="orderStart">Start Date:</label>
                 <input type="date" id="orderStart" className="date-input" required={true} value={startDate} onChange={(e) => setStartDate(e.target.value)}></input> <br></br>

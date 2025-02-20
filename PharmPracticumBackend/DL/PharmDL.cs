@@ -1885,6 +1885,38 @@ namespace PharmPracticumBackend.DL
             }
         }
 
+        //SIG related procedures
+
+        public List<SIGDTO> getAllSIGS()
+        {
+            List<SIGDTO> SIGDTOs = new List<SIGDTO>();
+
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.getAllSIGS", conn);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    SIGDTO sigDTO = new SIGDTO();
+
+                    sigDTO.abbreviation = reader["abbreviation"].ToString();
+                    sigDTO.description = reader["description"].ToString();
+
+                    SIGDTOs.Add(sigDTO);
+
+                }
+                return SIGDTOs;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return SIGDTOs;
+        }
 
     }
 }
