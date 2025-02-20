@@ -19,7 +19,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDel
     const handleConfirmDelete = () => {
         DeleteDrug();
         setSecondModalOpen(false);
-        handleClose();
+        //handleClose();
     }
 
     const handleCancelDelete = () => {
@@ -42,12 +42,15 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDel
             });
     
             if (response.ok) {
+                //these needs to be in this order for proper deletion and updating list
                 setAlertMessage("Drug deleted successfully");
-                setIsAlertModalOpen(true);
-                onDelete(); //added for refresh?
+                
                 setDrugToDelete({ "DIN": null, selected: false });
                 
+                onDelete(); //added for refresh?
                 // Explicitly call onClose after setting state
+                setIsAlertModalOpen(true);
+                
                 onClose();
             }
             else {

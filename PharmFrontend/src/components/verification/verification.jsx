@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 // Import modals
 import VerifyOrder from './verifyOrder';
+import SortByHeader from '@components/headerSort/sortByHeader';
 
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
@@ -19,6 +20,10 @@ function Verification() {
     const [tableHeaders, setTableHeaders] = useState([]);
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
+
+    //table sorting
+    const [column, setColumn] = useState(null);
+    const [sortOrder, setOrder] = useState('desc');
 
     const [display, setDisplay] = useState("main");
     const [content, setContent] = useState(null);
@@ -172,26 +177,6 @@ function Verification() {
         GetOrders();
     }, []);
 
-    // Attempt to obtain order data until success (max 3 attempts, 1 second interval)
-    useEffect(() => {
-        let attempts = 0;
-        const interval = setInterval(() => {
-            if (!dataObtained && attempts < 3) {
-                GetOrders();
-                attempts++;
-            }
-            else {
-                if (attempts === 3) {
-                    // If we've tried 3 times and still haven't gotten the data, set an error to display
-                    setDataError(true);
-                }
-                clearInterval(interval);
-            }
-        }, 1000);
-
-        // Cleanup function
-        return () => clearInterval(interval);
-    }, [dataObtained]); // Empty dependency array to run the effect once on mount  dataObtained
 
     // Filter order data on search box input
     useEffect(() => {
@@ -219,6 +204,31 @@ function Verification() {
                 break;
         }
     }, [display]); //remove setContent
+
+    //function to handle sorting when a header is clicked
+        const headerSort = (header,swap) => {
+    
+            //this sets a use state header so that when the page is updated it will re-sort
+    
+            //toggle sort order if clicking the same column, otherwise it will do ascending
+            
+            if (swap == true){
+                let newSortOrder = 'asc';
+                if (column === header && sortOrder === 'asc') {
+                    newSortOrder = 'desc';
+                }
+                setColumn(header);
+                setOrder(newSortOrder);
+                let sortedData = SortByHeader(filteredData,header,newSortOrder);
+                setFilteredData(sortedData);
+            }
+            else{
+                let sortedData = SortByHeader(filteredData,header,sortOrder);
+                setColumn(header);
+                setFilteredData(sortedData);
+    
+            }  
+        };
     
     return(
 
@@ -249,7 +259,8 @@ function Verification() {
                                 {/* Empty column for radio buttons */}
                                 <th></th>
                                 {tableHeaders.map(header => (
-                                    <th key={header}>{header}</th>
+                                    <th key={header} onClick={() => headerSort(header,true)} style={{cursor: 'pointer'}}>
+                                        {header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}</th>
                                 ))}
                             </tr>
                         </thead>

@@ -11,7 +11,7 @@ import AlertModal from '../modals/alertModal';
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-function EditPhysician({setDisplay, selectedPhysician, setSelectedPhysician}) {
+function EditPhysician({setDisplay, selectedPhysician, setSelectedPhysician, getPhysicians}) {
 
     //Modal things
     const [alertMessage, setAlertMessage] = useState("");
@@ -130,6 +130,7 @@ function EditPhysician({setDisplay, selectedPhysician, setSelectedPhysician}) {
                     setIsAlertModalOpen(false)
                     setDisplay("main");
                     setSelectedPhysician({ "Physician ID": null, selected: false });
+                    getPhysicians();
                 }}
             />
             </form>

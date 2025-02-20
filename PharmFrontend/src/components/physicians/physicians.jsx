@@ -10,6 +10,7 @@ import DeletePhysicianModal from '@components/modals/deletePhysicianModal';
 import EditPhysician from '@components/physicians/editphysician';
 import BulkPhysicians from '@components/physicians/bulkphysicians';
 import AlertModal from '../modals/alertModal';
+import SortByHeader from '@components/headerSort/sortByHeader';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -27,6 +28,9 @@ function Physicians() {
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
 
+    //table sorting
+    const [column, setColumn] = useState(null);
+    const [sortOrder, setOrder] = useState('desc');
     // UseStates to manage displaying the bulk add and edit functionality
     const [display, setDisplay] = useState("main");
     const [content, setContent] = useState(null);
@@ -124,27 +128,6 @@ function Physicians() {
         GetPhysicians();
     }, []);
 
-    // Attempt to obtain physician data until success (max 3 attempts, 1 second interval)
-    useEffect(() => {
-        let attempts = 0;
-        const interval = setInterval(() => {
-            if (!dataObtained && attempts < 3) {
-                GetPhysicians();
-                attempts++;
-            }
-            else {
-                if (attempts === 3) {
-                    // If we've tried 3 times and still haven't gotten the data, set an error to display
-                    setDataError(true);
-                }
-                clearInterval(interval);
-            }
-        }, 1000);
-
-        // Cleanup function
-        return () => clearInterval(interval);
-    }, []); // Empty dependency array to run the effect once on mount
-
     // Filter physician data on search box input
     useEffect(() => {
         if (data.length > 0) {
@@ -165,11 +148,21 @@ function Physicians() {
 
     // Update the data when the modals are closed
     useEffect(() => {
+        const fetchData = async () => {
+
         if (!isAddModalOpen && !isDeleteModalOpen) {
+
             // If both modals are closed, fetch the data
-            GetPhysicians();
+            await GetPhysicians();
+            setTimeout(function(){
+                if (column !== null) {
+                    headerSort(column, false);
+                }
+            }, 10)
         }
-    }, [isAddModalOpen, isDeleteModalOpen, display]);
+    };
+    fetchData();
+    }, [isAddModalOpen, isDeleteModalOpen]);
 
     const ChangeDisplay = (e) => {
         let select = e.target.id;
@@ -196,10 +189,58 @@ function Physicians() {
                 setContent(<BulkPhysicians setDisplay={setDisplay} />);
                 break;
             case "editPhysician":
-                setContent(<EditPhysician key={selectedPhysician["Physician ID"]} setDisplay={setDisplay} setSelectedPhysician={setSelectedPhysician} selectedPhysician={selectedPhysician} />)
+                setContent(<EditPhysician key={selectedPhysician["Physician ID"]} setDisplay={setDisplay} setSelectedPhysician={setSelectedPhysician} selectedPhysician={selectedPhysician} getPhysicians={GetPhysicians}/>)
                 break;
         }
     }, [display, setContent]);
+
+    //function to handle sorting when a header is clicked
+        const headerSort = (header,swap) => {
+    
+            //this sets a use state header so that when the page is updated it will re-sort
+    
+            //toggle sort order if clicking the same column, otherwise it will do ascending
+            
+            if (swap == true){
+                let newSortOrder = 'asc';
+                if (column === header && sortOrder === 'asc') {
+                    newSortOrder = 'desc';
+                }
+                setColumn(header);
+                setOrder(newSortOrder);
+                let sortedData = SortByHeader(filteredData,header,newSortOrder);
+                setFilteredData(sortedData);
+            }
+            else{
+                let sortedData = SortByHeader(filteredData,header,sortOrder);
+                setColumn(header);
+                setFilteredData(sortedData);
+    
+            }
+        };
+
+        //needs to be in here for a proper update to the list when deleteing
+        const handleSuccessfulDelete = (deletedPhysician) => {
+
+        const updatedData = [];
+        for (const item of data) {
+             
+             if (item.physicianID !== deletedPhysician) {
+                 updatedData.push(item);
+             }
+         }
+         
+        const updatedFilteredData = [];
+         for (const item of filteredData) {
+             
+             if (item.physicianID !== deletedPhysician) {
+                 updatedFilteredData.push(item);
+             }
+         }
+ 
+         setData(updatedData);
+         setFilteredData(updatedFilteredData);
+       };
     
     return(
 
@@ -225,8 +266,13 @@ function Physicians() {
                         <DeletePhysicianModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)}
-                            onDelete={() => GetPhysicians()} //added for refresh
+                            onDelete={() => {
+                                //handleSuccessfulDelete needs to be in here for a proper refresh of the list when deleting
+                                handleSuccessfulDelete(selectedPhysician["Physician ID"]);
+                                GetPhysicians() //added for refresh
+                            }}
                             physicianToDelete={selectedPhysician}
+                            setPhysicianToDelete={setSelectedPhysician}
                         />
 
                         <AlertModal
@@ -254,7 +300,8 @@ function Physicians() {
                             {/* Empty column for radio buttons */}
                             <th></th>
                             {tableHeaders.map(header => (
-                                <th key={header}>{header}</th>
+                                <th key={header} onClick={() => headerSort(header,true)} style={{cursor: 'pointer'}}>
+                                    {header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}</th>
                             ))}
                         </tr>
                     </thead>
