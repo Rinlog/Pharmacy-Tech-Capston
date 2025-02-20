@@ -10,6 +10,7 @@ import he from 'he';
 import DrugLookupModal from '@components/modals/drugLookupModal.jsx';
 import PatientLookupModal from '@components/modals/patientLookupModal.jsx';
 import PhysicianLookupModal from '@components/modals/physicianLookupModal.jsx';
+import SIGLookupModal from "@components/modals/SIGLookupModal";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -44,6 +45,7 @@ function MyOrders(){
     const [patientIsOpen, setPatientIsOpen] = useState(false);
     const [physicianIsOpen, setPhysicianIsOpen] = useState(false);
 
+    const [SIGIsOpen, setSIGIsOpen] = useState(false);
     //form states from db
     const [formPatient, setFormPatient] = useState('');
     const [formDIN, setFormDIN] = useState('');
@@ -416,10 +418,18 @@ function MyOrders(){
                 <br></br>
 
                 <label htmlFor="orderSIG">SIG:</label>
-                <input type="text" id="orderSIG" className="text-input" required={true} defaultValue={SIG} onChange={(e) => setSIG(e.target.value)}></input> <br></br>
+                <input type="text" id="orderSIG" className="text-input" required={true} defaultValue={SIG} readOnly={true}></input>
 
+                <button type="button" className='button' onClick={function(e){setSIGIsOpen(true)}}>SIG Code</button><br></br>
+                
+                <SIGLookupModal
+                    visible={SIGIsOpen}
+                    setVisible={setSIGIsOpen}
+                    setSig={setSIG}
+                    setSigDesc={setSIGDesc}
+                />
                 <label htmlFor="orderStart">SIG Description:</label>
-                <input type="text" id="orderStart" className="text-input" required={true} defaultValue={SIGDesc} onChange={(e) => setSIGDesc(e.target.value)}></input> <br></br>
+                <input type="text" id="orderStart" className="text-input" required={true} defaultValue={SIGDesc} readOnly={true}></input> <br></br>
 
                 <label htmlFor="orderStart">Start Date:</label>
                 <input type="date" id="orderStart" className="date-input" required={true} defaultValue={startDate} onChange={(e) => setStartDate(e.target.value)}></input> <br></br>

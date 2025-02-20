@@ -232,6 +232,7 @@ function AddOrder(){
                     visible={SIGIsOpen}
                     setVisible={setSIGIsOpen}
                     setSig={setSIG}
+                    setSigDesc={setSIGDesc}
                 />
 
                 <label htmlFor="orderStart">SIG Description:</label>

@@ -168,7 +168,9 @@ label{
 .modal-content{
     border: #005e99 6px solid;
 }
-
+.InputBackroundColor{
+    background-color: var(--inputBackground);
+}
 /* Animation for headers on page */
 .page-header-name {
     font-size: 40px;
