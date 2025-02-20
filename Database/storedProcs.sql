@@ -1721,4 +1721,3 @@ GO
     AS
         select * from SIGTable;
     GO
-
