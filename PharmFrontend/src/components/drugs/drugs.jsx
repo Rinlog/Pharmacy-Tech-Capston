@@ -13,6 +13,7 @@ import DeleteDrugModal from '@components/modals/deleteDrugModal';
 import EditDrug from '@components/drugs/editdrug';
 import BulkDrugs from '@components/drugs/bulkdrugs';
 import AlertModal from '../modals/alertModal';
+import SortByHeader from '@components/headerSort/sortByHeader';
 
 const ApiAccess = import.meta.env.VITE_APIAccess
 const BackendIP = import.meta.env.VITE_BackendIP
@@ -194,45 +195,7 @@ function Drugs() {
         }
     }, [display, setContent]);
 
-    function SortbyHeader(header,direction){
-        return filteredData.sort((a, b) => {
-
-            let first = a[header];
-            let second = b[header];
-
-            //convert to lowercase strings if there is upcase letters
-            first = String(first).toLowerCase();
-            second = String(second).toLowerCase();
-     
-
-            //sort info for asc and dsc rows
-            if (direction === 'asc') {
-                
-                if (first > second ) {
-                    return 1;
-                }
-                else if (first < second){
-                    return -1;
-                }
-                else {
-                    return 0;
-                }
-            } 
-            else {
-
-                if (first < second) {
-                    return 1;
-                }
-                else if (first > second) {
-                    return -1;
-                }
-                else {
-                    return 0;
-                }
-            }
-        })
-
-    }
+    
     //function to handle sorting when a header is clicked
     const headerSort = (header,swap) => {
 
@@ -247,11 +210,11 @@ function Drugs() {
             }
             setColumn(header);
             setOrder(newSortOrder);
-            let sortedData = SortbyHeader(header,newSortOrder);
+            let sortedData = SortByHeader(filteredData,header,newSortOrder);
             setFilteredData(sortedData);
         }
         else{
-            let sortedData = SortbyHeader(header,sortOrder);
+            let sortedData = SortByHeader(filteredData,header,sortOrder);
             setColumn(header);
             setFilteredData(sortedData);
 
@@ -260,6 +223,29 @@ function Drugs() {
         
         
     };
+
+    //needs to be in here for a proper update to the list when deleteing
+    const handleSuccessfulDelete = (deletedDIN) => {
+
+       const updatedData = [];
+       for (const item of data) {
+            
+            if (item.DIN !== deletedDIN) {
+                updatedData.push(item);
+            }
+        }
+        
+       const updatedFilteredData = [];
+        for (const item of filteredData) {
+            
+            if (item.DIN !== deletedDIN) {
+                updatedFilteredData.push(item);
+            }
+        }
+
+        setData(updatedData);
+        setFilteredData(updatedFilteredData);
+      };
 
     
     return(
@@ -286,7 +272,11 @@ function Drugs() {
                         <DeleteDrugModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)}
-                            onDelete={() => GetDrugs()} //added for refresh
+                            onDelete={() => {
+                                //handleSuccessfulDelete needs to be in here for a proper refresh of the list when deleting
+                                handleSuccessfulDelete(selectedDrug["DIN"]);
+                                GetDrugs();
+                            }} //added for refresh
                             drugToDelete={selectedDrug}
                             setDrugToDelete={setSelectedDrug}
                         />
