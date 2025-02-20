@@ -189,7 +189,7 @@ function Physicians() {
                 setContent(<BulkPhysicians setDisplay={setDisplay} />);
                 break;
             case "editPhysician":
-                setContent(<EditPhysician key={selectedPhysician["Physician ID"]} setDisplay={setDisplay} setSelectedPhysician={setSelectedPhysician} selectedPhysician={selectedPhysician} />)
+                setContent(<EditPhysician key={selectedPhysician["Physician ID"]} setDisplay={setDisplay} setSelectedPhysician={setSelectedPhysician} selectedPhysician={selectedPhysician} getPhysicians={GetPhysicians}/>)
                 break;
         }
     }, [display, setContent]);
@@ -272,6 +272,7 @@ function Physicians() {
                                 GetPhysicians() //added for refresh
                             }}
                             physicianToDelete={selectedPhysician}
+                            setPhysicianToDelete={setSelectedPhysician}
                         />
 
                         <AlertModal
