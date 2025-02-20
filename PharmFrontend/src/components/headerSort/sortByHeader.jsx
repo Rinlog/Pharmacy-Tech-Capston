@@ -4,8 +4,25 @@ function SortbyHeader(filteredData, header,direction){
         let first = a[header];
         let second = b[header];
 
+        const isDateString = (value ) => {
+            if (typeof value !== 'string') {
+                return false;
+            }
+
+            //lazy and gbt made regEx
+            const dataRegex = /^\d{4}-\d{2}-\d{2}(\s.*)?$/;
+            return dataRegex.test(value);
+        }
+
         //need this here to pull the number from the text
         const extractNumber = (value) => {
+
+            //needed if its in date format
+            if (isDateString(value)) {
+                return new Date(value).getTime();
+            }
+
+            //checking if its a number
             if (typeof value === "number") {
                 return value;
             }
