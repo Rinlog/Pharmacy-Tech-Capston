@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { SanitizeName } from '@components/datasanitization/sanitization.jsx'; 
 import AlertModal from '../modals/alertModal';
 import DeleteUserModal from '../modals/deleteUserModal';
+import SortByHeader from '@components/headerSort/sortByHeader';
 
 //other imports
 
@@ -18,6 +19,10 @@ function EditUser() {
 
     //state to ensure data has been obtained and set
     const [dataObtained, setDataObtained] = useState(false);
+
+    //table sorting
+    const [column, setColumn] = useState(null);
+    const [sortOrder, setOrder] = useState('desc');
 
     //Modal things
     const [alertMessage, setAlertMessage] = useState("");
@@ -204,6 +209,35 @@ function EditUser() {
         setIsDeleteModalOpen(true);
     };
 
+    //function to handle sorting when a header is clicked
+        const headerSort = (header,swap) => {
+    
+            //this sets a use state header so that when the page is updated it will re-sort
+    
+            //toggle sort order if clicking the same column, otherwise it will do ascending
+            
+            if (swap == true){
+                let newSortOrder = 'asc';
+                if (column === header && sortOrder === 'asc') {
+                    newSortOrder = 'desc';
+                }
+                setColumn(header);
+                setOrder(newSortOrder);
+                let sortedData = SortByHeader(filteredData,header,newSortOrder);
+                setFilteredData(sortedData);
+            }
+            else{
+                let sortedData = SortByHeader(filteredData,header,sortOrder);
+                setColumn(header);
+                setFilteredData(sortedData);
+    
+            }
+            
+            
+            
+        };
+    
+
     return(
 
         <div>
@@ -299,7 +333,8 @@ function EditUser() {
                             <th></th>
 
                             {tableHeaders.map(header => (
-                                <th className="table-headers" key={header}>{header}</th>
+                                <th className="table-headers" key={header} onClick={() => headerSort(header,true)} style={{ cursor: 'pointer' }}
+                                >{header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}</th>
                             ))}
                         </tr>
 
