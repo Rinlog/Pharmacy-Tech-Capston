@@ -10,6 +10,7 @@ import DeletePatientModal from '@components/modals/deletePatientModal';
 import EditPatient from '@components/patients/editpatient';
 import BulkPatients from '@components/patients/bulkpatients';
 import AlertModal from '../modals/alertModal';
+import SortByHeader from '@components/headerSort/sortByHeader';
 
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
@@ -26,6 +27,10 @@ function Patients() {
     const [tableHeaders, setTableHeaders] = useState([]);
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
+
+    //table sorting
+    const [column, setColumn] = useState(null);
+    const [sortOrder, setOrder] = useState('desc');
 
     // UseStates to manage displaying the bulk add and edit functionality
     const [display, setDisplay] = useState("main");
@@ -140,32 +145,6 @@ function Patients() {
         }
     }
 
-    // Get the patients initially on page load
-    useEffect(() => {
-        GetPatients();
-    }, []);
-
-    // Attempt to obtain patient data until success (max 3 attempts, 1 second interval)
-    useEffect(() => {
-        let attempts = 0;
-        const interval = setInterval(() => {
-            if (!dataObtained && attempts < 3) {
-                GetPatients();
-                attempts++;
-            }
-            else {
-                if (attempts >= 3) {
-                    // If we've tried 3 times and still haven't gotten the data, set an error to display
-                    setDataError(true);
-                }
-                clearInterval(interval);
-            }
-        }, 1000);
-
-        // Cleanup function
-        return () => clearInterval(interval);
-    }, []); // Empty dependency array to run the effect once on mount
-
     // Filter patient data on search box input
     useEffect(() => {
         if (data.length > 0) {
@@ -181,16 +160,22 @@ function Patients() {
         }
     }, [search, data]);
 
+    // Update the data when the modals are closed this also loads the table in initially
     useEffect(() => {
-    }, [selectedPatient]);
+        const fetchData = async () => {
+            if (!isAddModalOpen && !isDeleteModalOpen) {
+                // If both modals are closed, fetch the data
+                await GetPatients();
+                setTimeout(function(){
+                    if (column !== null){
+                        headerSort(column,false); //tells it not to swap the order from asc/desc, just re-sort
+                    }
+                },10)
+            }
+        };
 
-    // Update the data when the modals are closed
-    useEffect(() => {
-        if (!isAddModalOpen && !isDeleteModalOpen) {
-            // If both modals are closed, fetch the data
-            GetPatients();
-        }
-    }, [isAddModalOpen, isDeleteModalOpen, display]);
+        fetchData();
+    }, [isAddModalOpen, isDeleteModalOpen]);
 
     const ChangeDisplay = (e) => {
         let select = e.target.id;
@@ -217,10 +202,58 @@ function Patients() {
                 setContent(<BulkPatients setDisplay={setDisplay} getPatients={GetPatients}/>);
                 break;
             case "editPatient":
-                setContent(<EditPatient key={selectedPatient["Patient ID"]} setDisplay={setDisplay} setSelectedPatient={setSelectedPatient} selectedPatient={selectedPatient} />)
+                setContent(<EditPatient key={selectedPatient["Patient ID"]} setDisplay={setDisplay} setSelectedPatient={setSelectedPatient} selectedPatient={selectedPatient} getPatients={GetPatients}/>)
                 break;
         }
     }, [display, setContent]);
+
+       //function to handle sorting when a header is clicked
+        const headerSort = (header,swap) => {
+    
+            //this sets a use state header so that when the page is updated it will re-sort
+    
+            //toggle sort order if clicking the same column, otherwise it will do ascending
+            
+            if (swap == true){
+                let newSortOrder = 'asc';
+                if (column === header && sortOrder === 'asc') {
+                    newSortOrder = 'desc';
+                }
+                setColumn(header);
+                setOrder(newSortOrder);
+                let sortedData = SortByHeader(filteredData,header,newSortOrder);
+                setFilteredData(sortedData);
+            }
+            else{
+                let sortedData = SortByHeader(filteredData,header,sortOrder);
+                setColumn(header);
+                setFilteredData(sortedData);
+    
+            }
+        };
+
+        //needs to be in here for a proper update to the list when deleteing
+        const handleSuccessfulDelete = (deletedPatient) => {
+
+        const updatedData = [];
+        for (const item of data) {
+             
+             if (item["Patient ID"] !== deletedPatient) {
+                 updatedData.push(item);
+             }
+         }
+         
+        const updatedFilteredData = [];
+         for (const item of filteredData) {
+             
+             if (item["Patient ID"] !== deletedPatient) {
+                 updatedFilteredData.push(item);
+             }
+         }
+ 
+         setData(updatedData);
+         setFilteredData(updatedFilteredData);
+       };
     
     return(
 
@@ -245,10 +278,13 @@ function Patients() {
                     <button id="deletePatient" onClick={handleDeleteClick}>Delete Patient</button>
                         <DeletePatientModal 
                             isOpen={isDeleteModalOpen} 
-                            onDelete={() => GetPatients()}
                             onClose={() => setIsDeleteModalOpen(false)} 
+                            onDelete={() => {
+                                handleSuccessfulDelete(selectedPatient["Patient ID"]);
+                                GetPatients();
+                            }}
                             patientToDelete={selectedPatient}
-                            GetPatients = {GetPatients}
+                            setPatientToDelete={setSelectedPatient}
                         />
 
                         <AlertModal
@@ -276,7 +312,8 @@ function Patients() {
                             {/* Empty column for radio buttons */}
                             <th></th>
                             {tableHeaders.map(header => (
-                                <th key={header}>{header}</th>
+                                <th key={header} onClick={() => headerSort(header,true)} style={{cursor: 'pointer'}}>
+                                    {header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}</th>
                             ))}
                         </tr>
                     </thead>

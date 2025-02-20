@@ -4,7 +4,7 @@ import AlertModal from "./alertModal";
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-const DeletePatientModal = ({ isOpen, onClose, patientToDelete, GetPatients, onDelete = () => {} }) => {
+const DeletePatientModal = ({ isOpen, onClose, patientToDelete, setPatientToDelete, onDelete = () => {} }) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
@@ -19,11 +19,12 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, GetPatients, onD
     const handleConfirmDelete = () => {
         DeletePatient();
         setSecondModalOpen(false);
-        handleClose();
+        //handleClose();
     }
 
     const handleCancelDelete = () => {
         setSecondModalOpen(false);
+        handleClose();
     }
 
     const DeletePatient = async () => {
@@ -43,9 +44,14 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, GetPatients, onD
 
             if (response.ok) {
                 setAlertMessage("Patient deleted successfully");
+
+                setPatientToDelete({ "Patient ID": null, selected: false });
+                
+                onDelete(); //added for refresh
+                
                 setIsAlertModalOpen(true);
-                //onDelete(); //added for refresh
-                //onClose();
+
+                onClose();
             }
             else{
                 // Alert out the message sent from the API
@@ -56,6 +62,8 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, GetPatients, onD
         }
         catch (error) {
             console.log(error);
+            setAlertMessage("An error occurred while deleting the patient.");
+            setIsAlertModalOpen(true);
         }
     }
 
@@ -94,11 +102,7 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, GetPatients, onD
     <AlertModal
         isOpen={isAlertModalOpen}
         message={alertMessage}
-        onClose={() => {setIsAlertModalOpen(false)
-                if (alertMessage === "Patient deleted successfully") {
-                    GetPatients();
-                }
-    }}
+        onClose={() => setIsAlertModalOpen(false)}
     />
     </>
     );

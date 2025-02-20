@@ -13,7 +13,7 @@ import AlertModal from '@components/modals/alertModal';
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
+function EditPatient({setDisplay, selectedPatient, setSelectedPatient, getPatients}) {
 
     //states for selected patient
     const [patientID, setPatientID] = useState('');
@@ -202,10 +202,9 @@ function EditPatient({setDisplay, selectedPatient, setSelectedPatient}) {
                 message={AlertMessage}
                 onClose={function(){
                     setAlertModalOpen(false);
-                    if (AlertMessage == "Patient edited successfully"){
                         setDisplay("main");
                         setSelectedPatient({ "Patient ID": null, selected: false });
-                    }
+                        getPatients();
                 }}
             ></AlertModal>
         </div>
