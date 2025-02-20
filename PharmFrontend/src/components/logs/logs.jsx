@@ -1,6 +1,7 @@
 // React import
 import React, { useState, useEffect } from 'react';
 import AlertModal from '../modals/alertModal';
+import SortByHeader from '@components/headerSort/sortByHeader';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -11,6 +12,12 @@ function Logs() {
     const [data, setData] = useState([]);
     const [tableHeaders, setTableHeaders] = useState([]);
     const [dataObtained, setDataObtained] = useState(false);
+    const [dataFiltered, setFilteredData] = useState([]);
+
+    //table sorting
+    const [column, setColumn] = useState(null);
+    const [sortOrder, setOrder] = useState('desc');
+    
 
     // UseStates for date range
     const [startDate, setStartDate] = useState('');
@@ -93,6 +100,31 @@ function Logs() {
         e.preventDefault();
         GetLogs();
     }
+
+    //function to handle sorting when a header is clicked
+    const headerSort = (header,swap) => {
+
+        //this sets a use state header so that when the page is updated it will re-sort
+
+        //toggle sort order if clicking the same column, otherwise it will do ascending
+        
+        if (swap == true){
+            let newSortOrder = 'asc';
+            if (column === header && sortOrder === 'asc') {
+                newSortOrder = 'desc';
+            }
+            setColumn(header);
+            setOrder(newSortOrder);
+            let sortedData = SortByHeader(data,header,newSortOrder);
+            setFilteredData(sortedData);
+        }
+        else{
+            let sortedData = SortByHeader(data,header,sortOrder);
+            setColumn(header);
+            setFilteredData(sortedData);
+
+        }
+    };
     
     return(
 
@@ -121,7 +153,8 @@ function Logs() {
                     <thead>
                         <tr>
                             {tableHeaders.map(header => (
-                                <th key={header}>{header}</th>
+                                <th key={header} onClick={() => headerSort(header,true)} style={{ cursor: 'pointer' }}>
+                                    {header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}</th>
                             ))}
                         </tr>
                     </thead>
