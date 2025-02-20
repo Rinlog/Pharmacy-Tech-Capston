@@ -1022,6 +1022,7 @@ GO
         GO
 
 -- Deletes
+
     CREATE PROCEDURE deleteUser
         -- Procedure: deleteUser
         -- Purpose: Delete a user from the database
@@ -1073,7 +1074,7 @@ GO
             DELETE FROM PasswordResetCodeTable WHERE userID = @userID;
 
             -- Now, FINALLY, we can delete the user(disable account)
-            UPDATE UserTable set active = 0 where userID = @userID;
+            UPDATE UserTable set removed = 1, active = 0 where userID = @userID;
         END;
         GO
 
@@ -1249,7 +1250,7 @@ GO
             END;
 
             -- Return the user information
-            SELECT userID, fName, lName, email, admin, active, campus, createdDate, expirationDate
+            SELECT userID, fName, lName, email, admin, removed, active, campus, createdDate, expirationDate
             FROM UserTable
             WHERE userID = @userID;
         END;
@@ -1383,7 +1384,7 @@ GO
         AS
         BEGIN
             --Select
-            SELECT userID, fName, lName, email, admin, active, campus, createdDate, expirationDate
+            SELECT userID, fName, lName, email, admin, removed, active, campus, createdDate, expirationDate
             FROM UserTable
             WHERE userID <> '000000'
         END;

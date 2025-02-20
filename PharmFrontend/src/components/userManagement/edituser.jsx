@@ -68,11 +68,20 @@ function EditUser() {
                     'Key-Auth':ApiAccess
                 },
             });
-            const fetchedData = await response.json();
-    
-            if (fetchedData.data && fetchedData.data.length > 0) {
+            let fetchedData = await response.json();
+            fetchedData = fetchedData.data
+            const filteredData = fetchedData.filter(function(User){
+                if (User.removed === false){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            })
+            console.log(filteredData);
+            if (filteredData && filteredData.length > 0) {
                 // Transform keys in data
-                const transformedData = fetchedData.data.map(item => {
+                const transformedData = filteredData.map(item => {
                     return {
                         "User ID": item.id,
                         "First Name": item.fName,
@@ -97,7 +106,7 @@ function EditUser() {
             }
         } catch (error) {
             setAlertMessage("Could not obtain user data at this time. \nPlease contact system administrator.");
-            isAlertModalOpen(true);
+            setIsAlertModalOpen(true);
             console.log(error);
         }
     }
@@ -373,7 +382,7 @@ function EditUser() {
                         onClose={() => {setIsAlertModalOpen(false)
                                         GetUsers();
                         }}
-                    />
+                ></AlertModal>
                 </>
             )}
         </div>

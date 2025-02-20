@@ -46,6 +46,7 @@ CREATE TABLE UserTable (
 
     admin bit NOT NULL,                             -- If user is an admin (1) or not (0) (Students vs Admins/Instructors)
     active bit NOT NULL DEFAULT 0,                  -- If user is active (1) or not (0) (Deactivated or non verified users will be inactive)
+    removed bit NOT NULL DEFAULT 0,
     createdDate datetime NOT NULL,                  -- Date user was created
     expirationDate datetime                         -- Date user account expires (If NULL, account never expires)
 )

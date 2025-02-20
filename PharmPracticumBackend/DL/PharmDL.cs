@@ -147,19 +147,18 @@ namespace PharmPracticumBackend.DL
                         if (CurrentDate > expirationDate) //checks if account is expired
                         {
                             user.UserId = "expired";
-                            //deletes the user automatically when they try to login with an expired account
-                            if (userInfo.Active == "True")
-                            {
-                                this.DeleteUser(userID);
-                            }
                             return user;
                         }
                     }
-
+                    //check if account deleted
+                    if (userInfo.Removed == true)
+                    {
+                        user.UserId = "account removed";
+                        return user;
+                    }
                     //check if user is active
                     //if not, return
                     bool active = await IsUserActive(userID);
-                    Console.WriteLine(active.ToString());
                     if (!active)
                     {
                         user.UserId = "account inactive";
@@ -353,6 +352,7 @@ namespace PharmPracticumBackend.DL
                     usersDTO.FName = reader["fName"].ToString();
                     usersDTO.LName = reader["lName"].ToString();
                     usersDTO.Email = reader["email"].ToString();
+                    usersDTO.Removed = (bool)reader["removed"];
                     usersDTO.Active = reader["active"].ToString();
                     usersDTO.Campus = reader["campus"].ToString();
                     usersDTO.CreatedDate = reader["createdDate"].ToString();
@@ -817,6 +817,8 @@ namespace PharmPracticumBackend.DL
 
                         //expirationDate
                         dbUser.ExpirationDate = reader["expirationDate"].ToString();
+
+                        dbUser.Removed = (bool)reader["removed"];
 
                         users.Add(dbUser);
 

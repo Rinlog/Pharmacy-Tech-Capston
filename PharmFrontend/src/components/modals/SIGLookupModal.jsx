@@ -138,7 +138,7 @@ function SIGLookupModal({visible, setVisible,setSig, setSigDesc}){
                                 <Form>
                                     <Form.Control className='InputBackroundColor' type="text" placeholder='Search...' onChange={function(e){Search(e.target.value)}}></Form.Control>
                                 </Form>
-                                <div className=''>
+                                <div className='d-flex justify-content-center'>
                                     <table>
                                         <thead>
                                             {Headers}

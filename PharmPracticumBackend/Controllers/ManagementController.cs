@@ -26,9 +26,8 @@ namespace PharmPracticumBackend.Controllers
         [HttpPost("getusers")]
         public async Task<IActionResult> GetAllUsers()
         {
-
+           
             List<usersDTO> users = await _pharmDL.GetAllUsers();
-
             return Ok(new { data = users });
 
         }

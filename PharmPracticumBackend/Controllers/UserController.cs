@@ -45,6 +45,8 @@ namespace PharmPracticumBackend.Controllers
             {
                 case "expired": 
                     return Ok(new { message = "Account has expired" });
+                case "account removed":
+                    return Ok(new { message = "Account has been removed" });
                 case "password error":
                     return Ok(new { message = "Account can not be logged into currently" });
                 case "account inactive":
