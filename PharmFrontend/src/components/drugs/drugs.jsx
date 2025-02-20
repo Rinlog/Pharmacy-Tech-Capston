@@ -148,7 +148,7 @@ function Drugs() {
         }
     }, [search, data]);
 
-    // Update the data when the modals are closed this also loads the tabel in initially
+    // Update the data when the modals are closed this also loads the table in initially
     useEffect(() => {
         const fetchData = async () => {
             if (!isAddModalOpen && !isDeleteModalOpen) {
