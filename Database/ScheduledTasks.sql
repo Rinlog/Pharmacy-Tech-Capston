@@ -1,4 +1,4 @@
---this containts the code for the scheduled jobs on the mssql server, copy paste them individually
+--this contains the code for the scheduled jobs on the mssql server, copy paste them individually
 
 --soft delete
 DROP PROCEDURE IF EXISTS softDeleteTask

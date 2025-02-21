@@ -78,7 +78,6 @@ function EditUser() {
                     return false;
                 }
             })
-            console.log(filteredData);
             if (filteredData && filteredData.length > 0) {
                 // Transform keys in data
                 const transformedData = filteredData.map(item => {

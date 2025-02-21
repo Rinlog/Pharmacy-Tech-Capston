@@ -202,22 +202,22 @@ function MyOrders(){
 
     //set up form
     const SetupForm = (oldData) => {
-
         setDrug({
-            "DIN": oldData["DIN"],
-            "Drug Name": oldData["Drug Name"]
+            "din": oldData["DIN"],
+            "name": oldData["Drug Name"],
+            "dosage": oldData["Prescribed Dose"]
         });
 
         setPhysician({
-            "Physician ID": oldData["Physician ID"],
-            "Last Name": oldData["Phys Last Name"],
-            "First Name": oldData["Phys First Name"]
+            "physicianID": oldData["Physician ID"],
+            "lName": oldData["Phys Last Name"],
+            "fName": oldData["Phys First Name"]
         });
 
         setPatient({
-            "Patient ID": oldData["Patient ID"],
-            "First Name": oldData["First Name"],
-            "Last Name": oldData["Last Name"]
+            "ppr": oldData["Patient ID"],
+            "fName": oldData["First Name"],
+            "lName": oldData["Last Name"]
         });
 
         setRx(oldData["Rx Number"]);
@@ -251,9 +251,9 @@ function MyOrders(){
         let order = {
 
             "RxNum": rx,
-            "PPR": patient["Patient ID"],
-            "DIN": drug["DIN"],
-            "PhysicianID": physician["Physician ID"],
+            "PPR": patient["ppr"],
+            "DIN": drug["din"],
+            "PhysicianID": physician["physicianID"],
             "Initiator": user,
             "SIG": SIG,
             "SIGDescription": SIGDesc,
@@ -294,15 +294,11 @@ function MyOrders(){
 
     //when the drug is selected
     useEffect(() => {
-
         if (drug !== undefined && drug !== null){
-            let formatted = drug["DIN"] + " - " + drug["Drug Name"];
+            let formatted = drug["din"] + " - " + drug["name"];
             setFormDIN(formatted);
-
-            if (drug["Dosage"] !== undefined && drug["Dosage"] !== null){
-                formatted = "EX: (" + drug["Dosage"] + ")";
-                setFormDbDose(formatted);
-            }
+            formatted = "EX: (" + drug["dosage"] + ")";
+            setFormDbDose(formatted);
         }
 
     },[drug]);
@@ -311,7 +307,7 @@ function MyOrders(){
     useEffect(() => {
 
         if (patient !== undefined && patient !== null){
-            let formatted = patient["Patient ID"] + " - " + patient["Last Name"] + ", " + patient["First Name"];
+            let formatted = patient["ppr"] + " - " + patient["lName"] + ", " + patient["fName"];
             setFormPatient(formatted);
         }
 
@@ -319,9 +315,8 @@ function MyOrders(){
 
     //when the physician is selected
     useEffect(() => {
-
         if (physician !== undefined && physician !== null){
-            let formatted = physician["Physician ID"] + " - " + physician["Last Name"] + ", " + physician["First Name"];
+            let formatted = physician["physicianID"] + " - " + physician["lName"] + ", " + physician["fName"];
             setFormPhysician(formatted);
         }
 
@@ -355,15 +350,11 @@ function MyOrders(){
 
                 <button type="button" className="button" onClick={() => setPatientIsOpen(true)}>Patient</button>
 
-                {patientIsOpen && (
                 <PatientLookupModal
-                    patientIsOpen={patientIsOpen}
-                    setPatientIsOpen={setPatientIsOpen}
+                    visible={patientIsOpen}
+                    setVisible={setPatientIsOpen}
                     setPatient={setPatient}
-                />
-                )}
-
-                <br></br>
+                />  
 
                 <label htmlFor="orderDrug">Medication:</label>
                 <input className="text-input" id="orderDrug" required={true} readOnly={true} value={formDIN}></input> 
@@ -375,15 +366,11 @@ function MyOrders(){
                 <button type="button" className="button" id="drugBtn" onClick={() => setDrugIsOpen(true)}>Drugs</button>
 
 
-                {drugIsOpen && (
                 <DrugLookupModal
-                    drugIsOpen={drugIsOpen}
-                    setDrugIsOpen={setDrugIsOpen}
+                    visible={drugIsOpen}
+                    setVisible={setDrugIsOpen}
                     setDrug={setDrug}
                 />
-                )}
-
-                <br></br>
 
                 <label htmlFor="orderForm">Form:</label>
                 <input className="text-input" id="orderForm" required={true} defaultValue={formForm} onChange={(e) => setFormForm(e.target.value)}></input> <br></br>
@@ -407,15 +394,11 @@ function MyOrders(){
 
                 <button type="button" className="button" onClick={() => setPhysicianIsOpen(true)}>Physician</button>
 
-                {physicianIsOpen && (
                 <PhysicianLookupModal
-                    physicianIsOpen={physicianIsOpen}
-                    setPhysicianIsOpen={setPhysicianIsOpen}
+                    visible={physicianIsOpen}
+                    setVisible={setPhysicianIsOpen}
                     setPhysician={setPhysician}
                 />
-                )}
-
-                <br></br>
 
                 <label htmlFor="orderSIG">SIG:</label>
                 <input type="text" id="orderSIG" className="text-input" required={true} defaultValue={SIG} readOnly={true}></input>
