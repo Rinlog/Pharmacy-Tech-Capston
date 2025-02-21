@@ -10,8 +10,9 @@ import DeletePhysicianModal from '@components/modals/deletePhysicianModal';
 import EditPhysician from '@components/physicians/editphysician';
 import BulkPhysicians from '@components/physicians/bulkphysicians';
 import AlertModal from '../modals/alertModal';
-import SortByHeader from '@components/headerSort/sortByHeader';
 
+import Dropdown from 'react-bootstrap/Dropdown';
+import headerSort from '@components/headerSort/HeaderSort';
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
@@ -21,9 +22,10 @@ import he from 'he';
 function Physicians() {
 
     // UseStates for physician data
-    const [data, setData] = useState([]);
-    const [search, setSearch] = useState('');
-    const [filteredData, setFilteredData] = useState([]);
+    const [SearchBy, setSearchBy] = useState("First Name");
+    const [OG_data, setOG_Data] = useState([]);
+    const [Data, setData] = useState([]);
+
     const [tableHeaders, setTableHeaders] = useState([]);
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
@@ -54,6 +56,7 @@ function Physicians() {
     // Get the physicians
     const GetPhysicians = async () => {
         try {
+            setDataObtained(false);
             // Call the API
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/getphysicians', {
                 method: 'POST',
@@ -87,12 +90,15 @@ function Physicians() {
                 });
 
                 setData(transformedData);
+                setOG_Data(transformedData);
                 const keys = Object.keys(transformedData[0]);
 
                 // Map the custom versions
                 const customHeaders = keys.map(key => headerMapping[key] || key);
                 setTableHeaders(customHeaders);
-                setDataObtained(true);
+                setTimeout(function(){
+                    setDataObtained(true);
+                },10);
                 setDataError(false);
 
             }
@@ -123,45 +129,40 @@ function Physicians() {
         }
     }
 
-    // Get the physicians initially on page load
-    useEffect(() => {
-        GetPhysicians();
-    }, []);
-
-    // Filter physician data on search box input
-    useEffect(() => {
-        if (data.length > 0) {
-            const filtered = data.filter(item => {
-                for (const key in item) {
-                    if (item[key] && item[key].toString().toLowerCase().includes(search.toLowerCase())) {
-                        return true;
-                    }
+    // Filter Physician data on search box input
+    function Search(SearchTerm){
+        let expression = RegExp("^"+SearchTerm+".*$","i");
+        let LocalData = OG_data //makes sure we start searching with every search option included.
+        if (SearchTerm != ""){
+            let FilteredData = LocalData.filter(function(Physician){
+            
+                let result = expression.test(Physician[SearchBy]);
+                if (result === true){
+                    return true;
                 }
-                return false;
-            });
-            setFilteredData(filtered);
+                else{
+                    return false;
+                }
+            })
+            setData(FilteredData);
         }
-    }, [search, data]);
+        else{
+            setData(OG_data);
+        }
+    }
+    useEffect(function(){
+            if (column !== null){
+                headerSort(column,false,column, setColumn,sortOrder, setOrder, Data, setData); //tells it not to swap the order from asc/desc, just re-sort
+            }
+    },[Data])
 
-    useEffect(() => {
-    }, [selectedPhysician]);
-
+    
     // Update the data when the modals are closed
     useEffect(() => {
-        const fetchData = async () => {
-
         if (!isAddModalOpen && !isDeleteModalOpen) {
-
             // If both modals are closed, fetch the data
-            await GetPhysicians();
-            setTimeout(function(){
-                if (column !== null) {
-                    headerSort(column, false);
-                }
-            }, 10)
+            GetPhysicians();
         }
-    };
-    fetchData();
     }, [isAddModalOpen, isDeleteModalOpen]);
 
     const ChangeDisplay = (e) => {
@@ -193,63 +194,33 @@ function Physicians() {
                 break;
         }
     }, [display, setContent]);
-
-    //function to handle sorting when a header is clicked
-        const headerSort = (header,swap) => {
-    
-            //this sets a use state header so that when the page is updated it will re-sort
-    
-            //toggle sort order if clicking the same column, otherwise it will do ascending
-            
-            if (swap == true){
-                let newSortOrder = 'asc';
-                if (column === header && sortOrder === 'asc') {
-                    newSortOrder = 'desc';
-                }
-                setColumn(header);
-                setOrder(newSortOrder);
-                let sortedData = SortByHeader(filteredData,header,newSortOrder);
-                setFilteredData(sortedData);
-            }
-            else{
-                let sortedData = SortByHeader(filteredData,header,sortOrder);
-                setColumn(header);
-                setFilteredData(sortedData);
-    
-            }
-        };
-
-        //needs to be in here for a proper update to the list when deleteing
-        const handleSuccessfulDelete = (deletedPhysician) => {
-
-        const updatedData = [];
-        for (const item of data) {
-             
-             if (item.physicianID !== deletedPhysician) {
-                 updatedData.push(item);
-             }
-         }
-         
-        const updatedFilteredData = [];
-         for (const item of filteredData) {
-             
-             if (item.physicianID !== deletedPhysician) {
-                 updatedFilteredData.push(item);
-             }
-         }
- 
-         setData(updatedData);
-         setFilteredData(updatedFilteredData);
-       };
-    
     return(
 
         <div>
             <div className='page-header-name'>Physicians List</div>
             <hr/>
 
-            <input type="text" id="physicianSearch" placeholder="Search Physicians" value={search} onChange={e => setSearch(e.target.value)}/>
-            <br/><br/>
+            <div className='d-flex align-items-center'>
+                <div>
+                    <input type="text" id="drugSearch" placeholder={"Search by "+SearchBy} onChange={e => Search(e.target.value)}/>
+                </div>
+                <Dropdown>
+                    <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
+                        <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
+                            <rect id="svgEditorBackground" x="0" y="0" width="10px" height="10px" style={{fill: 'none', stroke: 'none'}}/>
+                            <circle id="e2_circle" cx="10" cy="10" style={{fill:'white',stroke:'black',strokeWidth:'2px'}} r="5"/>
+                            <line id="e3_line" x1="14" y1="14" x2="20.235" y2="20.235" style={{fill:'white',stroke:'black',strokeWidth:'2px'}}/>
+                        </svg>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item id="Physician ID" onClick={(e)=>{setSearchBy(e.target.id)}}>Physician ID</Dropdown.Item>
+                        <Dropdown.Item id="First Name" onClick={(e)=>{setSearchBy(e.target.id)}}>First Name</Dropdown.Item>
+                        <Dropdown.Item id="Last Name" onClick={(e)=>{setSearchBy(e.target.id)}}>Last Name</Dropdown.Item>
+                        <Dropdown.Item id="City" onClick={(e)=>{setSearchBy(e.target.id)}}>City</Dropdown.Item>
+                        <Dropdown.Item id="Province" onClick={(e)=>{setSearchBy(e.target.id)}}>Province</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
 
             {/* Only display the admin required buttons if the user is an admin */}
             {cookies.get('admin') === 'Y' && (
@@ -266,11 +237,6 @@ function Physicians() {
                         <DeletePhysicianModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)}
-                            onDelete={() => {
-                                //handleSuccessfulDelete needs to be in here for a proper refresh of the list when deleting
-                                handleSuccessfulDelete(selectedPhysician["Physician ID"]);
-                                GetPhysicians() //added for refresh
-                            }}
                             physicianToDelete={selectedPhysician}
                             setPhysicianToDelete={setSelectedPhysician}
                         />
@@ -300,13 +266,13 @@ function Physicians() {
                             {/* Empty column for radio buttons */}
                             <th></th>
                             {tableHeaders.map(header => (
-                                <th key={header} onClick={() => headerSort(header,true)} style={{cursor: 'pointer'}}>
+                                <th key={header} onClick={() => headerSort(header,true,column, setColumn,sortOrder, setOrder, Data, setData)} style={{cursor: 'pointer'}}>
                                     {header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredData.map((item, index) => (
+                        {Data.map((item, index) => (
                             <tr key={index}>
                                 <td>
                                     <input 

@@ -4,7 +4,7 @@ import AlertModal from "./alertModal";
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete, onDelete = () => {} }) => {
+const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);

@@ -13,17 +13,19 @@ import DeleteDrugModal from '@components/modals/deleteDrugModal';
 import EditDrug from '@components/drugs/editdrug';
 import BulkDrugs from '@components/drugs/bulkdrugs';
 import AlertModal from '../modals/alertModal';
-import SortByHeader from '@components/headerSort/sortByHeader';
+import headerSort from '@components/headerSort/HeaderSort';
 
+import Dropdown from 'react-bootstrap/Dropdown';
 const ApiAccess = import.meta.env.VITE_APIAccess
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 function Drugs() {
 
     // UseStates for drug data
-    const [data, setData] = useState([]);
-    const [search, setSearch] = useState('');
-    const [filteredData, setFilteredData] = useState([]);
+    const [SearchBy, setSearchBy] = useState("Drug Name");
+    const [OG_data, setOG_Data] = useState([]);
+    const [Data, setData] = useState([]);
+
     const [tableHeaders, setTableHeaders] = useState([]);
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
@@ -57,6 +59,7 @@ function Drugs() {
     // Get the drugs
     const GetDrugs = async () => {
         try {
+            setDataObtained(false);
             // Call the API
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Drug/getdrugs', {
                 method: 'POST',
@@ -93,14 +96,16 @@ function Drugs() {
                         "Container Size": he.decode(item.containerSize)
                     };
                 });
-
+                setOG_Data(transformedData);
                 setData(transformedData);
                 const keys = Object.keys(transformedData[0]);
 
                 // Map the custom versions
                 const customHeaders = keys.map(key => headerMapping[key] || key);
                 setTableHeaders(customHeaders);
-                setDataObtained(true);
+                setTimeout(function(){
+                    setDataObtained(true);
+                },10)
                 setDataError(false);
 
             }
@@ -134,35 +139,37 @@ function Drugs() {
    
 
     // Filter drug data on search box input
-    useEffect(() => {
-        if (data.length > 0) {
-            const filtered = data.filter(item => {
-                for (const key in item) {
-                    if (item[key] && item[key].toString().toLowerCase().includes(search.toLowerCase())) {
-                        return true;
-                    }
+    function Search(SearchTerm){
+        let expression = RegExp("^"+SearchTerm+".*$","i");
+        let LocalData = OG_data //makes sure we start searching with every search option included.
+        if (SearchTerm != ""){
+            let FilteredData = LocalData.filter(function(Drug){
+            
+                let result = expression.test(Drug[SearchBy]);
+                if (result === true){
+                    return true;
                 }
-                return false;
-            });
-            setFilteredData(filtered);
+                else{
+                    return false;
+                }
+            })
+            setData(FilteredData);
         }
-    }, [search, data]);
-
+        else{
+            setData(OG_data);
+        }
+    }
+    useEffect(function(){
+            if (column !== null){
+                headerSort(column,false,column, setColumn,sortOrder, setOrder, Data, setData); //tells it not to swap the order from asc/desc, just re-sort
+            }
+    },[Data])
     // Update the data when the modals are closed this also loads the table in initially
     useEffect(() => {
-        const fetchData = async () => {
-            if (!isAddModalOpen && !isDeleteModalOpen) {
-                // If both modals are closed, fetch the data
-                await GetDrugs();
-                setTimeout(function(){
-                    if (column !== null){
-                        headerSort(column,false); //tells it not to swap the order from asc/desc, just re-sort
-                    }
-                },10)
-            }
-        };
-
-        fetchData();
+        if (!isAddModalOpen && !isDeleteModalOpen) {
+            // If both modals are closed, fetch the data
+            GetDrugs();
+        }
     }, [isAddModalOpen, isDeleteModalOpen]);
 
     const ChangeDisplay = (e) => {
@@ -194,68 +201,37 @@ function Drugs() {
                 break;
         }
     }, [display, setContent]);
-
-    
-    //function to handle sorting when a header is clicked
-    const headerSort = (header,swap) => {
-
-        //this sets a use state header so that when the page is updated it will re-sort
-
-        //toggle sort order if clicking the same column, otherwise it will do ascending
-        
-        if (swap == true){
-            let newSortOrder = 'asc';
-            if (column === header && sortOrder === 'asc') {
-                newSortOrder = 'desc';
-            }
-            setColumn(header);
-            setOrder(newSortOrder);
-            let sortedData = SortByHeader(filteredData,header,newSortOrder);
-            setFilteredData(sortedData);
-        }
-        else{
-            let sortedData = SortByHeader(filteredData,header,sortOrder);
-            setColumn(header);
-            setFilteredData(sortedData);
-
-        }
-        
-        
-        
-    };
-
-    //needs to be in here for a proper update to the list when deleteing
-    const handleSuccessfulDelete = (deletedDIN) => {
-
-       const updatedData = [];
-       for (const item of data) {
-            
-            if (item.DIN !== deletedDIN) {
-                updatedData.push(item);
-            }
-        }
-        
-       const updatedFilteredData = [];
-        for (const item of filteredData) {
-            
-            if (item.DIN !== deletedDIN) {
-                updatedFilteredData.push(item);
-            }
-        }
-
-        setData(updatedData);
-        setFilteredData(updatedFilteredData);
-      };
-
-    
     return(
 
         <div>
             <div className='page-header-name'>Drugs List</div>
             <hr/>
 
-            <input type="text" id="drugSearch" placeholder="Search Drugs" value={search} onChange={e => setSearch(e.target.value)}/>
-            <br/><br/>
+            <div className='d-flex align-items-center'>
+                <div>
+                    <input type="text" id="drugSearch" placeholder={"Search by "+SearchBy} onChange={e => Search(e.target.value)}/>
+                </div>
+                <Dropdown>
+                    <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
+                        <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
+                            <rect id="svgEditorBackground" x="0" y="0" width="10px" height="10px" style={{fill: 'none', stroke: 'none'}}/>
+                            <circle id="e2_circle" cx="10" cy="10" style={{fill:'white',stroke:'black',strokeWidth:'2px'}} r="5"/>
+                            <line id="e3_line" x1="14" y1="14" x2="20.235" y2="20.235" style={{fill:'white',stroke:'black',strokeWidth:'2px'}}/>
+                        </svg>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item id="DIN" onClick={(e)=>{setSearchBy(e.target.id)}}>DIN</Dropdown.Item>
+                        <Dropdown.Item id="Drug Name" onClick={(e)=>{setSearchBy(e.target.id)}}>Drug Name</Dropdown.Item>
+                        <Dropdown.Item id="Dosage" onClick={(e)=>{setSearchBy(e.target.id)}}>Dosage</Dropdown.Item>
+                        <Dropdown.Item id="Strength" onClick={(e)=>{setSearchBy(e.target.id)}}>Strength</Dropdown.Item>
+                        <Dropdown.Item id="Manufacturer" onClick={(e)=>{setSearchBy(e.target.id)}}>Manufacturer</Dropdown.Item>
+                        <Dropdown.Item id="Concentration" onClick={(e)=>{setSearchBy(e.target.id)}}>Concentration</Dropdown.Item>
+                        <Dropdown.Item id="Reference Brand" onClick={(e)=>{setSearchBy(e.target.id)}}>Reference Brand</Dropdown.Item>
+                        <Dropdown.Item id="Container Size" onClick={(e)=>{setSearchBy(e.target.id)}}>Container Size</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
+        
 
             {/* Only display the admin required buttons if the user is an admin */}
             {cookies.get('admin') === 'Y' && (
@@ -272,11 +248,7 @@ function Drugs() {
                         <DeleteDrugModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)}
-                            onDelete={() => {
-                                //handleSuccessfulDelete needs to be in here for a proper refresh of the list when deleting
-                                handleSuccessfulDelete(selectedDrug["DIN"]);
-                                GetDrugs();
-                            }} //added for refresh
+                            //added for refresh
                             drugToDelete={selectedDrug}
                             setDrugToDelete={setSelectedDrug}
                         />
@@ -307,14 +279,14 @@ function Drugs() {
                         <tr>
                             <th></th>
                             {tableHeaders.map(header => (
-                                <th key={header} onClick={() => headerSort(header,true)} style={{ cursor: 'pointer' }}>
+                                <th key={header} onClick={() => headerSort(header,true,column, setColumn,sortOrder, setOrder, Data, setData)} style={{ cursor: 'pointer' }}>
                                     {header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
                                 </th>
                             ))}
                         </tr>
                     </thead>
                         <tbody>
-                            {filteredData.map((item, index) => (
+                            {Data.map((item, index) => (
                                 <tr key={index}>
                                     <td>
                                         <input 

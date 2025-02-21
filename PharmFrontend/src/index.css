@@ -176,7 +176,23 @@ label{
     font-size: 40px;
     animation: slideUp 1s ease-in-out;
 }
-
+.HideButtonCSS{
+    background-color: inherit !important;
+    border-color: inherit !important;
+    border-style: none !important;
+}
+.HideButtonCSS::after{
+    content: none;
+}
+.HideButtonCSS:hover, .HideButtonCSS:active, .HideButtonCSS:focus{
+    background-color: inherit !important;
+    border-color: inherit !important;
+    border-style: none !important;
+}
+.SearchTypeButton:hover svg, .SearchTypeButton:active svg{
+    width:35px;
+    height: 35px;
+}
 @keyframes slideUp {
     0% {
         transform: scale(1.1);

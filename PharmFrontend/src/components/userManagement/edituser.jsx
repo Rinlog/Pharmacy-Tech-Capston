@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react';
 import { SanitizeName } from '@components/datasanitization/sanitization.jsx'; 
 import AlertModal from '../modals/alertModal';
 import DeleteUserModal from '../modals/deleteUserModal';
-import SortByHeader from '@components/headerSort/sortByHeader';
-
+import Dropdown from 'react-bootstrap/Dropdown';
+import headerSort from '@components/headerSort/HeaderSort';
 //other imports
 
 const BackendIP = import.meta.env.VITE_BackendIP
@@ -15,7 +15,9 @@ const ApiAccess = import.meta.env.VITE_APIAccess
 function EditUser() {
 
     //users from DB
-    const [data, setData] = useState([]);
+    const [SearchBy, setSearchBy] = useState("First Name");
+    const [OG_data, setOG_Data] = useState([]);
+    const [Data, setData] = useState([]);
 
     //state to ensure data has been obtained and set
     const [dataObtained, setDataObtained] = useState(false);
@@ -28,7 +30,7 @@ function EditUser() {
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [pendingDelete, setPendingDelete] = useState(false);
+
     const [selectedUser, setSelectedUser] = useState({ "User ID": null, selected: false });
 
     //table data
@@ -44,8 +46,7 @@ function EditUser() {
         "expirationDate": "Expires"
     };
     const [tableHeaders, setTableHeaders] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
-    const [search, setSearch] = useState('');
+
 
     //edit state
     const [editing, setEditing] = useState(false);
@@ -61,6 +62,7 @@ function EditUser() {
     //pget user data
     const GetUsers = async () => {
         try {
+            setDataObtained(false);
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Management/getusers', {
                 method: 'POST',
                 headers: {
@@ -70,7 +72,7 @@ function EditUser() {
             });
             let fetchedData = await response.json();
             fetchedData = fetchedData.data
-            const filteredData = fetchedData.filter(function(User){
+            const Data = fetchedData.filter(function(User){
                 if (User.removed === false){
                     return true;
                 }
@@ -78,9 +80,9 @@ function EditUser() {
                     return false;
                 }
             })
-            if (filteredData && filteredData.length > 0) {
+            if (Data && Data.length > 0) {
                 // Transform keys in data
-                const transformedData = filteredData.map(item => {
+                const transformedData = Data.map(item => {
                     return {
                         "User ID": item.id,
                         "First Name": item.fName,
@@ -96,12 +98,14 @@ function EditUser() {
         
                 // Set the transformed data
                 setData(transformedData);
-                
+                setOG_Data(transformedData);
                 // Use the transformed data directly for headers
                 const keys = Object.keys(transformedData[0]);
                 const customHeaders = keys.map(key => headerMapping[key] || key);
                 setTableHeaders(customHeaders);
-                setDataObtained(true);
+                setTimeout(function(){
+                    setDataObtained(true);
+                },10);
             }
         } catch (error) {
             setAlertMessage("Could not obtain user data at this time. \nPlease contact system administrator.");
@@ -118,19 +122,31 @@ function EditUser() {
     });
 
      // Filter user data on search
-     useEffect(() => {
-        if (data.length > 0) {
-            const filtered = data.filter(item => {
-                for (const key in item) {
-                    if (item[key] && item[key].toString().toLowerCase().includes(search.toLowerCase())) {
-                        return true;
-                    }
+    function Search(SearchTerm){
+        let expression = RegExp("^"+SearchTerm+".*$","i");
+        let LocalData = OG_data //makes sure we start searching with every search option included.
+        if (SearchTerm != ""){
+            let Data = LocalData.filter(function(User){
+            
+                let result = expression.test(User[SearchBy]);
+                if (result === true){
+                    return true;
                 }
-                return false;
-            });
-            setFilteredData(filtered);
+                else{
+                    return false;
+                }
+            })
+            setData(Data);
         }
-    }, [search, data]);
+        else{
+            setData(OG_data);
+        }
+    }
+    useEffect(function(){
+            if (column !== null){
+                headerSort(column,false,column, setColumn,sortOrder, setOrder, Data, setData); //tells it not to swap the order from asc/desc, just re-sort
+            }
+    },[Data])
 
     //What to when data is selected
     const handleSelect = (rowData) => {
@@ -218,32 +234,6 @@ function EditUser() {
     };
 
     //function to handle sorting when a header is clicked
-        const headerSort = (header,swap) => {
-    
-            //this sets a use state header so that when the page is updated it will re-sort
-    
-            //toggle sort order if clicking the same column, otherwise it will do ascending
-            
-            if (swap == true){
-                let newSortOrder = 'asc';
-                if (column === header && sortOrder === 'asc') {
-                    newSortOrder = 'desc';
-                }
-                setColumn(header);
-                setOrder(newSortOrder);
-                let sortedData = SortByHeader(filteredData,header,newSortOrder);
-                setFilteredData(sortedData);
-            }
-            else{
-                let sortedData = SortByHeader(filteredData,header,sortOrder);
-                setColumn(header);
-                setFilteredData(sortedData);
-    
-            }
-            
-            
-            
-        };
     
 
     return(
@@ -328,7 +318,31 @@ function EditUser() {
                 )}
 
                 {/* Search bar */}
-                <input type="text" className="search-input" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} />
+                <div className='d-flex align-items-center'>
+                <div>
+                    <input type="text" id="drugSearch" placeholder={"Search by "+SearchBy} onChange={e => Search(e.target.value)}/>
+                </div>
+                <Dropdown>
+                    <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
+                        <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
+                            <rect id="svgEditorBackground" x="0" y="0" width="10px" height="10px" style={{fill: 'none', stroke: 'none'}}/>
+                            <circle id="e2_circle" cx="10" cy="10" style={{fill:'white',stroke:'black',strokeWidth:'2px'}} r="5"/>
+                            <line id="e3_line" x1="14" y1="14" x2="20.235" y2="20.235" style={{fill:'white',stroke:'black',strokeWidth:'2px'}}/>
+                        </svg>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item id="User ID" onClick={(e)=>{setSearchBy(e.target.id)}}>User ID</Dropdown.Item>
+                        <Dropdown.Item id="First Name" onClick={(e)=>{setSearchBy(e.target.id)}}>First Name</Dropdown.Item>
+                        <Dropdown.Item id="Last Name" onClick={(e)=>{setSearchBy(e.target.id)}}>Last Name</Dropdown.Item>
+                        <Dropdown.Item id="Email" onClick={(e)=>{setSearchBy(e.target.id)}}>Email</Dropdown.Item>
+                        <Dropdown.Item id="Campus" onClick={(e)=>{setSearchBy(e.target.id)}}>Campus</Dropdown.Item>
+                        <Dropdown.Item id="Admin" onClick={(e)=>{setSearchBy(e.target.id)}}>Admin</Dropdown.Item>
+                        <Dropdown.Item id="Active" onClick={(e)=>{setSearchBy(e.target.id)}}>Active</Dropdown.Item>
+                        <Dropdown.Item id="Created" onClick={(e)=>{setSearchBy(e.target.id)}}>Created</Dropdown.Item>
+                        <Dropdown.Item id="Expires" onClick={(e)=>{setSearchBy(e.target.id)}}>Expires</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
                 
                 <table className="table">
                 
@@ -341,7 +355,7 @@ function EditUser() {
                             <th></th>
 
                             {tableHeaders.map(header => (
-                                <th className="table-headers" key={header} onClick={() => headerSort(header,true)} style={{ cursor: 'pointer' }}
+                                <th className="table-headers" key={header} onClick={() => headerSort(header,true,column, setColumn,sortOrder, setOrder, Data, setData)} style={{ cursor: 'pointer' }}
                                 >{header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}</th>
                             ))}
                         </tr>
@@ -352,7 +366,7 @@ function EditUser() {
                     <tbody>
                         
                         {/* Rows */}
-                        {filteredData.map((item, index) => (
+                        {Data.map((item, index) => (
 
                                 <tr key={index} >
                                     {/* Add radio button for each row */}

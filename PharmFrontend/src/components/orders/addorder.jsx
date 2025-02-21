@@ -51,10 +51,42 @@ function AddOrder(){
 
     // Extract user and admin cookies
     const { user, admin } = cookies;
-
+    
+    function validate(){
+        //these if statements are so that html5 will activate if one of the fields are blank and also for custom errors
+        if (formPatient === ''){
+            setAlertMessage("Patient is required");
+            setAlertModalOpen(true);
+            return false;
+        }
+        if (formDIN === ''){
+            setAlertMessage("Medication is required");
+            setAlertModalOpen(true);
+            return false;
+        }
+        if (formDose === ''){return false;}
+        if (formForm=== ''){return false;}
+        if (route === ''){return false;}
+        if (frequency === ''){return false;}
+        if (duration === ''){return false;}
+        if (quantity === ''){return false;}
+        if (formPhysician === ''){
+            setAlertMessage("Physician is required");
+            setAlertModalOpen(true);
+            return false;
+        }
+        if (SIG === ''){
+            setAlertMessage("SIG code is required");
+            setAlertModalOpen(true);
+            return false;
+        }
+        if (startDate === ''){return false;}
+        if (startTime === ''){return false;}
+    }
     //form submission
     const OnSubmit = async (e) =>{
-
+        
+        if (validate() == false){return;}
         e.preventDefault();
 
         if (comments === '' || comments === null) setComments("No Comments");
