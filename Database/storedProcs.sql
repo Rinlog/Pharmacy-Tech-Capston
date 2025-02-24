@@ -1022,6 +1022,34 @@ GO
         GO
 
 -- Deletes
+    CREATE PROCEDURE deleteOrder
+        -- Procedure: deleteOrder
+        -- Purpose: Delete an order from the database
+        -- Parameters:
+        --      @orderID - the ID of the order
+        -- Returns: None
+        -- Notes: This procedure will also delete any associated images, labels, and logs
+        --        It is worth noting this procedure is NOT called in deleteUser, deletion is handled separately in that procedure
+        @orderID int
+        AS
+        BEGIN
+            -- Check if the order exists
+            IF NOT EXISTS (SELECT * FROM OrderTable WHERE rxNum = @orderID)
+            BEGIN
+                RETURN;
+            END;
+
+             -- Delete any images associated with the order
+            DELETE FROM ImageTable WHERE rxNum = @orderID;
+
+            -- Delete any labels associated with the order
+            DELETE FROM LabelTable WHERE rxNum = @orderID;
+
+            DELETE FROM LogTable WHERE affectedOrder = @orderID;
+            -- Delete the order
+            DELETE FROM OrderTable WHERE rxNum = @orderID;
+        END;
+        GO
 
     CREATE PROCEDURE deleteUser
         -- Procedure: deleteUser
@@ -1093,7 +1121,13 @@ GO
             BEGIN
                 RETURN;
             END;
-
+            --Delete the any orders associated with them first
+            DECLARE @OrderID int;
+            WHILE exists(select * from OrderTable Where PPR = @PPR)
+            BEGIN
+                select @OrderID = rxNum from OrderTable where PPR = @PPR
+                exec deleteOrder @OrderID;
+            END;
             -- Delete the patient
             DELETE FROM PatientTable WHERE PPR = @PPR;
         END;
@@ -1115,6 +1149,13 @@ GO
                 RETURN;
             END;
 
+            --Delete the any orders associated with them first
+            DECLARE @OrderID int;
+            WHILE exists(select * from OrderTable Where physicianID = @physicianID)
+            BEGIN
+                select @OrderID = rxNum from OrderTable where physicianID = @physicianID
+                exec deleteOrder @OrderID;
+            END;
             -- Delete the physician
             DELETE FROM PhysicianTable WHERE physicianID = @physicianID;
         END;
@@ -1135,37 +1176,15 @@ GO
             BEGIN
                 RETURN;
             END;
-
+            --Delete the any orders associated with them first
+            DECLARE @OrderID int;
+            WHILE exists(select * from OrderTable Where DIN = @DIN)
+            BEGIN
+                select @OrderID = rxNum from OrderTable where DIN = @DIN
+                exec deleteOrder @OrderID;
+            END;
             -- Delete the drug
             DELETE FROM DrugTable WHERE DIN = @DIN;
-        END;
-        GO
-
-    CREATE PROCEDURE deleteOrder
-        -- Procedure: deleteOrder
-        -- Purpose: Delete an order from the database
-        -- Parameters:
-        --      @orderID - the ID of the order
-        -- Returns: None
-        -- Notes: This procedure will also delete any associated images, labels, and logs
-        --        It is worth noting this procedure is NOT called in deleteUser, deletion is handled separately in that procedure
-        @orderID int
-        AS
-        BEGIN
-            -- Check if the order exists
-            IF NOT EXISTS (SELECT * FROM OrderTable WHERE rxNum = @orderID)
-            BEGIN
-                RETURN;
-            END;
-
-             -- Delete any images associated with the order
-            DELETE FROM ImageTable WHERE rxNum = @orderID;
-
-            -- Delete any labels associated with the order
-            DELETE FROM LabelTable WHERE rxNum = @orderID;
-
-            -- Delete the order
-            DELETE FROM OrderTable WHERE rxNum = @orderID;
         END;
         GO
 
