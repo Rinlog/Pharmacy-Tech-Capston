@@ -55,7 +55,12 @@ html{
     overflow-x: auto;
     max-width: 100%;
 }
-
+.UserIcon{
+    border: 2px solid black;
+    padding:0.1em;
+    border-radius: 0.2em;
+    margin-right:0.3em;
+}
 #navbarMenu{
     margin-right:1em;
 }
