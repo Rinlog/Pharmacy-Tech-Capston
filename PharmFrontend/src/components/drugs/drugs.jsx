@@ -105,7 +105,7 @@ function Drugs() {
                 setTableHeaders(customHeaders);
                 setTimeout(function(){
                     setDataObtained(true);
-                },10)
+                },20)
                 setDataError(false);
 
             }

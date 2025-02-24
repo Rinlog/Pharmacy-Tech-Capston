@@ -19,7 +19,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
     const handleConfirmDelete = () => {
         DeleteDrug();
         setSecondModalOpen(false);
-        //handleClose();
+        handleClose();
     }
 
     const handleCancelDelete = () => {

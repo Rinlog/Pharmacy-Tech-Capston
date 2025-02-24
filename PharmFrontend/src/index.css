@@ -127,6 +127,10 @@ form input[type="date"] {
 }
 label{
     font-size:1.1em;
+    color:black !important;
+}
+.ProfileText:hover{
+    cursor: pointer;
 }
 
 .form-select {

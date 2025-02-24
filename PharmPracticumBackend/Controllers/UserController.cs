@@ -289,5 +289,17 @@ namespace PharmPracticumBackend.Controllers
             
         }
 
+        [HttpPost("getUserByID")]
+        public IActionResult getUserByID([FromBody] string UserID)
+        {
+            if (string.IsNullOrEmpty(UserID))
+            {
+                return BadRequest("Invalid UserID");
+            }
+            else
+            {
+                return Ok(_pharmDL.getUserbyID(UserID));
+            }
+        }
     }
 }

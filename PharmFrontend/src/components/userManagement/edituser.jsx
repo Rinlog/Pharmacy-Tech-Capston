@@ -105,7 +105,7 @@ function EditUser() {
                 setTableHeaders(customHeaders);
                 setTimeout(function(){
                     setDataObtained(true);
-                },10);
+                },20);
             }
         } catch (error) {
             setAlertMessage("Could not obtain user data at this time. \nPlease contact system administrator.");
