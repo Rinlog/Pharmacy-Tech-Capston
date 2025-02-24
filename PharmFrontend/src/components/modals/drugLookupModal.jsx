@@ -3,12 +3,16 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import AlertModal from "@components/modals/alertModal";
+import Dropdown from 'react-bootstrap/Dropdown';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
 function DrugLookupModal({visible, setVisible,setDrug}){
 
+    //Search related
+    const [SearchBy, setSearchBy] = useState("name");
+    const [SearchByDisplay,setSearchByDisplay] = useState("Drug Name");
     //modal alert stuff
     const [AlertModalOpen, setAlertModalOpen] = useState(false);
     const [AlertMessage, setAlertMessage] = useState();
@@ -39,7 +43,7 @@ function DrugLookupModal({visible, setVisible,setDrug}){
         if (SearchTerm != ""){
             let FilteredDrugs = LocalDrugData.filter(function(Drug){
             
-                let result = expression.test(Drug["name"]);
+                let result = expression.test(Drug[SearchBy]);
                 if (result === true){
                     return true;
                 }
@@ -148,9 +152,46 @@ function DrugLookupModal({visible, setVisible,setDrug}){
                 <Modal.Body>
                         {FetchedData ? (
                             <div>
-                                <Form>
-                                    <Form.Control className='InputBackroundColor' type="text" placeholder='Search...' onChange={function(e){Search(e.target.value)}}></Form.Control>
-                                </Form>
+                                <div className='d-flex align-items-center pl-3'>
+                                    <div>
+                                        <input type="text" id="drugSearch" placeholder={"Search by "+SearchByDisplay} onChange={e => Search(e.target.value)}/>
+                                    </div>
+                                    <Dropdown>
+                                        <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
+                                            <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
+                                                <rect id="svgEditorBackground" x="0" y="0" width="10px" height="10px" style={{fill: 'none', stroke: 'none'}}/>
+                                                <circle id="e2_circle" cx="10" cy="10" style={{fill:'white',stroke:'black',strokeWidth:'2px'}} r="5"/>
+                                                <line id="e3_line" x1="14" y1="14" x2="20.235" y2="20.235" style={{fill:'white',stroke:'black',strokeWidth:'2px'}}/>
+                                            </svg>
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item id="din" onClick={(e)=>{setSearchBy(e.target.id)
+                                                    setSearchByDisplay("DIN");
+                                            }}>DIN</Dropdown.Item>
+                                            <Dropdown.Item id="name" onClick={(e)=>{setSearchBy(e.target.id)
+                                                    setSearchByDisplay("Drug Name");
+                                            }}>Drug Name</Dropdown.Item>
+                                            <Dropdown.Item id="dosage" onClick={(e)=>{setSearchBy(e.target.id)
+                                                    setSearchByDisplay("Dosage");
+                                            }}>Dosage</Dropdown.Item>
+                                            <Dropdown.Item id="strength" onClick={(e)=>{setSearchBy(e.target.id)
+                                                    setSearchByDisplay("Strength");
+                                            }}>Strength</Dropdown.Item>
+                                            <Dropdown.Item id="manufacturer" onClick={(e)=>{setSearchBy(e.target.id)
+                                                    setSearchByDisplay("Manufacturer");
+                                            }}>Manufacturer</Dropdown.Item>
+                                            <Dropdown.Item id="concentration" onClick={(e)=>{setSearchBy(e.target.id)
+                                                    setSearchByDisplay("Concentration");
+                                            }}>Concentration</Dropdown.Item>
+                                            <Dropdown.Item id="referenceBrand" onClick={(e)=>{setSearchBy(e.target.id)
+                                                    setSearchByDisplay("Reference Brand");
+                                            }}>Reference Brand</Dropdown.Item>
+                                            <Dropdown.Item id="containerSize" onClick={(e)=>{setSearchBy(e.target.id)
+                                                    setSearchByDisplay("Containter Size");
+                                            }}>Container Size</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </div>
                                 <div className='d-flex justify-content-center'>
                                     <table>
                                         <thead>

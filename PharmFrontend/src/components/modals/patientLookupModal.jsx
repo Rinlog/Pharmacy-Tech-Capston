@@ -3,12 +3,16 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import AlertModal from "@components/modals/alertModal";
+import Dropdown from 'react-bootstrap/Dropdown';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
 function PatientLookupModal({visible, setVisible,setPatient}){
 
+    //Search related
+    const [SearchBy, setSearchBy] = useState("fName");
+    const [SearchByDisplay,setSearchByDisplay] = useState("First Name");
     //modal alert stuff
     const [AlertModalOpen, setAlertModalOpen] = useState(false);
     const [AlertMessage, setAlertMessage] = useState();
@@ -43,7 +47,7 @@ function PatientLookupModal({visible, setVisible,setPatient}){
         if (SearchTerm != ""){
             let FilteredPatients = LocalPatientData.filter(function(Patient){
             
-                let result = expression.test(Patient["fName"]);
+                let result = expression.test(Patient[SearchBy]);
                 if (result === true){
                     return true;
                 }
@@ -89,7 +93,7 @@ function PatientLookupModal({visible, setVisible,setPatient}){
                         <td>{Patient.ppr}</td>
                         <td>{Patient.fName}</td>
                         <td>{Patient.lName}</td>
-                        <td>{Patient.dob}</td>
+                        <td>{Patient.dob.split(" ")[0]}</td> {/*splitting dob to remove time */}
                         <td>{Patient.sex}</td>
                         <td>{Patient.address}</td>
                         <td>{Patient.city}</td>
@@ -156,9 +160,58 @@ function PatientLookupModal({visible, setVisible,setPatient}){
                 <Modal.Body>
                         {FetchedData ? (
                             <div>
-                                <Form>
-                                    <Form.Control className='InputBackroundColor' type="text" placeholder='Search...' onChange={function(e){Search(e.target.value)}}></Form.Control>
-                                </Form>
+                                <div className='d-flex align-items-center'>
+                                    <div>
+                                        <input type="text" id="drugSearch" placeholder={"Search by "+SearchByDisplay} onChange={e => Search(e.target.value)}/>
+                                    </div>
+                                    <Dropdown>
+                                        <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
+                                            <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
+                                                <rect id="svgEditorBackground" x="0" y="0" width="10px" height="10px" style={{fill: 'none', stroke: 'none'}}/>
+                                                <circle id="e2_circle" cx="10" cy="10" style={{fill:'white',stroke:'black',strokeWidth:'2px'}} r="5"/>
+                                                <line id="e3_line" x1="14" y1="14" x2="20.235" y2="20.235" style={{fill:'white',stroke:'black',strokeWidth:'2px'}}/>
+                                            </svg>
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item id="ppr" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Patient ID");
+                                            }}>Patient ID</Dropdown.Item>
+                                            <Dropdown.Item id="fName" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("First Name");
+                                            }}>First Name</Dropdown.Item>
+                                            <Dropdown.Item id="lName" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Last Name");
+                                            }}>Last Name</Dropdown.Item>
+                                            <Dropdown.Item id="dob" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Date of Birth");
+                                            }}>Date of Birth</Dropdown.Item>
+                                            <Dropdown.Item id="sex" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Sex");
+                                            }}>Sex</Dropdown.Item>
+                                            <Dropdown.Item id="address" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Address");
+                                            }}>Address</Dropdown.Item>
+                                            <Dropdown.Item id="city" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("City");
+                                            }}>City</Dropdown.Item>
+                                            <Dropdown.Item id="hospitalName" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Hospital");
+                                            }}>Hospital</Dropdown.Item>
+                                            <Dropdown.Item id="roomNumber" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Room #");
+                                            }}>Room #</Dropdown.Item>
+                                            <Dropdown.Item id="unitNumber" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Unit #");
+                                            }}>Unit #</Dropdown.Item>
+                                            <Dropdown.Item id="allergies" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Allergies");
+                                            }}>Allergies</Dropdown.Item>
+                                            <Dropdown.Item id="conditions" onClick={(e)=>{setSearchBy(e.target.id)
+                                                setSearchByDisplay("Conditions");
+                                            }}>Conditions</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </div>
                                 <div className='d-flex justify-content-center'>
                                     <table>
                                         <thead>

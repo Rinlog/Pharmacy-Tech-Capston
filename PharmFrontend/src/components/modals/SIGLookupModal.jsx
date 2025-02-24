@@ -3,12 +3,14 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import AlertModal from "@components/modals/alertModal";
+import Dropdown from 'react-bootstrap/Dropdown';
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
 function SIGLookupModal({visible, setVisible,setSig, setSigDesc}){
-
+    //Search related
+    const [SearchBy, setSearchBy] = useState("abbreviation");
     //modal alert stuff
     const [AlertModalOpen, setAlertModalOpen] = useState(false);
     const [AlertMessage, setAlertMessage] = useState();
@@ -32,7 +34,7 @@ function SIGLookupModal({visible, setVisible,setSig, setSigDesc}){
         if (SearchTerm != ""){
             let FilteredSIGs = LocalSIGData.filter(function(SIG){
             
-                let result = expression.test(SIG["abbreviation"]);
+                let result = expression.test(SIG[SearchBy]);
                 if (result === true){
                     return true;
                 }
@@ -135,9 +137,24 @@ function SIGLookupModal({visible, setVisible,setSig, setSigDesc}){
                 <Modal.Body>
                         {FetchedData ? (
                             <div>
-                                <Form>
-                                    <Form.Control className='InputBackroundColor' type="text" placeholder='Search...' onChange={function(e){Search(e.target.value)}}></Form.Control>
-                                </Form>
+                                <div className='d-flex align-items-center pl-3'>
+                                    <div>
+                                        <input type="text" id="drugSearch" placeholder={"Search by "+SearchBy} onChange={e => Search(e.target.value)}/>
+                                    </div>
+                                    <Dropdown>
+                                        <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
+                                            <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
+                                                <rect id="svgEditorBackground" x="0" y="0" width="10px" height="10px" style={{fill: 'none', stroke: 'none'}}/>
+                                                <circle id="e2_circle" cx="10" cy="10" style={{fill:'white',stroke:'black',strokeWidth:'2px'}} r="5"/>
+                                                <line id="e3_line" x1="14" y1="14" x2="20.235" y2="20.235" style={{fill:'white',stroke:'black',strokeWidth:'2px'}}/>
+                                            </svg>
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item id="abbreviation" onClick={(e)=>{setSearchBy(e.target.id)}}>Abbreviation</Dropdown.Item>
+                                            <Dropdown.Item id="description" onClick={(e)=>{setSearchBy(e.target.id)}}>Description</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </div>
                                 <div className='d-flex justify-content-center'>
                                     <table>
                                         <thead>
