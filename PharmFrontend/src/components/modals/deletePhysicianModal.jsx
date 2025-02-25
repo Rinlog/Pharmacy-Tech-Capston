@@ -20,13 +20,13 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
     }
 
     const handleConfirmDelete = () => {
-        DeletePhysician();
         setSecondModalOpen(false);
-        handleClose();
+        DeletePhysician();
     }
 
     const handleCancelDelete = () => {
         setSecondModalOpen(false);
+        handleClose();
     }
 
     const DeletePhysician = async () => {
@@ -47,8 +47,6 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
             if (response.ok) {
                 setAlertMessage("Physician deleted successfully");
                 setIsAlertModalOpen(true);
-                //onDelete(); //added for refresh
-                //onClose();
             }
             else{
                 // Alert out the message sent from the API
@@ -89,7 +87,7 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
             <div className={`modal ${isSecondModalOpen ? 'isOpen' : ''}`} style={{ display: isSecondModalOpen ? 'flex' : 'none' }}>
             <div className="modal-content" style={{ height: modalHeight,  width:400 }}>
                 <span className="close" onClick={handleCancelDelete}>&times;</span>
-                <h1>Are you REALLY sure you want to delete this physician?</h1>
+                <h1>Are you REALLY sure you want to delete this physician? This will delete ALL orders accociated with the physician.</h1>
                 <button onClick={handleConfirmDelete}>Yes</button>
                 <button onClick={handleCancelDelete}>No</button>
             </div>
@@ -101,8 +99,7 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
         message={alertMessage}
         onClose={() => {setIsAlertModalOpen(false)
                 if (alertMessage === "Physician deleted successfully") {
-                    onDelete();
-                    onClose();
+                    handleClose(); //this refreshes the table
                 }
     }}
     />

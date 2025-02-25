@@ -248,7 +248,6 @@ function Drugs() {
                         <DeleteDrugModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)}
-                            //added for refresh
                             drugToDelete={selectedDrug}
                             setDrugToDelete={setSelectedDrug}
                         />

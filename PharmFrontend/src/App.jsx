@@ -46,6 +46,7 @@ function App() {
                             <Route path="/home" element={<ProtectedRoute component={Home} />} />
                             <Route path="/patients" element={<ProtectedRoute component={Patients} />} />
                             <Route path="/orders" element={<ProtectedRoute component={Orders} />} />
+                            <Route path="/orders/:specificPage" element={<ProtectedRoute component={Orders} />} />
                             <Route path="/physicians" element={<ProtectedRoute component={Physicians} />} />
                             <Route path="/drugs" element={<ProtectedRoute component={Drugs} />} />
                             <Route path="/printorder/:OrderID" element={<ProtectedRoute component={printOrder}/>} />

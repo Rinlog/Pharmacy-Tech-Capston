@@ -18,6 +18,7 @@ const DeleteUserModal = ({ isOpen, onClose, userToDelete, onDelete = () => {} })
 
     const handleCancelDelete = () => {
         setSecondModalOpen(false);
+        onClose();
     };
 
     const handleConfirmDelete = () => {
@@ -73,7 +74,7 @@ const DeleteUserModal = ({ isOpen, onClose, userToDelete, onDelete = () => {} })
             <div className="modal isOpen" style={{ display: 'flex' }}>
                 <div className="modal-content" style={{ height: modalHeight, width: 400 }}>
                     <span className="close" onClick={handleCancelDelete}>&times;</span>
-                    <h1>Are you REALLY sure you want to delete this user?</h1>
+                    <h1>Are you REALLY sure you want to delete this user? This will delete ALL orders accociated with the user.</h1>
                     <button onClick={handleConfirmDelete}>Yes</button>
                     <button onClick={handleCancelDelete}>No</button>
                 </div>
@@ -85,7 +86,6 @@ const DeleteUserModal = ({ isOpen, onClose, userToDelete, onDelete = () => {} })
             message={alertMessage}
             onClose={() => {setIsAlertModalOpen(false);
                     if (alertMessage === "User Successfully Deleted") {
-                        onDelete();
                         onClose();
                     }
     }}

@@ -80,7 +80,7 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder, GetOrders}) {
         let reject = {
             RxNum: selectedOrder["Rx Number"],
             Status: "Rejected",
-            UserID: document.cookie.split('; ').find(row => row.startsWith('user=')).split('=')[1]
+            UserID: document.cookie.split('; ').find(row => row.startsWith('user=')).split('=')[1],
         }
 
         // Pass the Rx Number to the API to reject the order

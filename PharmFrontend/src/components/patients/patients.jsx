@@ -267,10 +267,6 @@ function Patients() {
                         <DeletePatientModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)} 
-                            onDelete={() => {
-                                handleSuccessfulDelete(selectedPatient["Patient ID"]);
-                                GetPatients();
-                            }}
                             patientToDelete={selectedPatient}
                             setPatientToDelete={setSelectedPatient}
                         />
