@@ -88,11 +88,10 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
             }
             />
                 <Modal.Header closeButton>
-                    <h3>Add Patient</h3>
+                    <h3>Add Physician</h3>
                 </Modal.Header>
                 <Modal.Body>
                     <form onSubmit={handleSubmit} style={{ width: '90%'}}>
-                        <h1>Add Physician</h1>
 
                         <label>First Name:</label>
                         <input id="firstName" type="text" required></input><br></br>
