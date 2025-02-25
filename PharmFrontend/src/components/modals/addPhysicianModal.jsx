@@ -3,7 +3,7 @@ import { SanitizeName } from "@components/datasanitization/sanitization";
 
 import { SanitizeInput, SanitizeLength } from "@components/datasanitization/sanitization";
 import AlertModal from "./alertModal";
-
+import { Button, Modal, Form, Dropdown} from "react-bootstrap";
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
@@ -70,11 +70,27 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
     }
 
     return (
-        isOpen && (
-            <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight, width: '30%' }}>
-                    <span className="close" onClick={handleClose}>&times;</span>
-
+            <Modal
+                show={isOpen}
+                onHide={handleClose}
+                size="lg"
+                className="Modal"
+                centered
+            >
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {setIsAlertModalOpen(false);
+                    if (alertMessage === "Physician Added") {
+                        onClose();
+                    }
+                }
+            }
+            />
+                <Modal.Header closeButton>
+                    <h3>Add Patient</h3>
+                </Modal.Header>
+                <Modal.Body>
                     <form onSubmit={handleSubmit} style={{ width: '90%'}}>
                         <h1>Add Physician</h1>
 
@@ -108,20 +124,13 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
 
                         <button type="submit">Add Physician</button>
                     </form>
+                </Modal.Body>
+                <Modal.Footer>
 
-                    <AlertModal
-                        isOpen={isAlertModalOpen}
-                        message={alertMessage}
-                        onClose={() => {setIsAlertModalOpen(false)
-                            if (alertMessage === "Physician Added") {
-                                onClose();
-                            }}
-                        }
-                    />
-                </div>
-            </div>
+                </Modal.Footer>
+            </Modal>
+
         )
-    );
 }
 
 export default AddPhysicianModal;

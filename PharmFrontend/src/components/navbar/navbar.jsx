@@ -149,7 +149,7 @@ function Navbar() {
                             </Dropdown.Item> 
                           </span>  
                           ):(
-                            <span className="Unseen Notification">
+                            <span className="UnseenNotification">
                               <Dropdown.Item key={Notification.notificationID} href={NotificationHref} className="p-3 d-flex flex-column">
                                 <label className="text-wrap ProfileText">{Notification.nMessage}</label>
                                 <div className="align-self-end pt-2">

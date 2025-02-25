@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { SanitizeEmail, SanitizeName, SanitizeDate, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
 import AlertModal from "./alertModal";
-
+import { Button, Modal, Form, Dropdown} from "react-bootstrap";
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
 const AddDrugModal = ({ isOpen, onClose}) => {
 
-    const [modalHeight, setModalHeight] = useState('auto');
 
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
 
     const AddDrug = async () => {
@@ -54,21 +54,21 @@ const AddDrugModal = ({ isOpen, onClose}) => {
             if(response.status === 200) {
                 // Alert the user that the drug was added
                 setAlertMessage("Drug Added");
-                setIsAddModalOpen(true);
+                setIsAlertModalOpen(true);
                 // Close the modal
                 //onClose();
             }
             else{// Alert out the message sent from the API
                 const data = await response.json();
                 setAlertMessage(data.message);
-                setIsAddModalOpen(true);
+                setIsAlertModalOpen(true);
             }
             
         }
         catch (error) {
             console.error(error);
             setAlertMessage("An error has occurred, please try again later");
-            setIsAddModalOpen(true);
+            setIsAlertModalOpen(true);
         }
     }
 
@@ -83,66 +83,74 @@ const AddDrugModal = ({ isOpen, onClose}) => {
     }
 
     return (
-        isOpen && (
-            <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight, width: '30%' }}>
-                    <span className="close" onClick={handleClose}>&times;</span>
 
-                    <form onSubmit={handleSubmit} style={{ width: '90%'}}>
-                        <h1>Add Drug</h1>
-
-                        <label htmlFor="DIN">DIN:</label>
-                        <input type="text" id="DIN" name="DIN" required/>
-                        <br></br>
-
-                        <label htmlFor="drugName">Drug Name:</label>
-                        <input type="text" id="drugName" name="drugName" required/>
-                        <br></br>
-
-                        <label htmlFor="dosage">Dosage:</label>
-                        <input type="text" id="dosage" name="dosage" required/>
-                        <br></br>
-
-                        <label htmlFor="strength">Strength:</label>
-                        <input type="text" id="strength" name="strength" required/>
-                        <br></br>
-
-                        <label htmlFor="manufacturer">Manufacturer:</label>
-                        <input type="text" id="manufacturer" name="manufacturer" required/>
-                        <br></br>
-
-                        <label htmlFor="concentration">Concentration:</label>
-                        <input type="text" id="concentration" name="concentration" required/>
-                        <br></br>
-
-                        <label htmlFor="referenceBrand">Reference Brand:</label>
-                        <input type="text" id="referenceBrand" name="referenceBrand"/>
-                        <br></br>
-
-                        <label htmlFor="containerSize">Container Size:</label>
-                        <input type="text" id="containerSize" name="containerSize" required/>
-                        <br></br>
-
-                        <br></br>
-
-                        <button type="submit">Add Drug</button>
-                    </form>
-
+                    <Modal
+                        show={isOpen}
+                        onHide={handleClose}
+                        size="lg"
+                        className="Modal"
+                        centered
+                    >
                     <AlertModal
-                        isOpen={isAddModalOpen}
+                        isOpen={isAlertModalOpen}
                         message={alertMessage}
-                        onClose={() => {setIsAddModalOpen(false);
+                        onClose={() => {setIsAlertModalOpen(false);
                             if (alertMessage === "Drug Added") {
                                 onClose();
                             }
                         }
-                                    
                     }
                     />
-                </div>
-            </div>
+                        <Modal.Header closeButton>
+                            <h3>Add Drug</h3>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <form onSubmit={handleSubmit} style={{ width: '90%'}}>
+                            
+                                <label htmlFor="DIN">DIN:</label>
+                                <input type="text" id="DIN" name="DIN" required/>
+                                <br></br>
+
+                                <label htmlFor="drugName">Drug Name:</label>
+                                <input type="text" id="drugName" name="drugName" required/>
+                                <br></br>
+
+                                <label htmlFor="dosage">Dosage:</label>
+                                <input type="text" id="dosage" name="dosage" required/>
+                                <br></br>
+
+                                <label htmlFor="strength">Strength:</label>
+                                <input type="text" id="strength" name="strength" required/>
+                                <br></br>
+
+                                <label htmlFor="manufacturer">Manufacturer:</label>
+                                <input type="text" id="manufacturer" name="manufacturer" required/>
+                                <br></br>
+
+                                <label htmlFor="concentration">Concentration:</label>
+                                <input type="text" id="concentration" name="concentration" required/>
+                                <br></br>
+
+                                <label htmlFor="referenceBrand">Reference Brand:</label>
+                                <input type="text" id="referenceBrand" name="referenceBrand"/>
+                                <br></br>
+
+                                <label htmlFor="containerSize">Container Size:</label>
+                                <input type="text" id="containerSize" name="containerSize" required/>
+                                <br></br>
+
+                                <br></br>
+
+                                <button type="submit">Add Drug</button>
+                            </form>
+                        </Modal.Body>
+                        <Modal.Footer>
+
+                        </Modal.Footer>
+                    </Modal>
+            
+
         )
-    );
 }
 
 export default AddDrugModal;

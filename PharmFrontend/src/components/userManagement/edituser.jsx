@@ -305,13 +305,12 @@ function EditUser() {
                         <button className="button" type="button" onClick={HandleDelete}>Delete User</button>
                         <DeleteUserModal
                             isOpen={isDeleteModalOpen}
-                            onClose={() => setIsDeleteModalOpen(false)}
-                            userToDelete={selectedUser}
-                            onDelete={() => {
-                                //setIsDeleteModalOpen(false);
+                            onClose={() => {
                                 setEditing(false);
                                 GetUsers();
+                                setIsDeleteModalOpen(false)
                             }}
+                            userToDelete={selectedUser}
                         />
                     </form>
                     </>

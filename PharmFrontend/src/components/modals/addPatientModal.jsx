@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { SanitizeName, SanitizeDate, SanitizeEmail, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
 import AlertModal from "./alertModal";
-
+import { Button, Modal, Form, Dropdown} from "react-bootstrap";
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
 const AddPatientModal = ({ isOpen, onClose}) => {
 
-    const [modalHeight, setModalHeight] = useState('auto');
 
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
@@ -84,13 +83,28 @@ const AddPatientModal = ({ isOpen, onClose}) => {
     }
 
     return (
-        isOpen && (
-            <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight, width: '40%' }}>
-                    <span className="close" onClick={handleClose}>&times;</span>
-
+        <Modal
+            show={isOpen}
+            onHide={handleClose}
+            size="xl"
+            className="Modal"
+            centered
+        >
+        <AlertModal
+            isOpen={isAlertModalOpen}
+            message={alertMessage}
+            onClose={() => {setIsAlertModalOpen(false);
+                if (alertMessage === "Patient Added") {
+                    onClose();
+                }
+            }
+        }
+        />
+            <Modal.Header closeButton>
+                <h3>Add Patient</h3>
+            </Modal.Header>
+            <Modal.Body>
                     <form onSubmit={handleSubmit} style={{ width: '90%'}}>
-                        <h1>Add Patient</h1>
                         <div className='form-content'>
                             <div className='left'>
                                 <label>First Name</label> <br></br>
@@ -141,18 +155,13 @@ const AddPatientModal = ({ isOpen, onClose}) => {
 
                         <button type="submit" tabIndex={12}>Add Patient</button>
                     </form>
+            </Modal.Body>
+            <Modal.Footer>
 
-                    <AlertModal
-                        isOpen={isAlertModalOpen}
-                        message={alertMessage}
-                        onClose={() => {setIsAlertModalOpen(false)
-                            onClose();
-                        }}
-                    />
-                </div>
-            </div>
+            </Modal.Footer>
+        </Modal>
         )
-    );
+
 }
 
 export default AddPatientModal;

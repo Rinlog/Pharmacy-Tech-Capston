@@ -102,3 +102,9 @@
     white-space: normal;
     max-height:calc(100vh - 150px);
 }
+.UnseenNotification a{
+    background-color: lightblue;
+}
+.UnseenNotification a:hover{
+    background-color: rgb(121, 192, 216);
+}

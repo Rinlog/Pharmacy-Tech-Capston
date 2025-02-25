@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import AlertModal from "./alertModal";
+import { Button, Modal, Form, Dropdown} from "react-bootstrap";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
@@ -73,37 +74,60 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
 
     return (
         <>
-        {isOpen && (
-            <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight,  width:400}}>
-                    <span className="close" onClick={handleClose}>&times;</span>
-                    <h1>Are you sure you want to delete {drugToDelete["Drug Name"]}?</h1>
-                    <button onClick={handleDeleteDrug}>Delete</button>
-                    <button onClick={handleClose}>Cancel</button>
-                </div>
-            </div>
-        )}
-        {isSecondModalOpen && (
-            <div className={`modal ${isSecondModalOpen ? 'isOpen' : ''}`} style={{ display: isSecondModalOpen ? 'flex' : 'none' }}>
-            <div className="modal-content" style={{ height: modalHeight,  width:400 }}>
-                <span className="close" onClick={handleCancelDelete}>&times;</span>
-                <h1>Are you REALLY sure you want to delete this drug? This will delete ALL orders accociated with the drug.</h1>
-                <button onClick={handleConfirmDelete}>Yes</button>
-                <button onClick={handleCancelDelete}>No</button>
-            </div>
-        </div>
-    )}
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {
+                    if (alertMessage == "Drug deleted successfully"){
+                        handleClose();//This will refresh the drug list
+                    }
+                    setIsAlertModalOpen(false)
+                }}
+            />
 
-    <AlertModal
-        isOpen={isAlertModalOpen}
-        message={alertMessage}
-        onClose={() => {
-            if (alertMessage == "Drug deleted successfully"){
-                handleClose();//This will refresh the drug list
-            }
-            setIsAlertModalOpen(false)
-        }}
-    />
+            <Modal
+                show={isOpen}
+                onHide={handleClose}
+                size="lg"
+                className="Modal"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <h3>Delete Drug</h3>
+                </Modal.Header>
+                <Modal.Body>
+                <h1>Are you sure you want to delete {drugToDelete["Drug Name"]}?</h1>
+                <Button className="ModalbuttonG w-100" onClick={handleDeleteDrug}>Delete</Button>
+                <Button className="ModalbuttonB w-100" onClick={handleClose}>Cancel</Button>
+                </Modal.Body>
+                <Modal.Footer>
+
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={isSecondModalOpen}
+                onHide={function(){
+                    setSecondModalOpen(false)
+                    handleClose();
+                }}
+                size="lg"
+                className="Modal"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <h3>Delete Drug</h3>
+                </Modal.Header>
+                <Modal.Body>
+                <h1>Are you REALLY sure you want to delete this drug? This will delete ALL orders accociated with the drug.</h1>
+                <Button className="ModalbuttonG w-100" onClick={handleConfirmDelete}>Yes</Button>
+                <Button className="ModalbuttonB w-100" onClick={handleCancelDelete}>No</Button>
+                </Modal.Body>
+                <Modal.Footer>
+
+                </Modal.Footer>
+            </Modal>
+    
     </>
     );
 }

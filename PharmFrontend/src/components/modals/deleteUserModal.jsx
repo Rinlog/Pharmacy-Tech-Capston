@@ -1,12 +1,12 @@
 import { useState } from "react";
 import he from 'he';
 import AlertModal from "./alertModal";
-
+import { Button, Modal, Form, Dropdown} from "react-bootstrap";
 const BackendIP = import.meta.env.VITE_BackendIP;
 const BackendPort = import.meta.env.VITE_BackendPort;
 const ApiAccess = import.meta.env.VITE_APIAccess;
 
-const DeleteUserModal = ({ isOpen, onClose, userToDelete, onDelete = () => {} }) => {
+const DeleteUserModal = ({ isOpen, onClose, userToDelete }) => {
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
@@ -59,38 +59,59 @@ const DeleteUserModal = ({ isOpen, onClose, userToDelete, onDelete = () => {} })
 
     return (
         <>
-        {isOpen && !isSecondModalOpen && (
-            <div className="modal isOpen" style={{ display: 'flex' }}>
-                <div className="modal-content" style={{ height: modalHeight, width: 400 }}>
-                    <span className="close" onClick={onClose}>&times;</span>
-                    <h1>Are you sure you want to delete {he.decode(userToDelete["First Name"])} {he.decode(userToDelete["Last Name"])}?</h1>
-                    <button onClick={handleDeleteUser}>Delete</button>
-                    <button onClick={onClose}>Cancel</button>
-                </div>
-            </div>
-        )}
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {setIsAlertModalOpen(false);
+                        if (alertMessage === "User Successfully Deleted") {
+                            onClose();
+                        }
+            }}
+            />
+            <Modal
+                show={isOpen}
+                onHide={onClose}
+                size="lg"
+                className="Modal"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <h3>Delete User</h3>
+                </Modal.Header>
+                <Modal.Body>
+                <h1>Are you sure you want to delete {userToDelete["First Name"]}?</h1>
+                <Button className="ModalbuttonG w-100" onClick={handleDeleteUser}>Delete</Button>
+                <Button className="ModalbuttonB w-100" onClick={onClose}>Cancel</Button>
+                </Modal.Body>
+                <Modal.Footer>
 
-        {isSecondModalOpen && (
-            <div className="modal isOpen" style={{ display: 'flex' }}>
-                <div className="modal-content" style={{ height: modalHeight, width: 400 }}>
-                    <span className="close" onClick={handleCancelDelete}>&times;</span>
-                    <h1>Are you REALLY sure you want to delete this user? This will delete ALL orders accociated with the user.</h1>
-                    <button onClick={handleConfirmDelete}>Yes</button>
-                    <button onClick={handleCancelDelete}>No</button>
-                </div>
-            </div>
-        )}
+                </Modal.Footer>
+            </Modal>
 
-        <AlertModal
-            isOpen={isAlertModalOpen}
-            message={alertMessage}
-            onClose={() => {setIsAlertModalOpen(false);
-                    if (alertMessage === "User Successfully Deleted") {
-                        onClose();
-                    }
-    }}
-    />
-    </>
+            <Modal
+                show={isSecondModalOpen}
+                onHide={function(){
+                    setSecondModalOpen(false)
+                    onClose();
+                }}
+                size="lg"
+                className="Modal"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <h3>Delete User</h3>
+                </Modal.Header>
+                <Modal.Body>
+                <h1>Are you REALLY sure you want to delete this user? This will delete ALL orders accociated with the user.</h1>
+                <Button className="ModalbuttonG w-100" onClick={handleConfirmDelete}>Yes</Button>
+                <Button className="ModalbuttonB w-100" onClick={handleCancelDelete}>No</Button>
+                </Modal.Body>
+                <Modal.Footer>
+
+                </Modal.Footer>
+            </Modal>
+
+        </>
     );
 };
 
