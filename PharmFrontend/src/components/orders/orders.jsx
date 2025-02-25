@@ -6,10 +6,43 @@ import $ from 'jquery';
 import AddOrder from '@components/orders/addorder.jsx';
 import MyOrders from '@components/orders/myorders.jsx';
 import AllOrders from '@components/orders/allorders.jsx';
-
+import { useParams } from 'react-router-dom';
 function Orders() {
-
+    
     const [content, setContent] = useState(<AllOrders></AllOrders>);
+    const Location = useParams();
+    const [RenderAmount, setRenderAmount] = useState(0);
+
+    if (Location.specificPage!= undefined){
+        //trick where it won't for re-render the page a bunch
+        if (RenderAmount == 0){
+            setRenderAmount(RenderAmount+1);
+            if (RenderAmount <1){
+                $(document).ready(function(){
+                    $("#orderall").removeClass("selected");
+                    $("#ordermy").addClass("selected");
+                    $("#orderadd").removeClass("selected");
+                })
+                if (Location.specificPage == "myOrders"){
+                    setContent(<MyOrders></MyOrders>);
+                }
+                else if (Location.specificPage == "AddOrder"){
+                    setContent(<AddOrder></AddOrder>);
+                }
+            }
+        }
+    }
+    else{
+        if (RenderAmount != 0){
+            setRenderAmount(0);
+            $(document).ready(function(){
+                $("#orderall").addClass("selected");
+                $("#ordermy").removeClass("selected");
+                $("#orderadd").removeClass("selected");
+            })
+            setContent(<AllOrders></AllOrders>);
+        }
+    }
 
     //change mode depending on content that should show
     const ChangeDisplay = (e) =>{

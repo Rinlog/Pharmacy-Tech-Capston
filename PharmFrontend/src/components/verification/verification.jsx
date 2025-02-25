@@ -62,6 +62,7 @@ function Verification() {
     // Get the orders
     const GetOrders = async () => {
         try {
+            setDataObtained(false);
             // Call the API
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Order/getorders', {
                 method: 'POST',

@@ -1920,5 +1920,84 @@ namespace PharmPracticumBackend.DL
             return SIGDTOs;
         }
 
+
+        //Notification related procedures
+
+        public List<NotificationDTO> getNotifications(String UserID,int StartingRow)
+        {
+            List <NotificationDTO> notifications = new List<NotificationDTO>();
+
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetNotifications", conn);
+                cmd.CommandType= CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@StartingRow", StartingRow);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    notifications.Add(new NotificationDTO()
+                    {
+                        NotificationID = reader["NotificationID"].ToString(),
+                        NMessage = reader["NMessage"].ToString(),
+                        Recipient = reader["Recipient"].ToString(),
+                        Seen = (bool)reader["Seen"],
+                        DateAdded = reader["DateAdded"].ToString()
+                    });
+                }
+                return notifications;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return notifications;
+
+        }
+
+        public bool addNotification(String Message, String UserID)
+        {
+            bool result = false;
+
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.AddNotification", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Message", Message);
+                cmd.Parameters.AddWithValue("@Recipient", UserID);
+                result = cmd.ExecuteNonQuery() == 1; 
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return result;
+
+        }
+
+        public bool updateNotificationStatus(String NotificationID, bool status)
+        {
+            bool result = false;
+
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.UpdateSeenStatus", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@NotificationID", NotificationID);
+                cmd.Parameters.AddWithValue("@Status", status);
+                result = cmd.ExecuteNonQuery() == 1;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return result;
+
+        }
     }
 }

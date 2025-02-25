@@ -301,5 +301,69 @@ namespace PharmPracticumBackend.Controllers
                 return Ok(_pharmDL.getUserbyID(UserID));
             }
         }
+
+        [HttpPost("getUserNotifications")]
+        public IActionResult getUserNotifications([FromBody]string NotificationInfo)
+        {
+            //index 0 is the user id, index 1 is the Row offset to know what rows to get
+            try
+            {
+                String[] NotificationInfoArray = NotificationInfo.Split("~!~");
+                if (int.TryParse(NotificationInfoArray[1], out int RowOffset))
+                {
+                    return Ok(_pharmDL.getNotifications(NotificationInfoArray[0], RowOffset));
+                }
+                else
+                {
+                    return BadRequest("Invalid Row Offset or User ID");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest("Failed to get notifications");
+            }
+        }
+
+        [HttpPost("addUserNotification")]
+        public IActionResult addNotification([FromBody] string NotificationInfo)
+        {
+            //index 0 is the message, index 1 is the userID
+            String[] NotificationInfoArray = NotificationInfo.Split("~!~");
+            try
+            {
+                return Ok(_pharmDL.addNotification(NotificationInfoArray[0], NotificationInfoArray[1]));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest("Failed to add notification");
+            }
+
+        }
+
+        [HttpPost("updateUserNotificationStatus")]
+        public IActionResult UpdateNotification([FromBody] string NotificationInfo)
+        {
+            //index 0 is the Notification id, index 1 is the Status to change to
+            try
+            {
+                String[] NotificationInfoArray = NotificationInfo.Split("~!~");
+                if (bool.TryParse(NotificationInfoArray[1], out bool Status))
+                {
+                    return Ok(_pharmDL.updateNotificationStatus(NotificationInfoArray[0], Status));
+                }
+                else
+                {
+                    return BadRequest("Invalid Notification ID or Status");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest("Failed to update notification");
+            }
+            
+        }
     }
 }

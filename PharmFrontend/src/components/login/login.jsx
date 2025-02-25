@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import AuthContext from '@components/login/AuthContext.jsx';
 import './Login.css'
-
 import $ from 'jquery';
 
 const ApiAccess = import.meta.env.VITE_APIAccess
@@ -25,6 +24,7 @@ const Login = () => {
     const [cookies, setCookie] = useCookies(['user', 'admin']);
     const { setAuthState } = useContext(AuthContext);
     const navigate = useNavigate();
+
     const handleLogin = async (e) => {
         e.preventDefault();
         setEmailError('');
@@ -66,8 +66,6 @@ const Login = () => {
                     isAdmin: data.data.admin === 'Y'
                 });
 
-                // Navigate to home page
-                navigate('/home');
             }
         } catch (error) {
             //console.log(error); //debugging

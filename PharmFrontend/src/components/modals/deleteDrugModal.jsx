@@ -17,9 +17,8 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
     }
 
     const handleConfirmDelete = () => {
-        DeleteDrug();
         setSecondModalOpen(false);
-        handleClose();
+        DeleteDrug();
     }
 
     const handleCancelDelete = () => {
@@ -47,11 +46,10 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
                 
                 setDrugToDelete({ "DIN": null, selected: false });
                 
-                onDelete(); //added for refresh?
+
                 // Explicitly call onClose after setting state
                 setIsAlertModalOpen(true);
                 
-                onClose();
             }
             else {
                 const data = await response.json();
@@ -99,7 +97,12 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
     <AlertModal
         isOpen={isAlertModalOpen}
         message={alertMessage}
-        onClose={() => setIsAlertModalOpen(false)}
+        onClose={() => {
+            if (alertMessage == "Drug deleted successfully"){
+                handleClose();//This will refresh the drug list
+            }
+            setIsAlertModalOpen(false)
+        }}
     />
     </>
     );

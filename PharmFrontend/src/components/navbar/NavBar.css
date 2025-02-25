@@ -23,9 +23,6 @@
 .navbar-logo:hover {
     color: #ffcc00;
 }
-.pl-5{
-    padding-left: 70px;
-}
 /* navbar toggler (for mobile responsiveness) we can make this better with some other things later */
 .navbar-toggler {
     background: none;
@@ -97,4 +94,11 @@
 .logout-container {
     display: flex;
     align-items: center; /* Vertically align the text and button */
+}
+.Notifications{
+    overflow-y: scroll;
+    overflow-wrap: anywhere;
+    width:20vw;
+    white-space: normal;
+    max-height:calc(100vh - 150px);
 }
