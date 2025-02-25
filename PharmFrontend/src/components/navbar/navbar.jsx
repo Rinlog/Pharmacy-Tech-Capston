@@ -65,7 +65,7 @@ function Navbar() {
   //will update notifications when we change page location
   useEffect(function(){
     setOldLocation(location);//will not update until this use effect goes through meaning we will have the old location still
-    if((location.pathname != oldLocation.pathname) && (oldLocation.pathname !== undefined && oldLocation.pathname !== '' && oldLocation.pathname !== "/login")){
+    if((location.pathname != oldLocation.pathname) && (oldLocation.pathname !== undefined && oldLocation.pathname !== '')){
       setNotificationContent([]);
       //setting a small timeout to help ensure the notification content is empty before we re-populate it
   
@@ -172,7 +172,10 @@ function Navbar() {
               if (FetchedData == false){
                 if (cookies.user != undefined && cookies.user != ''){
                   GetUserInfo();
-                  GetNotifications(0);
+                  //basically if the old path is undefined they refreshed
+                  if (oldLocation.pathname == undefined){
+                    GetNotifications(0);
+                  }
                 }
               }
               else{
