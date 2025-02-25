@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS LogTable;
 DROP TABLE IF EXISTS ConfirmationCodeTable;
 DROP TABLE IF EXISTS PasswordResetCodeTable;
 DROP TABLE IF EXISTS PrintStatusTable;
-
+DROP TABLE IF EXISTS NotificationTable;
 
 -- Create the table in the specified schema
 CREATE TABLE PrintStatusTable
@@ -279,3 +279,20 @@ CREATE TABLE PasswordResetCodeTable (
 
     FOREIGN KEY (userID) REFERENCES UserTable(userID)
 )
+
+
+
+GO
+
+CREATE TABLE NotificationTable
+(
+    NotificationID INT NOT NULL PRIMARY KEY IDENTITY(1,1), -- primary key column
+    NMessage [NVARCHAR](999) NOT NULL,
+    Recipient char(6) NOT NULL,
+    Seen bit NOT NULL DEFAULT 0,
+    DateAdded DATETIME2 NOT NULL default CURRENT_TIMESTAMP,
+
+
+    FOREIGN KEY (Recipient) REFERENCES UserTable(UserID)
+);
+GO

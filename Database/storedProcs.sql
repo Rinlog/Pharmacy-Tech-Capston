@@ -14,6 +14,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS insertLabel; 
     DROP PROCEDURE IF EXISTS insertConfirmationCode; 
     DROP PROCEDURE IF EXISTS insertResetCode; 
+    DROP PROCEDURE IF EXISTS AddNotification;
 
     -- Setters (Single Column Updates)
     DROP PROCEDURE IF EXISTS setUserActiveStatus; 
@@ -21,6 +22,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS setOrderStatus; 
     DROP PROCEDURE IF EXISTS setOrderImage; 
     DROP PROCEDURE IF EXISTS updateOrderPrintStatus;
+    DROP PROCEDURE IF EXISTS UpdateSeenStatus;
     -- Updates (Whole Row Updates)
     DROP PROCEDURE IF EXISTS updateUser; 
     DROP PROCEDURE IF EXISTS updatePatient; 
@@ -65,7 +67,8 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS getAllOrders; 
     DROP PROCEDURE IF EXISTS getAllLogs; 
     DROP PROCEDURE IF EXISTS getAllSIGS
-    DROP PROCEDURE IF EXISTS getOrdersVerifiedByUser
+    DROP PROCEDURE IF EXISTS getOrdersVerifiedByUser;
+    DROP PROCEDURE IF EXISTS GetNotifications;
     -- Specific Procedures
     DROP PROCEDURE IF EXISTS getLogs; 
     DROP PROCEDURE IF EXISTS amendOrder; 
@@ -1101,6 +1104,9 @@ GO
             -- Delete any reset codes
             DELETE FROM PasswordResetCodeTable WHERE userID = @userID;
 
+            --Delete any notifications
+            DELETE FROM NotificationTable where recipient = @userID;
+
             -- Now, FINALLY, we can delete the user(disable account)
             UPDATE UserTable set removed = 1, active = 0 where userID = @userID;
         END;
@@ -1740,4 +1746,33 @@ GO
     -- will retrieve all sig codes from sig table
     AS
         select * from SIGTable;
+    GO
+
+    --Notification Procedures
+
+
+    CREATE PROCEDURE AddNotification
+        @Message nvarchar(250),
+        @Recipient char(6)
+    -- add more stored procedure parameters here
+    AS
+        -- body of the stored procedure
+        insert into NotificationTable(NMessage, Recipient) values(@Message,@Recipient);
+    GO
+
+
+    CREATE PROCEDURE GetNotifications
+        @UserID char(6),
+        @StartingRow int
+    AS
+
+        select * from NotificationTable where Recipient = @UserID order by DateAdded desc OFFSET (@StartingRow) Rows FETCH NEXT 5 Rows only;
+    GO
+
+    CREATE PROCEDURE UpdateSeenStatus
+        @NotificationID int,
+        @Status bit
+    AS
+
+        update NotificationTable set Seen = @Status where NotificationID = @NotificationID;
     GO
