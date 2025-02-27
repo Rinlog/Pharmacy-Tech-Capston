@@ -93,7 +93,7 @@ function PatientLookupModal({visible, setVisible,setPatient}){
                         <td>{Patient.ppr}</td>
                         <td>{Patient.fName}</td>
                         <td>{Patient.lName}</td>
-                        <td>{Patient.dob.split(" ")[0]}</td> {/*splitting dob to remove time */}
+                        <td>{Patient.dob.split(" ")[0]}</td>
                         <td>{Patient.sex}</td>
                         <td>{Patient.address}</td>
                         <td>{Patient.city}</td>
