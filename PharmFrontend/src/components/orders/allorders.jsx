@@ -668,6 +668,55 @@ function AllOrders(){
         }
         
     })
+
+    //sorting useeffect. this is easier than doing a full reright of code for the jsx loading
+    useEffect(() => {
+        //using jquery
+        //attaching this to the header called "sroll-table" in the page content section below
+        $(".scroll-table table thead th").off("click").on("click", function() {
+
+            //header the table belongs to
+            var table = $(this).closest("table");
+            //getting the element from the table
+            var tbody = table.find("tbody");
+
+            //getting all the rows and putting them in an array
+            var rows = tbody.find("tr").toArray();
+            //index of the header clicked
+            var index = $(this).index();
+
+            //sort and toggle the order. checking to see if it has asc, if this does switch to desc
+            var asc = !$(this).hasClass("asc");
+
+            //need to make sure to remove the header class to put in a new one
+            table.find("th").removeClass("asc desc");
+            //depending on the 
+            $(this).toggleClass("asc", asc);
+            $(this).toggleClass("desc", !asc);
+
+            //this will sort the tables now
+            rows.sort((a, b) => {
+
+                var UP = $(a).children("td").eq(index).text().toUpperCase();
+                var DOWN = $(b).children("td").eq(index).text().toUpperCase();
+
+                //took some logic from sortbyheader page
+                if (UP < DOWN) {
+                    return asc ? -1 : 1;
+                }
+                if (UP > DOWN) {
+                    return asc ? 1 : -1;
+                }
+                return 0;
+            });
+
+            //place the new rows back into the table (append them)
+            $.each(rows, (i, row) => {
+                tbody.append(row);
+            });
+        });
+      }, [OrdersGotten]);
+
     const PageHeaders = (
         <thead>
             <tr>

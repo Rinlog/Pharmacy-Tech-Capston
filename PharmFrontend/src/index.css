@@ -145,6 +145,15 @@ label{
     font-size: 16px;
 }
 
+/*  Table sorting things for allOrders page    */
+th.asc::after {
+    content: " ▲";
+  }
+  
+  th.desc::after {
+    content: " ▼";
+  }
+
 /* ############# Modal Things ############### */
 .ModalDropDownB button{
     background-color: var(--nbcc-ocean-blue) !important;
