@@ -16,11 +16,14 @@ import axios from "axios";
 import he from 'he';
 import AlertModal from "../modals/alertModal";
 
+
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
 function AllOrders(){
 
+    //search stuff
+    const [SearchBy, setSearchBy] = useState("First Name");
     //Modal things
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
@@ -29,7 +32,9 @@ function AllOrders(){
     const [OrdersGotten,setOrdersGotten] = useState(false);
     const [onlyOne,setonlyOne] = useState(1);
 
-    const [NamedData, setNamedData] = useState([])
+    const [OG_OrderData, setOG_OrderData] = useState([])
+    const [OrderData, setOrderData] = useState([])
+
     const [ApprovedOrder, setApprovedOrders] = useState([])
     const [RejectedOrder, setRejectedOrders] = useState([])
     const [OtherOrder, setOtherOrders] = useState([])
@@ -38,7 +43,9 @@ function AllOrders(){
     const [DisplayAllVerifiedOrders, setDisplayAllVerifiedOrders] = useState(true);
     const [DisplayMyVerifiedOrders, setDisplayMyVerifiedOrders] = useState(false);
 
-    const [myNamedData, setMyNamedData] = useState([])
+    const [OG_MyOrderData, setOG_MyOrderData] = useState([])
+    const [MyOrderData, setMyOrderData] = useState([])
+
     const [MyApprovedOrder, setMyApprovedOrders] = useState([])
     const [Reload, setReload] = useState(false);
     //Printing Related Variables
@@ -131,10 +138,6 @@ function AllOrders(){
     },[Reload])
 
     function ReloadTable(){
-        setApprovedOrders([]);
-        setRejectedOrders([]);
-        setMyApprovedOrders([]);
-        setOtherOrders([]);
         setReload(true);
     }
     const handleClose = () => {
@@ -471,63 +474,109 @@ function AllOrders(){
          </Modal>
     );
     //GENERATING TABLE STRUCTURE
-    function GenerateTables(Data,NamedData,Type){
+    function GenerateTables(Data,Type){
         let OrderNumber = 0;
         //Now that we have all the data we will output it
+        let TempApproved = []
+        let TempMyApproved = []
+        let TempRejected = []
+        let TempOther = []
         Data.forEach(function(Order){
             let CurrentOrder = (
-                <tr key={Order.rxNum}>
-                    <td>{he.decode(Order.rxNum)}</td>
-                    <td>{he.decode(Order.ppr)}</td>
-                    <td>{he.decode(NamedData[OrderNumber].patientLName)}</td>
-                    <td>{he.decode(NamedData[OrderNumber].patientFName)}</td>
-                    <td>{he.decode(NamedData[OrderNumber].din)}</td>
-                    <td>{he.decode(NamedData[OrderNumber].drugName)}</td>
-                    <td>{he.decode(NamedData[OrderNumber].physicianID)}</td>
-                    <td>{he.decode(NamedData[OrderNumber].physicianLName)}</td>
-                    <td>{he.decode(Order.status)}</td>
-                    <td>{he.decode(Order.dateSubmitted)}</td>
-                    <td>{he.decode(Order.sig)}</td>
-                    <td>{he.decode(Order.sigDescription)}</td>
-                    <td>{he.decode(Order.form)}</td>
-                    <td>{he.decode(Order.route)}</td>
-                    <td>{he.decode(Order.prescribedDose)}</td>
-                    <td>{he.decode(Order.frequency)}</td>
-                    <td>{he.decode(Order.duration)}</td>
-                    <td>{he.decode(Order.quantity)}</td>
-                    <td>{he.decode(Order.startDate)}</td>
-                    <td>{he.decode(Order.startTime)}</td>
-                    <td>{he.decode(Order.comments)}</td>
-                    {Order.status == "Approved" && Order.printStatusID == "" && cookies.user == Order.verifier&&(
-                        <td><button id="PrintOrder" orderid={Order.rxNum} onClick={handleShow}>Print</button></td>
+                <tr key={Order["Rx Number"]}>
+                    <td>{Order["Rx Number"]}</td>
+                    <td>{Order["Patient ID"]}</td>
+                    <td>{Order["Last Name"]}</td>
+                    <td>{Order["First Name"]}</td>
+                    <td>{Order["DIN"]}</td>
+                    <td>{Order["Drug Name"]}</td>
+                    <td>{Order["Physician ID"]}</td>
+                    <td>{Order["Phys Last Name"]}</td>
+                    <td>{Order["Status"]}</td>
+                    <td>{Order["Date Submitted"]}</td>
+                    <td>{Order["SIG Code"]}</td>
+                    <td>{Order["SIG Description"]}</td>
+                    <td>{Order["Form"]}</td>
+                    <td>{Order["Route"]}</td>
+                    <td>{Order["Prescribed Dose"]}</td>
+                    <td>{Order["Frequency"]}</td>
+                    <td>{Order["Duration"]}</td>
+                    <td>{Order["Quantity"]}</td>
+                    <td>{Order["Start Date"]}</td>
+                    <td>{Order["Start Time"]}</td>
+                    <td>{Order["Comments"]}</td>
+                    {Order["Status"] == "Approved" && Order["printStatusID"] == "" && cookies.user == Order["verifier"]&&(
+                        <td><button id="PrintOrder" orderid={Order["Rx Number"]} onClick={handleShow}>Print</button></td>
                     )}
-                    {Order.status == "Approved" && Order.printStatusID != "" && cookies.user == Order.verifier&&(
-                        <td><button id="RePrintOrder" orderid={Order.rxNum} onClick={handleShow}>Reprint</button></td>
+                    {Order["Status"] == "Approved" && Order["printStatusID"] != "" && cookies.user == Order["verifier"]&&(
+                        <td><button id="RePrintOrder" orderid={Order["Rx Number"]} onClick={handleShow}>Reprint</button></td>
                     )}
-                    {Order.status == "Approved" && cookies.user != Order.verifier &&(
+                    {Order["Status"] == "Approved" && cookies.user != Order.verifier &&(
                         <td></td>
                     )}
                 </tr>
 
             )
-            if (Order.status == "Approved"){
+            if (Order.Status == "Approved"){
                 if (Type == "All"){
-                    ApprovedOrder.push(CurrentOrder);
+                    TempApproved.push(CurrentOrder);
+                    setApprovedOrders(TempApproved)
                 }
                 else{
-                    MyApprovedOrder.push(CurrentOrder)
+                    TempMyApproved.push(CurrentOrder)
+                    setMyApprovedOrders(TempMyApproved)
                 }
             }
-            else if (Order.status == "Rejected"){
-                RejectedOrder.push(CurrentOrder)
+            else if (Order.Status == "Rejected"){
+                TempRejected.push(CurrentOrder)
+                setRejectedOrders(TempRejected)
             }
             else{
-                OtherOrder.push(CurrentOrder);
+                TempOther.push(CurrentOrder);
+                setOtherOrders(TempOther)
             }
             OrderNumber+=1
         })
-        
     }
+    //used for the search functionality
+    function Search(SearchTerm){
+        let expression = RegExp("^"+SearchTerm+".*$","i");
+        let LocalOrderData = OG_OrderData //makes sure we start searching with every search option included.
+        let LocalMyOrderData = OG_MyOrderData
+        if (SearchTerm != ""){
+            let FilteredOrders = LocalOrderData.filter(function(Order){
+            
+                let result = expression.test(Order[SearchBy]);
+                if (result === true){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            })
+            let MyFilteredOrders = LocalMyOrderData.filter(function(Order){
+            
+                let result = expression.test(Order[SearchBy]);
+                if (result === true){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            })
+            setApprovedOrders([]);
+            setMyApprovedOrders([]);
+            setRejectedOrders([]);
+            setOtherOrders([]);
+            setOrderData(FilteredOrders);
+            setMyOrderData(MyFilteredOrders);
+        }
+        else{
+            setOrderData(OG_OrderData);
+            setMyOrderData(OG_MyOrderData);
+        }
+    }
+    //used for the hide and show buttons
     function HandleHideShowPress(e){
         let TriggerHideVal = $(e.currentTarget).attr("triggerhide")
         let TableAffecting = $(e.currentTarget).attr("table")
@@ -543,6 +592,10 @@ function AllOrders(){
             $("#"+TableAffecting + "Hide").removeClass("hide");
         }
     }
+    useEffect(function(){
+        GenerateTables(OrderData,"All")
+        GenerateTables(MyOrderData,"My")
+    },[OrderData,MyOrderData])
     async function LoadAllOrders(){
         let Data = await $.ajax({
             method:"POST",
@@ -555,9 +608,9 @@ function AllOrders(){
                 setOrdersGotten(true);
             }});
         Data = Data.data; //a weird line because of how the previous team wrote code... too late to change structure
-
         let OrderAmount = Data.length;
         let CurrentOrderAmount = 0;
+        let TempData = []
         Data.forEach(async Order => {
                 await $.ajax({
                 method:"POST",
@@ -580,11 +633,48 @@ function AllOrders(){
                     "Content-Type":"application/json",
                     'Key-Auth':ApiAccess
                 },
-                success:function(data){
+                success:function(NamedData){
                     CurrentOrderAmount+=1
-                    NamedData.push(data)
+                    TempData.push({
+                        "Rx Number":Order.rxNum,
+                        "Patient ID":Order.ppr,
+                        "Last Name":NamedData.patientLName,
+                        "First Name":NamedData.patientFName,
+                        "DIN":Order.din,
+                        "Drug Name": NamedData.drugName,
+                        "Physician ID": Order.physicianID,
+                        "Phys Last Name": NamedData.physicianLName,
+                        "Status": Order.status,
+                        "Date Submitted": Order.dateSubmitted,
+                        "SIG Code": Order.sig,
+                        "SIG Description": Order.sigDescription,
+                        "Form": Order.form,
+                        "Route": Order.route,
+                        "Prescribed Dose": Order.prescribedDose,
+                        "Frequency": Order.frequency,
+                        "Duration":Order.duration,
+                        "Quantity":Order.quantity,
+                        "Start Date": Order.startDate,
+                        "Start Time": Order.startTime,
+                        "Comments" : Order.comments,
+                        "printStatusID": Order.printStatusID,
+                        "verifier":Order.verifier
+                    })
                     if (CurrentOrderAmount == OrderAmount){
-                        GenerateTables(Data,NamedData,"All")
+                        //sorts ascending
+                        TempData.sort((a,b)=>{
+                            if (a["Rx Number"] > b["Rx Number"]){
+                                return 1
+                            }
+                            else if (a["Rx Number"] < b["Rx Number"]){
+                                return -1
+                            }
+                            else{
+                                return 0
+                            }
+                        })
+                        setOG_OrderData(TempData)
+                        setOrderData(TempData)
                     }
                 }});
         });
@@ -605,6 +695,7 @@ function AllOrders(){
 
             let OrderAmount = Data.length;
             let CurrentOrderAmount = 0;
+            let TempData = []
             Data.forEach(async Order => {
                     await $.ajax({
                     method:"POST",
@@ -627,12 +718,49 @@ function AllOrders(){
                         "Content-Type":"application/json",
                         'Key-Auth':ApiAccess
                     },
-                    success:function(data){
+                    success:function(NamedData){
                         CurrentOrderAmount+=1
-                        myNamedData.push(data)
+                        TempData.push({
+                            "Rx Number":Order.rxNum,
+                            "Patient ID":Order.ppr,
+                            "Last Name":NamedData.patientLName,
+                            "First Name":NamedData.patientFName,
+                            "DIN":Order.din,
+                            "Drug Name": NamedData.drugName,
+                            "Physician ID": Order.physicianID,
+                            "Phys Last Name": NamedData.physicianLName,
+                            "Status": Order.status,
+                            "Date Submitted": Order.dateSubmitted,
+                            "SIG Code": Order.sig,
+                            "SIG Description": Order.sigDescription,
+                            "Form": Order.form,
+                            "Route": Order.route,
+                            "Prescribed Dose": Order.prescribedDose,
+                            "Frequency": Order.frequency,
+                            "Duration":Order.duration,
+                            "Quantity":Order.quantity,
+                            "Start Date": Order.startDate,
+                            "Start Time": Order.startTime,
+                            "Comments" : Order.comments,
+                            "printStatusID": Order.printStatusID,
+                            "verifier":Order.verifier
+                        })
                         if (CurrentOrderAmount == OrderAmount){
-                            GenerateTables(Data,myNamedData,"My")
-                        }
+                            //sorts ascending
+                            TempData.sort((a,b)=>{
+                                if (a["Rx Number"] > b["Rx Number"]){
+                                    return 1
+                                }
+                                else if (a["Rx Number"] < b["Rx Number"]){
+                                    return -1
+                                }
+                                else{
+                                    return 0
+                                }
+                            })
+                            setOG_MyOrderData(TempData)
+                            setMyOrderData(TempData)
+                    }
                     }});
         })
         }
@@ -762,6 +890,42 @@ function AllOrders(){
         <div>
             {PrintModal}
             {RePrintModal}
+            <div className='d-flex align-items-center'>
+                <div>
+                    <input type="text" id="drugSearch" placeholder={"Search by "+SearchBy} onChange={e => Search(e.target.value)}/>
+                </div>
+                <Dropdown>
+                    <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
+                        <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
+                            <rect id="svgEditorBackground" x="0" y="0" width="10px" height="10px" style={{fill: 'none', stroke: 'none'}}/>
+                            <circle id="e2_circle" cx="10" cy="10" style={{fill:'white',stroke:'black',strokeWidth:'2px'}} r="5"/>
+                            <line id="e3_line" x1="14" y1="14" x2="20.235" y2="20.235" style={{fill:'white',stroke:'black',strokeWidth:'2px'}}/>
+                        </svg>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item id="Rx Number" onClick={(e)=>{setSearchBy(e.target.id)}}>Rx Number</Dropdown.Item>
+                        <Dropdown.Item id="Patient ID" onClick={(e)=>{setSearchBy(e.target.id)}}>Patient ID</Dropdown.Item>
+                        <Dropdown.Item id="Last Name" onClick={(e)=>{setSearchBy(e.target.id)}}>Last Name</Dropdown.Item>
+                        <Dropdown.Item id="First Name" onClick={(e)=>{setSearchBy(e.target.id)}}>First Name</Dropdown.Item>
+                        <Dropdown.Item id="DIN" onClick={(e)=>{setSearchBy(e.target.id)}}>DIN</Dropdown.Item>
+                        <Dropdown.Item id="Physician ID" onClick={(e)=>{setSearchBy(e.target.id)}}>Physician ID</Dropdown.Item>
+                        <Dropdown.Item id="Phys Last Name" onClick={(e)=>{setSearchBy(e.target.id)}}>Phys Last Name</Dropdown.Item>
+                        <Dropdown.Item id="Status" onClick={(e)=>{setSearchBy(e.target.id)}}>Status</Dropdown.Item>
+                        <Dropdown.Item id="Date Submitted" onClick={(e)=>{setSearchBy(e.target.id)}}>Date Submitted</Dropdown.Item>
+                        <Dropdown.Item id="SIG Code" onClick={(e)=>{setSearchBy(e.target.id)}}>SIG Code</Dropdown.Item>
+                        <Dropdown.Item id="SIG Description" onClick={(e)=>{setSearchBy(e.target.id)}}>SIG Description</Dropdown.Item>
+                        <Dropdown.Item id="Form" onClick={(e)=>{setSearchBy(e.target.id)}}>Form</Dropdown.Item>
+                        <Dropdown.Item id="Route" onClick={(e)=>{setSearchBy(e.target.id)}}>Route</Dropdown.Item>
+                        <Dropdown.Item id="Prescribed Dose" onClick={(e)=>{setSearchBy(e.target.id)}}>Prescribed Dose</Dropdown.Item>
+                        <Dropdown.Item id="Frequency" onClick={(e)=>{setSearchBy(e.target.id)}}>Frequency</Dropdown.Item>
+                        <Dropdown.Item id="Duration" onClick={(e)=>{setSearchBy(e.target.id)}}>Duration</Dropdown.Item>
+                        <Dropdown.Item id="Quantity" onClick={(e)=>{setSearchBy(e.target.id)}}>Quantity</Dropdown.Item>
+                        <Dropdown.Item id="Start Date" onClick={(e)=>{setSearchBy(e.target.id)}}>Start Date</Dropdown.Item>
+                        <Dropdown.Item id="Start Time" onClick={(e)=>{setSearchBy(e.target.id)}}>Start Time</Dropdown.Item>
+                        <Dropdown.Item id="Comments" onClick={(e)=>{setSearchBy(e.target.id)}}>Comments</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
             <div className="d-flex align-items-center">
                 <h2>Rejected</h2>
                 <div className="hide" id="RejectedShow">
