@@ -9,7 +9,7 @@ import AlertModal from '../modals/alertModal';
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-function BulkPhysicians({setDisplay}) {
+function BulkPhysicians({setDisplay, getPhysicians}) {
 
     const [excelFile, setExcelFile] = useState(null);
 
@@ -191,6 +191,7 @@ function BulkPhysicians({setDisplay}) {
                 onClose={() => {
                     setIsAlertModalOpen(false)
                     setDisplay("main");
+                    getPhysicians();
             }}
             />
         </div>

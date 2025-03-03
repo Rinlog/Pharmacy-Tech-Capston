@@ -187,7 +187,7 @@ function Physicians() {
                 setContent(null);
                 break;
             case "bulkPhysician":
-                setContent(<BulkPhysicians setDisplay={setDisplay} />);
+                setContent(<BulkPhysicians setDisplay={setDisplay} getPhysicians={GetPhysicians} />);
                 break;
             case "editPhysician":
                 setContent(<EditPhysician key={selectedPhysician["Physician ID"]} setDisplay={setDisplay} setSelectedPhysician={setSelectedPhysician} selectedPhysician={selectedPhysician} getPhysicians={GetPhysicians}/>)
