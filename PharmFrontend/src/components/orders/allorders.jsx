@@ -13,7 +13,6 @@ import Form from "react-bootstrap/Form"
 import { Anchor, DropdownButton } from "react-bootstrap";   
 import axios from "axios";
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
-import he from 'he';
 import AlertModal from "../modals/alertModal";
 
 

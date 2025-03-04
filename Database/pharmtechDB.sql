@@ -6,6 +6,7 @@
 USE pharmtechDB;
 
 -- Drop Tables if they exist
+DROP TABLE IF EXISTS NotificationTable;
 DROP TABLE IF EXISTS UserTable;
 DROP TABLE IF EXISTS PatientTable;
 DROP TABLE IF EXISTS PhysicianTable;
@@ -18,7 +19,6 @@ DROP TABLE IF EXISTS LogTable;
 DROP TABLE IF EXISTS ConfirmationCodeTable;
 DROP TABLE IF EXISTS PasswordResetCodeTable;
 DROP TABLE IF EXISTS PrintStatusTable;
-DROP TABLE IF EXISTS NotificationTable;
 
 -- Create the table in the specified schema
 CREATE TABLE PrintStatusTable

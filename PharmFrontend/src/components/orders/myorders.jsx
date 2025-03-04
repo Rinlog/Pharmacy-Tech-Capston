@@ -2,6 +2,7 @@
 import {useState, useEffect} from 'react';
 import {useCookies} from 'react-cookie';
 import $, { grep } from 'jquery';
+import Dropdown from "react-bootstrap/Dropdown";
 
 import AlertModal from '@components/modals/alertModal';
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
@@ -17,8 +18,13 @@ const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
 function MyOrders(){
+
+    //search stuff
+    const [SearchBy, setSearchBy] = useState("First Name");
     // UseStates for data
     const [data, setData] = useState([]);
+    const [OG_Data, setOG_Data] = useState([]);
+
     const [tableHeaders, setTableHeaders] = useState([]);
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
@@ -91,6 +97,27 @@ function MyOrders(){
 
     // Get the orders
 
+    //search related stuff
+    function Search(SearchTerm){
+        let expression = RegExp("^"+SearchTerm+".*$","i");
+        let LocalData = OG_Data //makes sure we start searching with every search option included.
+        if (SearchTerm != ""){
+            let FilteredData = LocalData.filter(function(Order){
+            
+                let result = expression.test(Order[SearchBy]);
+                if (result === true){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            })
+            setData(FilteredData);
+        }
+        else{
+            setData(OG_Data);
+        }
+    }
     //handles the show and hide buttons
     function HandleHideShowPress(e){
         let TriggerHideVal = $(e.currentTarget).attr("triggerhide")
@@ -185,6 +212,7 @@ function MyOrders(){
                 }));
 
                 setData(transformedData);
+                setOG_Data(transformedData)
                 const keys = Object.keys(transformedData[0]);
 
                 // Map the custom versions
@@ -532,6 +560,42 @@ function MyOrders(){
             {/* Displays when data has been obtained */}
             {dataObtained && (
                         <>
+                            <div className='d-flex align-items-center'>
+                                <div>
+                                    <input type="text" id="drugSearch" placeholder={"Search by "+SearchBy} onChange={e => Search(e.target.value)}/>
+                                </div>
+                                <Dropdown>
+                                    <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
+                                        <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
+                                            <rect id="svgEditorBackground" x="0" y="0" width="10px" height="10px" style={{fill: 'none', stroke: 'none'}}/>
+                                            <circle id="e2_circle" cx="10" cy="10" style={{fill:'white',stroke:'black',strokeWidth:'2px'}} r="5"/>
+                                            <line id="e3_line" x1="14" y1="14" x2="20.235" y2="20.235" style={{fill:'white',stroke:'black',strokeWidth:'2px'}}/>
+                                        </svg>
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item id="Rx Number" onClick={(e)=>{setSearchBy(e.target.id)}}>Rx Number</Dropdown.Item>
+                                        <Dropdown.Item id="Patient ID" onClick={(e)=>{setSearchBy(e.target.id)}}>Patient ID</Dropdown.Item>
+                                        <Dropdown.Item id="Last Name" onClick={(e)=>{setSearchBy(e.target.id)}}>Last Name</Dropdown.Item>
+                                        <Dropdown.Item id="First Name" onClick={(e)=>{setSearchBy(e.target.id)}}>First Name</Dropdown.Item>
+                                        <Dropdown.Item id="DIN" onClick={(e)=>{setSearchBy(e.target.id)}}>DIN</Dropdown.Item>
+                                        <Dropdown.Item id="Physician ID" onClick={(e)=>{setSearchBy(e.target.id)}}>Physician ID</Dropdown.Item>
+                                        <Dropdown.Item id="Phys Last Name" onClick={(e)=>{setSearchBy(e.target.id)}}>Phys Last Name</Dropdown.Item>
+                                        <Dropdown.Item id="Status" onClick={(e)=>{setSearchBy(e.target.id)}}>Status</Dropdown.Item>
+                                        <Dropdown.Item id="Date Submitted" onClick={(e)=>{setSearchBy(e.target.id)}}>Date Submitted</Dropdown.Item>
+                                        <Dropdown.Item id="SIG Code" onClick={(e)=>{setSearchBy(e.target.id)}}>SIG Code</Dropdown.Item>
+                                        <Dropdown.Item id="SIG Description" onClick={(e)=>{setSearchBy(e.target.id)}}>SIG Description</Dropdown.Item>
+                                        <Dropdown.Item id="Form" onClick={(e)=>{setSearchBy(e.target.id)}}>Form</Dropdown.Item>
+                                        <Dropdown.Item id="Route" onClick={(e)=>{setSearchBy(e.target.id)}}>Route</Dropdown.Item>
+                                        <Dropdown.Item id="Prescribed Dose" onClick={(e)=>{setSearchBy(e.target.id)}}>Prescribed Dose</Dropdown.Item>
+                                        <Dropdown.Item id="Frequency" onClick={(e)=>{setSearchBy(e.target.id)}}>Frequency</Dropdown.Item>
+                                        <Dropdown.Item id="Duration" onClick={(e)=>{setSearchBy(e.target.id)}}>Duration</Dropdown.Item>
+                                        <Dropdown.Item id="Quantity" onClick={(e)=>{setSearchBy(e.target.id)}}>Quantity</Dropdown.Item>
+                                        <Dropdown.Item id="Start Date" onClick={(e)=>{setSearchBy(e.target.id)}}>Start Date</Dropdown.Item>
+                                        <Dropdown.Item id="Start Time" onClick={(e)=>{setSearchBy(e.target.id)}}>Start Time</Dropdown.Item>
+                                        <Dropdown.Item id="Comments" onClick={(e)=>{setSearchBy(e.target.id)}}>Comments</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </div>
                         <div className="d-flex align-items-center">
                             <h2>Rejected</h2>
                             <div className="hide" id="RejectedShow">
