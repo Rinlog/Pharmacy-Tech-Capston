@@ -244,6 +244,7 @@ function Verification() {
                 <div>
                     <input type="text" id="drugSearch" placeholder={"Search by "+SearchBy} onChange={e => Search(e.target.value)}/>
                 </div>
+                <small className='pl-1'>SearchBy:</small>
                 <Dropdown>
                     <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
                         <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
