@@ -32,6 +32,7 @@ function Navbar() {
 
   const Logout = () => {
     logout(); //uses authcontext logout function
+    setFetchedData(false);
     navigate("/login");
     //window.location.reload(); //commented this out testing to see if i need it still
   };
@@ -101,6 +102,7 @@ function Navbar() {
     },10)
   }
   async function GetUserInfo(){
+    setFetchedData(false)
     let result = await $.ajax({
       url:"https://"+BackendIP+":"+BackendPort+"/api/User/getUserByID",
       method:"POST",
@@ -111,8 +113,9 @@ function Navbar() {
       }
     })
     setUserInfo(result);
-    setFetchedData(true);
-    
+    setTimeout(function(){
+      setFetchedData(true);
+    },10)
   }
   useEffect(function(){
           if (NotificationData != undefined && NotificationData != null && NotificationData != ''){
