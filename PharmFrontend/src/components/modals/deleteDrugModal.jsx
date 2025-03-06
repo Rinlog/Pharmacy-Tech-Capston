@@ -19,7 +19,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
 
     const handleConfirmDelete = () => {
         setSecondModalOpen(false);
-        DeleteDrug();
+        DeleteDrugs();
     }
 
     const handleCancelDelete = () => {
@@ -28,24 +28,28 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
         handleClose();
     }
 
-    const DeleteDrug = async () => {
+    const DeleteDrugs = async () => {
         try {
+
+            const drugsToDelete = drugToDelete.map(drug => drug.din);
+
+            //console.log("Drugs to delete SENDING", drugsToDelete); //dubugging
+
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Drug/deletedrug', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Key-Auth':ApiAccess
                 },
-                body: JSON.stringify({
-                    "DIN": drugToDelete["DIN"]
-                })
+                body: JSON.stringify(drugsToDelete) //send the array of drugs to delete
             });
+
     
             if (response.ok) {
                 //these needs to be in this order for proper deletion and updating list
-                setAlertMessage("Drug deleted successfully");
+                setAlertMessage("Drugs Deleted Successfully");
                 
-                setDrugToDelete({ "DIN": null, selected: false });
+                setDrugToDelete([]);
                 
 
                 // Explicitly call onClose after setting state
@@ -60,6 +64,8 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
         }
         catch (error) {
             console.log(error);
+            setAlertMessage("Error deleting drugs");
+            setIsAlertModalOpen(true);
         }
     }
 
@@ -78,7 +84,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
                 isOpen={isAlertModalOpen}
                 message={alertMessage}
                 onClose={() => {
-                    if (alertMessage == "Drug deleted successfully"){
+                    if (alertMessage == "Drugs Deleted Successfully"){
                         handleClose();//This will refresh the drug list
                     }
                     setIsAlertModalOpen(false)
@@ -96,7 +102,12 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
                     <h3>Delete Drug</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you sure you want to delete {drugToDelete["Drug Name"]}?</h1>
+                <h1>Are you sure you want to delete the following drugs?</h1>
+                <ul>{/*need to make sure to show all the drugs selected .map is used to ease*/}
+                    {drugToDelete.map((drug, index) => (
+                        <li key= {index}>{drug.name}</li>
+                    ))}
+                </ul>
                 <Button className="ModalbuttonG w-100" onClick={handleDeleteDrug}>Delete</Button>
                 <Button className="ModalbuttonB w-100" onClick={handleClose}>Cancel</Button>
                 </Modal.Body>

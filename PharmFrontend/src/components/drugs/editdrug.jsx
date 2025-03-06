@@ -42,6 +42,7 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
     };
 
     useEffect(() => {
+        //console.log(selectedDrug); //debugging
         if (selectedDrug) {
             handleSelect(selectedDrug);
         }
