@@ -30,6 +30,9 @@ function Drugs() {
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
 
+    //delete multiple drugs
+    const [selectedDrugs, setSelectedDrugs] = useState([]);
+
     //table sorting
     const [column, setColumn] = useState(null);
     const [sortOrder, setOrder] = useState('desc');
@@ -43,6 +46,36 @@ function Drugs() {
     const [selectedDrug, setSelectedDrug] = useState({ "DIN": null, selected: false });
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
+
+    //checkbox changes
+    const handleSelectionChange = (e, item) => {
+        const { checked } = e.target;
+        const drugDIN = item["DIN"];
+        const drugName = item["Drug Name"];
+        
+        if (checked) {
+            //selected box gets added
+            setSelectedDrugs(prev => [...prev, {DIN: drugDIN, name: drugName}]);
+            //if its only one selected set it as new
+            if (selectedDrugs.length === 0) {
+                setSelectedDrug(item);
+                //console.log(item); //dubugging
+            }
+        } 
+        else {
+            //when unchecking a box update the array
+            setSelectedDrugs(prev => {
+                const updated = prev.filter(drug => drug.DIN !== drugDIN);
+                //if nothing is selected clear the array
+                if (updated.length === 0) {
+                    setSelectedDrug(null);
+                }
+                //console.log(updated); //dubugging
+                return updated;
+            });
+        }
+    };
 
     // Map the headers to the data for the table
     const headerMapping = {
@@ -118,20 +151,26 @@ function Drugs() {
     }
 
     // Handle radio change
-    const handleRadioChange = (e, item) => {
-        if (e.target.checked) {
-            setSelectedDrug({ ...item, selected: true });
-            setDisplay("main");
-        }
-    }
+    // const handleRadioChange = (e, item) => {
+    //     if (e.target.checked) {
+    //         setSelectedDrug({ ...item, selected: true });
+    //         setDisplay("main");
+    //     }
+    // }
 
     // Handle delete button click
     const handleDeleteClick = () => {
-        if (selectedDrug.selected) {
+        if (selectedDrugs.length > 0) {
+            
+            const drugsToDelete = selectedDrugs.map(drug => ({
+                din: drug.DIN,
+                name: drug.name
+            }));
+            setSelectedDrugs(drugsToDelete);
             setIsDeleteModalOpen(true);
         }
         else {
-            setAlertMessage("Please select a drug to delete.");
+            setAlertMessage("Please select at least one drug to delete");
             setIsAlertModalOpen(true);
         }
     }
@@ -174,15 +213,19 @@ function Drugs() {
 
     const ChangeDisplay = (e) => {
         let select = e.target.id;
+
         if (select === "bulkDrug") {
             setDisplay("bulkDrug");
         }
+
         if (select === "editDrug") {
-            if (selectedDrug.selected) {
+            
+            if (selectedDrugs.length === 1) {
+                setSelectedDrug(Data.find(drug => drug["DIN"] === selectedDrugs[0].DIN));
                 setDisplay("editDrug");
             }
             else {
-                setAlertMessage("Please select a drug to edit.");
+                setAlertMessage("Please select only one drug to delete");
                 setIsAlertModalOpen(true);
             }
         }
@@ -197,7 +240,7 @@ function Drugs() {
                 setContent(<BulkDrugs setDisplay={setDisplay} getDrugs={GetDrugs}/>);
                 break;
             case "editDrug":
-                setContent(<EditDrug key={selectedDrug["DIN"]} setDisplay={setDisplay} setSelectedDrug={setSelectedDrug} selectedDrug={selectedDrug } getDrugs={GetDrugs} />)
+                setContent(<EditDrug key={selectedDrugs["DIN"]} setDisplay={setDisplay} setSelectedDrug={setSelectedDrug} selectedDrug={selectedDrug } getDrugs={GetDrugs} />)
                 break;
         }
     }, [display, setContent]);
@@ -232,7 +275,6 @@ function Drugs() {
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
-        
 
             {/* Only display the admin required buttons if the user is an admin */}
             {cookies.get('admin') === 'Y' && (
@@ -249,8 +291,8 @@ function Drugs() {
                         <DeleteDrugModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)}
-                            drugToDelete={selectedDrug}
-                            setDrugToDelete={setSelectedDrug}
+                            drugToDelete={selectedDrugs}
+                            setDrugToDelete={setSelectedDrugs}
                         />
 
                         <AlertModal
@@ -290,10 +332,9 @@ function Drugs() {
                                 <tr key={index}>
                                     <td>
                                         <input 
-                                            type="radio" 
-                                            name="selectedRow" 
-                                            checked={selectedDrug.selected && item["DIN"] === selectedDrug["DIN"]}
-                                            onChange={e => handleRadioChange(e, item)}
+                                            type="checkbox" 
+                                            checked={selectedDrugs.some(drug => drug.DIN === item["DIN"])}
+                                            onChange={e => handleSelectionChange(e, item)}
                                         />
                                     </td>
                                     {tableHeaders.map(header => (

@@ -1028,34 +1028,39 @@ namespace PharmPracticumBackend.DL
             return result;
         }
 
-        public async Task<string> DeleteDrugAsync(string DIN)
+        public async Task<string> DeleteDrugAsync(List<string> DINs)
         {
-            string result = "Drug not deleted";
+
+            if (DINs == null || DINs.Count == 0)
+            {
+                return "No drugs were sent for deleting";
+            }
 
             try
             {
-                // Delete the drug
                 using var connection = GetOpenConnection();
-                SqlCommand cmd = new SqlCommand("dbo.deleteDrug", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@DIN", DIN);
-
-                int changed = await cmd.ExecuteNonQueryAsync();
-
-                if (changed > 0)
+                foreach (var DIN in DINs)
                 {
-                    result = "Drug Deleted";
+                   
+                    SqlCommand cmd = new SqlCommand("dbo.deleteDrug", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@DIN", DIN);
+
+                    await cmd.ExecuteNonQueryAsync();
+
+                    cmd.Parameters.Clear();
                 }
+                
+                return "Drugs Deleted successfully";
+                
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                result = ex.Message;
+                Console.WriteLine(ex.ToString()); //debugging
+                return ex.Message;
             }
-
-            return result;
-
         }
 
         public async Task<string> EditDrugAsync(drugsDTO drug)
