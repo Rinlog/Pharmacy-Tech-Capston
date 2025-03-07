@@ -1443,6 +1443,81 @@ namespace PharmPracticumBackend.DL
         }
 
         //ORDER METHODS
+        public bool UpdateOrderImagePathByID(String RxNum, String Path)
+        {
+            bool result = false;
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.UpdateOrderImagePath",conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@rxNum",RxNum);
+                cmd.Parameters.AddWithValue("@path",Path);
+
+                result = (cmd.ExecuteNonQuery() == 1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return result;
+        }
+        public ImageDTO GetOrderImageByID(String RxNum)
+        {
+            ImageDTO imageDTO = new ImageDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetOrderImageByID", conn);
+                cmd.CommandType= CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@rxNum",RxNum);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                //should only give back one row
+                while (reader.Read())
+                {
+                    return new ImageDTO()
+                    {
+                        imageID = reader[0].ToString(),
+                        rxNum = reader[1].ToString(),
+                        imagePath = reader[2].ToString()
+                    };
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return imageDTO;
+        }
+        public List<ImageDTO> GetAllOrderImages()
+        {
+            List<ImageDTO> images = new List<ImageDTO>();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetAllOrderImages", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    images.Add(new ImageDTO()
+                    {
+                        imageID = reader[0].ToString(),
+                        rxNum = reader[1].ToString(),
+                        imagePath = reader[2].ToString()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return images;
+        }
         public ordersDTO GetOrderByID(String RxNum)
         {
             ordersDTO dbOrders = new ordersDTO();
@@ -1663,7 +1738,7 @@ namespace PharmPracticumBackend.DL
                 cmd.Parameters.AddWithValue("@startDate", DateTime.Parse(order.StartDate)); //date
                 cmd.Parameters.AddWithValue("@startTime", order.StartTime);
                 cmd.Parameters.AddWithValue("@comments", order.Comments);
-                cmd.Parameters.AddWithValue("@imagePath", "Test");
+                cmd.Parameters.AddWithValue("@imagePath", order.OrderImage);
 
 
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -1794,7 +1869,7 @@ namespace PharmPracticumBackend.DL
                 cmd.Parameters.AddWithValue("@startDate", DateTime.Parse(order.StartDate)); //date
                 cmd.Parameters.AddWithValue("@startTime", order.StartTime);
                 cmd.Parameters.AddWithValue("@comments", order.Comments);
-                cmd.Parameters.AddWithValue("@imagePath", "Test");
+                cmd.Parameters.AddWithValue("@imagePath", order.OrderImage);
 
                 cmd.CommandType = CommandType.StoredProcedure;
 

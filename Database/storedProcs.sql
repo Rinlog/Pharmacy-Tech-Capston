@@ -23,6 +23,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS setOrderImage; 
     DROP PROCEDURE IF EXISTS updateOrderPrintStatus;
     DROP PROCEDURE IF EXISTS UpdateSeenStatus;
+    DROP PROCEDURE IF EXISTS UpdateOrderImagePath;
     -- Updates (Whole Row Updates)
     DROP PROCEDURE IF EXISTS updateUser; 
     DROP PROCEDURE IF EXISTS updatePatient; 
@@ -51,6 +52,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS getIDByEmail; 
     DROP PROCEDURE IF EXISTS getEmailByID; 
     DROP PROCEDURE IF EXISTS getImagePathByOrderID; 
+    DROP PROCEDURE IF EXISTS GetOrderImageByID;
     -- Retrievals (Whole Row)
     DROP PROCEDURE IF EXISTS getUserInfo; 
     DROP PROCEDURE IF EXISTS getPatientInfo; 
@@ -58,6 +60,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS getDrugInfo; 
     DROP PROCEDURE IF EXISTS getOrderInfo; 
     DROP PROCEDURE IF EXISTS getLabelInfo; 
+    DROP PROCEDURE IF EXISTS GetAllOrderImages
 
     -- Retrievals (Whole Table)
     DROP PROCEDURE IF EXISTS getAllUsers; 
@@ -1775,4 +1778,27 @@ GO
     AS
 
         update NotificationTable set Seen = @Status where NotificationID = @NotificationID;
+    GO
+
+    CREATE PROCEDURE GetOrderImageByID
+        @rxNum int
+    AS
+        BEGIN
+            select * from ImageTable where rxNum = @rxNum;
+        end;
+    GO
+    CREATE PROCEDURE GetAllOrderImages
+    AS
+        BEGIN
+            select * from ImageTable
+        end;
+    GO
+
+    CREATE PROCEDURE UpdateOrderImagePath
+        @rxNum int,
+        @path nvarchar(200)
+    AS
+        BEGIN
+            update ImageTable set imagePath = @path where rxNum = @rxNum;
+        END;
     GO

@@ -24,7 +24,6 @@ import { AuthProvider } from '@components/login/AuthContext.jsx';
 import ProtectedRoute from '@components/login/ProtectedRoute.jsx';
 import UnProtectedRoute from '@components/login/UnprotectedRoute';
 import ManageLoginStatus from './components/login/ManageLoginStatus';
-
 function App() {
     return (
         <div className='page-container'>
@@ -52,7 +51,6 @@ function App() {
                             <Route path="/printorder/:OrderID" element={<ProtectedRoute component={printOrder}/>} />
                             <Route path="/printorder/" element={<Navigate to="/home" replace />} />
                             <Route path="/verification" element={<ProtectedRoute component={Verification} />} />
-                            
                             {/*admin routes*/}
                             <Route path="/usermanagement" element={<ProtectedRoute component={UserManagement} adminRequired />} />
                             <Route path="/logs" element={<ProtectedRoute component={Logs} adminRequired />} />

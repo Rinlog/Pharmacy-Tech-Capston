@@ -82,7 +82,6 @@ namespace PharmPracticumBackend.Controllers
         {
             try
             {
-                
                 //index 0 is the order id , index 1 is the print status code, index 2 is the quantity to print
                 String[] OrderInfoArray = OrderInfo.Split("~!~");
                 if (OrderInfoArray.Length != 3)
