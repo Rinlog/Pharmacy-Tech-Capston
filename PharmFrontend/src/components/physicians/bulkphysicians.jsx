@@ -69,6 +69,22 @@ function BulkPhysicians({setDisplay, getPhysicians}) {
                 return;
             }
 
+            const provinceMapping = {
+                "alberta": "AB", 
+                "british columbia": "BC", 
+                "manitoba": "MB", 
+                "new brunswick": "NB",
+                "newfoundland and labrador": "NL", 
+                "northwest territories": "NT", 
+                "nova scotia": "NS",
+                "nunavut": "NU", 
+                "ontario": "ON", 
+                "prince edward island": "PE", 
+                "quebec": "QC",
+                "saskatchewan": "SK", 
+                "yukon": "YT"
+            };
+
             // Create them as keys and format data
 
             let formattedData = [];
@@ -87,14 +103,19 @@ function BulkPhysicians({setDisplay, getPhysicians}) {
                     // Use the mapping to get the changed key names
                     let key = headerMapping[keys[j]];
 
-                    // Convert the values to strings because type coercion is the devil
-                    rawData[i][j] = String(rawData[i][j]);
+                    let value = String(rawData[i][j]).trim();
 
-                    // Sanitize the input
-                    let sanitized = SanitizeInput(rawData[i][j]);
+                    if (key === "FName" || key === "LName") {
+                        value = value.charAt(0).toLocaleUpperCase() + value.slice(1).toLocaleLowerCase();
+                    }
+
+                    if (key === "Province") {
+                        let lowerCaseValue = value.toLocaleLowerCase();
+                        value = provinceMapping[lowerCaseValue] || value;
+                    }
 
                     // Assign each column to keys
-                    obj[key] = sanitized;
+                    obj[key] = SanitizeInput(value);
 
                 }
                 // Push the object to array
