@@ -170,6 +170,7 @@ function AddOrder(){
             responseType:"json",
             data:formData
             })
+            console.log(response)
             setSavedImage({filePath:response.data,previewUrl:savedImage.previewUrl,CommitSave:true})
         }
         catch(error){

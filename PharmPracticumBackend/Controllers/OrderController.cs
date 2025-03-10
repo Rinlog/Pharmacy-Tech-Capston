@@ -149,7 +149,7 @@ namespace PharmPracticumBackend.Controllers
             Console.WriteLine(GreatestNumber);
             return GreatestNumber;
         }
-        [HttpPost("addOrderImage")]
+        [HttpPost("addorderImage")]
         public async Task<IActionResult> AddOrderImage([FromForm] IFormFile image)
         {
             try
