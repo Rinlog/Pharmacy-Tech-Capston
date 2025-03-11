@@ -70,6 +70,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
     }
 
     const handleClose = () => {
+        setDrugToDelete([]);
         onClose();
     }
 
