@@ -1232,24 +1232,28 @@ namespace PharmPracticumBackend.DL
             return result;
         }
 
-        public async Task<string> DeletePatientAsync(string ppr)
+        public async Task<string> DeletePatientsAsync(string pprs)
         {
-            string result = "Patient not deleted";
+            string result = "Patients not deleted";
 
             try
             {
                 // Delete the patient
                 using var connection = GetOpenConnection();
-                SqlCommand cmd = new SqlCommand("dbo.deletePatient", connection);
+                SqlCommand cmd = new SqlCommand("dbo.deletePatients", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@PPR", ppr);
+                cmd.Parameters.AddWithValue("@PPR", pprs);
 
                 int changed = await cmd.ExecuteNonQueryAsync();
 
-                if (changed > 0)
+                if (changed == 1)
                 {
                     result = "Patient Deleted";
+                }
+                else if (changed > 1)
+                {
+                    result = "Patients Deleted";
                 }
             }
             catch (Exception ex)

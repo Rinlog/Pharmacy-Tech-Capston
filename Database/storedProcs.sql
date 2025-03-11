@@ -43,7 +43,7 @@ use pharmtechDB;
 
     -- Deletes
     DROP PROCEDURE IF EXISTS deleteUser; 
-    DROP PROCEDURE IF EXISTS deletePatient; 
+    DROP PROCEDURE IF EXISTS deletePatients; 
     DROP PROCEDURE IF EXISTS deletePhysician; 
     DROP PROCEDURE IF EXISTS deleteDrug; 
     DROP PROCEDURE IF EXISTS deleteOrder; 
@@ -1115,30 +1115,25 @@ GO
         END;
         GO
 
-    CREATE PROCEDURE deletePatient
-        -- Procedure: deletePatient
-        -- Purpose: Delete a patient from the database
+    CREATE PROCEDURE deletePatients
+        -- Procedure: deletePatients
+        -- Purpose: Delete one or more patients from the database
         -- Parameters:
         --      @PPR - the PPR of the patient
         -- Returns: None
         -- Notes: Hopefully this is because the patient is cured :)
-        @PPR char(6)
+        @PPR nvarchar(4000)
         AS
         BEGIN
-            -- Check if the patient exists
-            IF NOT EXISTS (SELECT * FROM PatientTable WHERE PPR = @PPR)
-            BEGIN
-                RETURN;
-            END;
             --Delete the any orders associated with them first
             DECLARE @OrderID int;
-            WHILE exists(select * from OrderTable Where PPR = @PPR)
+            WHILE exists(select * from OrderTable Where PPR in(select * from string_split(@PPR,',')))
             BEGIN
-                select @OrderID = rxNum from OrderTable where PPR = @PPR
+                select top 1 @OrderID = rxNum from OrderTable where PPR in(select * from string_split(@PPR,','))
                 exec deleteOrder @OrderID;
             END;
             -- Delete the patient
-            DELETE FROM PatientTable WHERE PPR = @PPR;
+            DELETE FROM PatientTable WHERE PPR in(select * from string_split(@PPR,','))
         END;
         GO
 
