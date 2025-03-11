@@ -59,7 +59,7 @@ function Physicians() {
             //if its only one selected set it as new
             if (selectedPhysicians.length === 0) {
                 setSelectedPhysician(item);
-                console.log(item); //debugging
+                //console.log(item); //debugging
             }
         }
         else {
@@ -69,8 +69,12 @@ function Physicians() {
                 //if nothing is selected clear the array
                 if (updated.length === 0) {
                     setSelectedPhysician(null);
+
+                    if (display === "editPhysician") {
+                        setDisplay("main");
+                    }
                 }
-                console.log(updated); //debugging
+                //console.log(updated); //debugging
                 return updated;
             })
         }
@@ -211,7 +215,9 @@ function Physicians() {
         if (select === "editPhysician") {
 
             if (selectedPhysicians.length === 1) {
-                setSelectedPhysician(Data.find(physician => physician["Physician ID"] === selectedPhysicians[0].PhysicianID));
+                const currentSelectedPhysician = Data.find(physician => physician["Physician ID"] === selectedPhysicians[0].PhysicianID);
+
+                setSelectedPhysician(currentSelectedPhysician);
                 setDisplay("editPhysician");
             }
             else {
