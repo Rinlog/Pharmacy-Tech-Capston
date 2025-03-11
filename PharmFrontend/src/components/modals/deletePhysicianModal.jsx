@@ -31,6 +31,9 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
 
     const DeletePhysician = async () => {
         try {
+
+            const physiciansToDelete = physicianToDelete.map(physician => physician.physicianID);
+
             // Call the API
             const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/deletephysician', {
                 method: 'POST',
@@ -38,9 +41,7 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
                     'Content-Type': 'application/json',
                     'Key-Auth':ApiAccess
                 },
-                body: JSON.stringify({
-                    "PhysicianID": physicianToDelete["Physician ID"]
-                })
+                body: JSON.stringify(physiciansToDelete)
 
             });
 
@@ -90,7 +91,12 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
                     <h3>Delete Physician</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you sure you want to delete {physicianToDelete["First Name"]}?</h1>
+                <h1>Are you sure you want to delete the following physicians?</h1>
+                <ul>{/*need to make sure to show all the physicians selected .map is used to ease*/}
+                    {physicianToDelete.map((physician, index) => (
+                        <li key= {index}>{physician.name}</li>
+                    ))}
+                </ul>
                 <Button className="ModalbuttonG w-100" onClick={handleDeletePhysician}>Delete</Button>
                 <Button className="ModalbuttonB w-100" onClick={handleClose}>Cancel</Button>
                 </Modal.Body>
