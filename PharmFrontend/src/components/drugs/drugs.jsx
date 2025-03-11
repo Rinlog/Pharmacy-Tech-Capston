@@ -70,6 +70,10 @@ function Drugs() {
                 //if nothing is selected clear the array
                 if (updated.length === 0) {
                     setSelectedDrug(null);
+
+                    if (display === "editDrug") {
+                        setDisplay("main");
+                    }
                 }
                 //console.log(updated); //dubugging
                 return updated;
@@ -221,7 +225,9 @@ function Drugs() {
         if (select === "editDrug") {
             
             if (selectedDrugs.length === 1) {
-                setSelectedDrug(Data.find(drug => drug["DIN"] === selectedDrugs[0].DIN));
+                const currentSelectedDrug = Data.find(drug => drug["DIN"] === selectedDrugs[0].DIN);
+
+                setSelectedDrug(currentSelectedDrug);
                 setDisplay("editDrug");
             }
             else {
