@@ -12,6 +12,7 @@ import BulkPatients from '@components/patients/bulkpatients';
 import AlertModal from '../modals/alertModal';
 import Dropdown from 'react-bootstrap/Dropdown';
 import headerSort from '@components/headerSort/HeaderSort';
+import $ from 'jquery'
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
 
@@ -41,7 +42,7 @@ function Patients() {
     // Modal things
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedPatient, setSelectedPatient] = useState({ "Patient ID": null, selected: false });
+    const [selectedPatients, setSelectedPatients] = useState([]);
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
@@ -131,18 +132,29 @@ function Patients() {
         }
     }
 
-    // Handle radio change
-    const handleRadioChange = (e, item) => {
+    // Handle checkbox change
+    const handleCheckChange = (e, item) => {
         if (e.target.checked) {
-            setSelectedPatient({ ...item, selected: true });
+            selectedPatients.push(item)
             setDisplay("main");
+        }
+        else{
+            let removeIndex = selectedPatients.indexOf(item)
+            selectedPatients.splice(removeIndex,1);
         }
     }
 
     // Handle delete button click
     const handleDeleteClick = () => {
-        if (selectedPatient.selected) {
-            setIsDeleteModalOpen(true);
+        if (selectedPatients.length > 0) {
+            //only allows up to 100 patients to be removed at a time
+            if (selectedPatients.length <= 100){
+                setIsDeleteModalOpen(true);
+            }
+            else{
+                setAlertMessage("Please select less than 100 patients to delete");
+                setIsAlertModalOpen(true);
+            }
         }
         else {
             setAlertMessage("Please select a patient to delete.");
@@ -191,8 +203,12 @@ function Patients() {
             setDisplay("bulkPatient");
         }
         if (select === "editPatient") {
-            if (selectedPatient.selected) {
+            if (selectedPatients.length > 0 && selectedPatients.length <=1) {
                 setDisplay("editPatient");
+            }
+            else if (selectedPatients.length > 1){
+                setAlertMessage("Please only select one patient to edit at a time");
+                setIsAlertModalOpen(true);
             }
             else {
                 setAlertMessage("Please select a patient to edit.");
@@ -210,7 +226,7 @@ function Patients() {
                 setContent(<BulkPatients setDisplay={setDisplay} getPatients={GetPatients}/>);
                 break;
             case "editPatient":
-                setContent(<EditPatient key={selectedPatient["Patient ID"]} setDisplay={setDisplay} setSelectedPatient={setSelectedPatient} selectedPatient={selectedPatient} getPatients={GetPatients}/>)
+                setContent(<EditPatient key={selectedPatients[0]["Patient ID"]} setDisplay={setDisplay} setSelectedPatients={setSelectedPatients} selectedPatient={selectedPatients[0]} getPatients={GetPatients}/>)
                 break;
         }
     }, [display, setContent]);
@@ -268,8 +284,8 @@ function Patients() {
                         <DeletePatientModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)} 
-                            patientToDelete={selectedPatient}
-                            setPatientToDelete={setSelectedPatient}
+                            patientsToDelete={selectedPatients}
+                            setPatientsToDelete={setSelectedPatients}
                         />
 
                         <AlertModal
@@ -294,7 +310,7 @@ function Patients() {
                 <table>
                     <thead>
                         <tr>
-                            {/* Empty column for radio buttons */}
+                            {/* Empty column for check boxes */}
                             <th></th>
                             {tableHeaders.map(header => (
                                 <th key={header} onClick={() => headerSort(header,true,column, setColumn,sortOrder, setOrder, Data, setData)} style={{cursor: 'pointer'}}>
@@ -307,10 +323,10 @@ function Patients() {
                             <tr key={index}>
                                 <td>
                                     <input 
-                                        type="radio" 
-                                        name="selectedRow" 
-                                        checked={selectedPatient.selected && item["Patient ID"] === selectedPatient["Patient ID"]}
-                                        onChange={e => handleRadioChange(e, item)}
+                                        type="checkbox" 
+                                        name="selectedRow"
+                                        className='CheckBox'
+                                        onChange={e => handleCheckChange(e, item)}
                                     />
                                 </td>
                                 {tableHeaders.map(header => (

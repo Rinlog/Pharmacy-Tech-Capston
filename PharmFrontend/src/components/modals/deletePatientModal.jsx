@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import AlertModal from "./alertModal";
 import { Button, Modal, Form, Dropdown} from "react-bootstrap";
+import $ from 'jquery'
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-const DeletePatientModal = ({ isOpen, onClose, patientToDelete, setPatientToDelete, onDelete = () => {} }) => {
+const DeletePatientModal = ({ isOpen, onClose, patientsToDelete, setPatientsToDelete}) => {
 
 
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
@@ -25,50 +26,53 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, setPatientToDele
         setSecondModalOpen(false);
         handleClose();
     }
-
+    function getStringOfPPRs(patientsToDelete){
+        let tempPPR = ""
+        for (let i = 0; i < patientsToDelete.length; i++){
+            if (i != (patientsToDelete.length-1)){
+                tempPPR = tempPPR.concat(patientsToDelete[i]["Patient ID"] + ",");
+            }
+            else{
+                tempPPR = tempPPR.concat(patientsToDelete[i]["Patient ID"]);
+            }
+        }
+        return tempPPR
+    }
     const DeletePatient = async () => {
         try {
+            let PatientsPPRsToDelete = getStringOfPPRs(patientsToDelete)
             // Call the API
-            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Patient/deletepatient', {
+            const response = await $.ajax('https://'+BackendIP+':'+BackendPort+'/api/Patient/deletepatients', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Key-Auth':ApiAccess
                 },
-                body: JSON.stringify({
-                    "PPR": patientToDelete["Patient ID"]
-                })
+                data: JSON.stringify(PatientsPPRsToDelete)
 
             });
 
-            if (response.ok) {
-                setAlertMessage("Patient deleted successfully");
-
-                setPatientToDelete({ "Patient ID": null, selected: false });
-                
+                setPatientsToDelete([]);
+                setAlertMessage(response);
+                setIsAlertModalOpen(true);
+        }
+        catch (error) {
+            if (error.responseText){
+                setAlertMessage(error.responseText);
                 setIsAlertModalOpen(true);
             }
             else{
-                // Alert out the message sent from the API
-                const data = await response.json();
-                setAlertMessage(data.message);
+                setAlertMessage("An error occurred while deleting the patients.");
                 setIsAlertModalOpen(true);
             }
-        }
-        catch (error) {
-            console.log(error);
-            setAlertMessage("An error occurred while deleting the patient.");
-            setIsAlertModalOpen(true);
+
         }
     }
 
     const handleClose = () => {
         onClose();
-    }
 
-    useEffect(() => {
-        // No-op
-    }, [patientToDelete]);
+    }
 
 
     return (
@@ -77,7 +81,7 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, setPatientToDele
             isOpen={isAlertModalOpen}
             message={alertMessage}
             onClose={() => {
-                if (alertMessage == "Patient deleted successfully"){
+                if (alertMessage == "Patients Deleted" || alertMessage == "Patient Deleted"){
                     handleClose(); //refreshs Patient list
                 }
                 setIsAlertModalOpen(false)
@@ -94,7 +98,7 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, setPatientToDele
                     <h3>Delete Patient</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you sure you want to delete {patientToDelete["First Name"]}?</h1>
+                <h1>Are you sure you want to delete the selected patients?</h1>
                 <Button className="ModalbuttonG w-100" onClick={handleDeletePatient}>Delete</Button>
                 <Button className="ModalbuttonB w-100" onClick={handleClose}>Cancel</Button>
                 </Modal.Body>
@@ -117,7 +121,7 @@ const DeletePatientModal = ({ isOpen, onClose, patientToDelete, setPatientToDele
                     <h3>Delete Patient</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you REALLY sure you want to delete this patient? This will delete ALL orders accociated with the patient.</h1>
+                <h1>Are you REALLY sure you want to delete the selected patients? This will delete ALL orders accociated with the patients.</h1>
                 <Button className="ModalbuttonG w-100" onClick={handleConfirmDelete}>Yes</Button>
                 <Button className="ModalbuttonB w-100" onClick={handleCancelDelete}>No</Button>
                 </Modal.Body>
