@@ -92,7 +92,7 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, setPhysician
                     <h3>Delete Physician</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you sure you want to delete the following physicians?</h1>
+                <h1>Are you sure you want to delete the selected physician(s)?</h1>
                 <ul>{/*need to make sure to show all the physicians selected .map is used to ease*/}
                     {physicianToDelete.map((physician, index) => (
                         <li key= {index}>{physician.name}</li>
@@ -120,7 +120,12 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, setPhysician
                     <h3>Delete Physician</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you REALLY sure you want to delete this physician? This will delete ALL orders accociated with the physician.</h1>
+                <h1>Are you REALLY sure you want to delete the selected physician(s)? This will delete ALL orders associated with the physician(s).</h1>
+                <ul>{/*need to make sure to show all the physicians selected .map is used to ease*/}
+                    {physicianToDelete.map((physician, index) => (
+                        <li key= {index}>{physician.name}</li>
+                    ))}
+                </ul>
                 <Button className="ModalbuttonG w-100" onClick={handleConfirmDelete}>Yes</Button>
                 <Button className="ModalbuttonB w-100" onClick={handleCancelDelete}>No</Button>
                 </Modal.Body>

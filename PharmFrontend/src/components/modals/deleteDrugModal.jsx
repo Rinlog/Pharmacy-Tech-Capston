@@ -103,7 +103,7 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
                     <h3>Delete Drug</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you sure you want to delete the following drugs?</h1>
+                <h1>Are you sure you want to delete the following drug(s)?</h1>
                 <ul>{/*need to make sure to show all the drugs selected .map is used to ease*/}
                     {drugToDelete.map((drug, index) => (
                         <li key= {index}>{drug.name}</li>
@@ -131,7 +131,12 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
                     <h3>Delete Drug</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you REALLY sure you want to delete this drug? This will delete ALL orders accociated with the drug.</h1>
+                <h1>Are you REALLY sure you want to delete the selected drug(s)? This will delete ALL orders associated with the drug(s).</h1>
+                <ul>{/*need to make sure to show all the drugs selected .map is used to ease*/}
+                    {drugToDelete.map((drug, index) => (
+                        <li key= {index}>{drug.name}</li>
+                    ))}
+                </ul>
                 <Button className="ModalbuttonG w-100" onClick={handleConfirmDelete}>Yes</Button>
                 <Button className="ModalbuttonB w-100" onClick={handleCancelDelete}>No</Button>
                 </Modal.Body>
