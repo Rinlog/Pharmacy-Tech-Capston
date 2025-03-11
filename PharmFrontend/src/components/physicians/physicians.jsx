@@ -30,6 +30,9 @@ function Physicians() {
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
 
+    //multiple delete
+    const [selectedPhysicians, setSelectedPhysicians] = useState([]);
+
     //table sorting
     const [column, setColumn] = useState(null);
     const [sortOrder, setOrder] = useState('desc');
@@ -43,6 +46,39 @@ function Physicians() {
     const [selectedPhysician, setSelectedPhysician] = useState({ "Physician ID": null, selected: false });
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
+    //textbox changes
+    const handleSelectionChange = (e, item) => {
+        const {checked} = e.target;
+        const physicianID = item["Physician ID"];
+        const physicianName = item["First Name"] + " " + item["Last Name"];
+
+        if (checked) {
+            //selected box gets added
+            setSelectedPhysicians(prev => [...prev, {PhysicianID: physicianID, name: physicianName}]);
+            //if its only one selected set it as new
+            if (selectedPhysicians.length === 0) {
+                setSelectedPhysician(item);
+                //console.log(item); //debugging
+            }
+        }
+        else {
+            //when unchecking a box update the array
+            setSelectedPhysicians(prev => {
+                const updated = prev.filter(physician => physician.PhysicianID !== physicianID);
+                //if nothing is selected clear the array
+                if (updated.length === 0) {
+                    setSelectedPhysician(null);
+
+                    if (display === "editPhysician") {
+                        setDisplay("main");
+                    }
+                }
+                //console.log(updated); //debugging
+                return updated;
+            })
+        }
+    }
 
     // Map the headers to the data for the table
     const headerMapping = {
@@ -111,20 +147,25 @@ function Physicians() {
     }
 
     // Handle radio change
-    const handleRadioChange = (e, item) => {
-        if (e.target.checked) {
-            setSelectedPhysician({ ...item, selected: true });
-            setDisplay("main");
-        }
-    }
+    // const handleRadioChange = (e, item) => {
+    //     if (e.target.checked) {
+    //         setSelectedPhysician({ ...item, selected: true });
+    //         setDisplay("main");
+    //     }
+    // }
 
     // Handle delete button click
     const handleDeleteClick = () => {
-        if (selectedPhysician.selected) {
+        if (selectedPhysicians.length > 0) {
+            const physicianToDelete = selectedPhysicians.map(physician => ({
+                physicianID: physician.PhysicianID,
+                name: physician.name
+            }));
+            setSelectedPhysicians(physicianToDelete);
             setIsDeleteModalOpen(true);
         }
         else {
-            setAlertMessage("Please select a physician to delete.");
+            setAlertMessage("Please select at least one physician to delete");
             setIsAlertModalOpen(true);
         }
     }
@@ -167,11 +208,16 @@ function Physicians() {
 
     const ChangeDisplay = (e) => {
         let select = e.target.id;
+
         if (select === "bulkPhysician") {
             setDisplay("bulkPhysician");
         }
         if (select === "editPhysician") {
-            if (selectedPhysician.selected) {
+
+            if (selectedPhysicians.length === 1) {
+                const currentSelectedPhysician = Data.find(physician => physician["Physician ID"] === selectedPhysicians[0].PhysicianID);
+
+                setSelectedPhysician(currentSelectedPhysician);
                 setDisplay("editPhysician");
             }
             else {
@@ -238,8 +284,8 @@ function Physicians() {
                         <DeletePhysicianModal 
                             isOpen={isDeleteModalOpen} 
                             onClose={() => setIsDeleteModalOpen(false)}
-                            physicianToDelete={selectedPhysician}
-                            setPhysicianToDelete={setSelectedPhysician}
+                            physicianToDelete={selectedPhysicians}
+                            setPhysicianToDelete={setSelectedPhysicians}
                         />
 
                         <AlertModal
@@ -277,10 +323,9 @@ function Physicians() {
                             <tr key={index}>
                                 <td>
                                     <input 
-                                        type="radio" 
-                                        name="selectedRow" 
-                                        checked={selectedPhysician.selected && item["Physician ID"] === selectedPhysician["Physician ID"]}
-                                        onChange={e => handleRadioChange(e, item)}
+                                        type="checkbox" 
+                                        checked={selectedPhysicians.some(physician => physician.PhysicianID === item["Physician ID"])}
+                                        onChange={e => handleSelectionChange(e, item)}
                                     />
                                 </td>
                                 {tableHeaders.map(header => (

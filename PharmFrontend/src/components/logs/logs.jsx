@@ -111,8 +111,16 @@ function Logs() {
             <hr/>
 
             <form onSubmit={handleSubmit}>
-                <input type="date" required onChange={e => setStartDate(e.target.value)} style={{width:150}}/>
-                <input type="date" onChange={e => setEndDate(e.target.value)} style={{width:150}} />
+                <h4>Select a start and end date to retrieve logs within that range.</h4> <br/>
+                <div>
+                    <label>Start Date:</label>
+                    <input type="date" required onChange={e => setStartDate(e.target.value)} style={{width:150}}/>
+                </div>
+                <br/>
+                <div>
+                    <label>End Date:</label>
+                    <input type="date" onChange={e => setEndDate(e.target.value)} style={{width:150}} />
+                </div>
                 <br/>
                 <button type="submit">Get Logs</button>
             </form>
