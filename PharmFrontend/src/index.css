@@ -257,3 +257,113 @@ th.asc::after {
     position:absolute;
     left:350px;
 }
+
+
+/*Home page*/
+.home-container {
+    text-align: center;
+    font-family: var(--nbcc-font);
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  .home-header {
+    background-color: var(--nbcc-ocean-blue);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .pictures-rounded {
+      border-radius: 25px;
+      height: 100px;
+      width: 150px;
+  }
+  
+  .home-logo {
+    height: 100px;
+    margin: 20px 0;
+  }
+  
+  .home-description {
+    font-size: 18px;
+    color: #333;
+    margin: 20px;
+  }
+  
+  .button-with-image {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+  
+  /* grid buttons */
+  .button-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 20px;
+    margin-top: 20px;
+    justify-items: center;
+    width: 100%;
+  }
+  
+  .admin-section {
+    margin-top: 40px; /* Space from the normal buttons */
+  }
+    
+  .home-button, .one, .two, .three, .four, .five {
+    background-color: var(--nbcc-background-nav-item);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    width: 300px;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* some nice effects to add */
+  }
+    
+  .home-button:hover, .one:hover, .two:hover, .three:hover, .four:hover, .five:hover {
+    background-color: #004472;
+    transform: scale(1.05);
+  }
+  
+  .admin-separator {
+    grid-column: span 2;
+    width: 100%;
+    margin: 30px auto;
+    border: none;
+    border-top: 2px solid #000000; /* Light gray line */
+  }
+  
+  @media (max-width: 600px) {
+    .home-header {
+      font-size: 24px;
+    }
+  
+    .home-button {
+      font-size: 14px;
+      padding: 8px 15px;
+    }
+  }
+  
+  @media (max-width: 744px) {
+    .button-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 1176px) {
+    .home-button {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+  .CarouselSizing{
+    margin:auto;
+    text-align: center;
+    width:800px !important;
+    height:300px !important; /*this should be same height as images*/
+  }
