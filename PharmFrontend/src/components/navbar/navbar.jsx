@@ -8,7 +8,6 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import { useState, useEffect } from "react";
 import timeSince from "./TimeSince";
 import $ from 'jquery';
-import "./Navbar.css";
 
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort

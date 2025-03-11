@@ -2,9 +2,6 @@
 import { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 
-//css import
-import './signup.css';
-
 //validation import
 import { NullCheck, CheckEmail, VarMatch, PassRequirements, CheckNBCCEmail } from '@components/validation/basicValidation.jsx';
 

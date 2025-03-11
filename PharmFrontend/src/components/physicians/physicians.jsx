@@ -4,7 +4,6 @@ import { Cookies } from 'react-cookie';
 const cookies = new Cookies();
 
 // Import modals
-import "@components/modals/modalStyles.css";
 import AddPhysicianModal from '@components/modals/addPhysicianModal';
 import DeletePhysicianModal from '@components/modals/deletePhysicianModal';
 import EditPhysician from '@components/physicians/editphysician';

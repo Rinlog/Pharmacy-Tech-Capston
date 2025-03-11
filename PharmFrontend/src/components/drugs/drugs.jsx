@@ -7,7 +7,6 @@ const cookies = new Cookies();
 import he from 'he';
 
 // Import modals
-import "@components/modals/modalStyles.css";
 import AddDrugModal from '@components/modals/addDrugModal';
 import DeleteDrugModal from '@components/modals/deleteDrugModal';
 import EditDrug from '@components/drugs/editdrug';

@@ -2,8 +2,6 @@ import React, { useCallback } from "react";
 import $, { grep } from 'jquery';
 import {useState} from 'react';
 import { useEffect } from "react";
-import './Orders.css';
-import '../printorder/printorder.css'
 import { useCookies } from "react-cookie";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';

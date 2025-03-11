@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import AuthContext from '@components/login/AuthContext.jsx';
-import './Login.css'
 import $ from 'jquery';
 
 const ApiAccess = import.meta.env.VITE_APIAccess
