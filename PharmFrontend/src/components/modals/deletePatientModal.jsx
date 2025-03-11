@@ -51,8 +51,6 @@ const DeletePatientModal = ({ isOpen, onClose, patientsToDelete, setPatientsToDe
                 data: JSON.stringify(PatientsPPRsToDelete)
 
             });
-
-                setPatientsToDelete([]);
                 setAlertMessage(response);
                 setIsAlertModalOpen(true);
         }
@@ -98,7 +96,14 @@ const DeletePatientModal = ({ isOpen, onClose, patientsToDelete, setPatientsToDe
                     <h3>Delete Patient</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you sure you want to delete the selected patients?</h1>
+                <h1>Are you sure you want to delete the selected patient(s) below?</h1>
+                <ul id="PatientsToDelete">
+                    {patientsToDelete.map(function(patient){
+                        return (
+                            <li key={patient["Patient ID"]}>{patient["First Name"]}, {patient["Last Name"]}</li>
+                        )
+                    })}
+                </ul>
                 <Button className="ModalbuttonG w-100" onClick={handleDeletePatient}>Delete</Button>
                 <Button className="ModalbuttonB w-100" onClick={handleClose}>Cancel</Button>
                 </Modal.Body>
@@ -121,7 +126,14 @@ const DeletePatientModal = ({ isOpen, onClose, patientsToDelete, setPatientsToDe
                     <h3>Delete Patient</h3>
                 </Modal.Header>
                 <Modal.Body>
-                <h1>Are you REALLY sure you want to delete the selected patients? This will delete ALL orders accociated with the patients.</h1>
+                <h1>Are you REALLY sure you want to delete the selected patient(s)? This will delete ALL orders associated with the patient(s).</h1>
+                <ul id="PatientsToDelete">
+                    {patientsToDelete.map(function(patient){
+                        return (
+                            <li key={patient["Patient ID"]}>{patient["First Name"]}, {patient["Last Name"]}</li>
+                        )
+                    })}
+                </ul>
                 <Button className="ModalbuttonG w-100" onClick={handleConfirmDelete}>Yes</Button>
                 <Button className="ModalbuttonB w-100" onClick={handleCancelDelete}>No</Button>
                 </Modal.Body>

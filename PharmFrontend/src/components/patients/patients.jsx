@@ -194,6 +194,7 @@ function Patients() {
         if (!isAddModalOpen && !isDeleteModalOpen) {
             // If both modals are closed, fetch the data
             GetPatients();
+            setSelectedPatients([])
         }
     }, [isAddModalOpen, isDeleteModalOpen]);
 
