@@ -145,6 +145,344 @@ label{
     font-size: 16px;
 }
 
+/*SIGNUP CSS*/
+select {
+    width: 90%;
+    border-radius: 5px;
+    border: 1px solid var(--nbcc-ocean-blue);
+
+}
+
+.form-content {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+}
+
+.left {
+    width: 50%;
+    padding: 10px;
+    float: left;
+}
+
+.right {
+    width: 50%;
+    padding: 10px;
+    float: right;
+}
+/*SIGNUP CSS ENDING*/
+
+/*NAVBAR CSS*/
+.navbar {
+    background-color: var(--nbcc-nav); /* nbcc color taken from website using paint*/
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--nbcc-font);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky !important;
+    top:0; /*needed*/
+    z-index: 1;
+}
+
+.navbar-logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.navbar-logo:hover {
+    color: #ffcc00;
+}
+/* navbar toggler (for mobile responsiveness) we can make this better with some other things later */
+.navbar-toggler {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.navbar-toggler-icon {
+    display: inline-block;
+}
+
+.navbar-menu {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow:1;
+    justify-content: right;
+}
+
+.navbar-links {
+    display:flex;
+    align-items: center;
+    justify-content: right;
+    gap: 15px;
+}
+
+.navbar-hometext{
+    font-size: 40px;
+    font-weight: bold;
+    color: var(--nbcc-nav-item);
+}
+
+.navbar-item {
+    font-size:1.1em; 
+    text-decoration: none;
+    color: var(--nbcc-nav-item);
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar-item:hover {
+    background-color: var(--nbcc-background-nav-item);
+    color: white;
+}
+
+/* Navbar Button */
+.navbar-button {
+    background-color: rgba(255, 0, 0, 0.808); /* red button */
+    color: var(--nbcc-nav-item);
+    padding: 5px 10px;
+    font-size:1.1em; 
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.5s ease; /* slow transition to make it look better*/
+}
+
+.navbar-button:hover {
+    background-color: #a80000; /* dark red */
+}
+
+/* Responsive Navbar */
+.hide {
+    display: none;
+}
+
+/* logout button on nav bar */
+.logout-container {
+    display: flex;
+    align-items: center; /* Vertically align the text and button */
+}
+.Notifications{
+    overflow-y: scroll;
+    overflow-wrap: anywhere;
+    width:20vw;
+    white-space: normal;
+    max-height:calc(100vh - 150px);
+}
+.UnseenNotification a{
+    background-color: lightblue;
+}
+.UnseenNotification a:hover{
+    background-color: rgb(121, 192, 216);
+}
+/*NAVBAR CSS ENDING*/
+
+/*MODAL CSS*/
+.modal label {
+    color: black;
+}
+.modal span {
+    color: black;
+}
+.modal h3 {
+    color: black;
+}
+/*OLD CSS - LEFT HERE JUST INCASE SOMETHING BREAKS*/
+/* .modal {
+    display: none;
+    position: fixed; 
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); 
+}
+
+    .modal.isOpen {
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+    } */
+
+/* CSS for modal content */
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto; 
+    min-height: 200px; 
+}
+
+/* CSS for close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+/* CSS for table */
+.modal table {
+    border-collapse: collapse;
+}
+
+    .modal table th, table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .modal table th {
+        background-color: #012a3b;
+    }
+
+    .modal table tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    .modal table tr:hover {
+        background-color: #f5f5f5;
+    }
+    .modal table tr.selected{
+        background-color: #7bc09a;
+    }
+    .modal table tr.selected-red{
+        background-color: #db3d37;
+    }
+
+.modal textarea {
+    resize: none;
+    border: 2px inset black;
+}
+/*MODAL CSS ENDING*/
+
+
+/*Orders css*/
+div[class="scroll-table"]{
+    padding-right:0em;
+    padding-bottom:auto;
+    margin:auto;
+
+}
+div[class="scroll-table"] th{
+    padding: 0em 0.1em 0em 0.3em;
+}
+div[class="scroll-table"] table{
+    width: 100%;
+}
+.ApprovedButtons{
+    display: flex;
+    justify-content: right;
+    margin-bottom: 0.5em;
+    gap:0.5em;
+}
+.d-flex2{
+    display: flex;
+}
+.hide{
+    display:none;
+}
+/*Loading animation*/
+@keyframes LoadingAnim1{
+    0% {bottom:0px;}
+    25% {bottom:100px;}
+    50% {bottom: 0px;}
+    75% {bottom:100px;}
+    100% {bottom:0px;}
+
+}
+.Loading{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color:var(--nbcc-ocean-blue);
+    font-size: 15em;
+}
+.Dot1{
+    animation: LoadingAnim1 4s;
+    animation-iteration-count: infinite;
+}
+.Dot2{
+    animation: LoadingAnim1 4s;
+    animation-iteration-count: infinite;
+    animation-delay:0.25s;
+}
+.Dot3{
+    animation: LoadingAnim1 4s;
+    animation-iteration-count: infinite;
+    animation-delay:0.5s;
+}
+
+/*PRINT ORDER CSS*/
+.HideATagDefaults{
+    text-decoration: none;
+    color:white;
+}
+.Header{
+    display:flex;
+    justify-content: center;
+}
+.Buttons{
+    display:flex;
+    justify-content: center;
+}
+.DisplayText{
+    display:flex;
+    justify-content: center;
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+.VerifiedImage{
+    height:20em;
+}
+/*PRINT ORDER CSS ENDING*/
+
+/*ALERT MODAL CSS*/
+.Modal div div[class="modal-content"]{
+    background-color: (235, 240, 252);
+}
+.Modal div div[class="modal-content"] div[class="modal-body"] div[id="PrintImage"]{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding:0.2em;
+    background-color: black;
+
+}
+.Modal div div[class="modal-content"] div[class="modal-body"] div[class="PrintOptionsSection"]{
+    display:flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+    gap:0.5em;
+}
+/*ALERT MODAL CSS ENDING*/
+
+/*Login page css*/
+.BlueBackground{
+    background-color: var(--nbcc-possi-blue) !important;
+}
+
 /*  Table sorting things for allOrders page    */
 th.asc::after {
     content: " ▲";

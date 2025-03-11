@@ -5,7 +5,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Dropdown from "react-bootstrap/Dropdown";
 import Image from "react-bootstrap/Image"
-import './printorder.css';
 import { DropdownButton, Nav } from "react-bootstrap";
 import { useCookies } from 'react-cookie';
 
