@@ -7,7 +7,7 @@ import { Button, Modal, Form, Dropdown} from "react-bootstrap";
 const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
-const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = () => {} }) => {
+const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, setPhysicianToDelete }) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
@@ -64,6 +64,7 @@ const DeletePhysicianModal = ({ isOpen, onClose, physicianToDelete, onDelete = (
     }
 
     const handleClose = () => {
+        setPhysicianToDelete([]);
         onClose();
     }
 
