@@ -63,9 +63,12 @@ namespace PharmPracticumBackend.Controllers
             order.Comments = _sanitization.SanitizeComments(order.Comments);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             Console.WriteLine(order.PPR);
             Console.WriteLine(order.DIN);
             Console.WriteLine(order.PhysicianID);
+=======
+>>>>>>> parent of 4118e47 (Initial Main commit)
 
 =======
 >>>>>>> dev
@@ -84,7 +87,10 @@ namespace PharmPracticumBackend.Controllers
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 4118e47 (Initial Main commit)
         [HttpPost("getmyorders")]
         public async Task<IActionResult> GetMyOrders([FromBody] string user)
         {
@@ -113,6 +119,7 @@ namespace PharmPracticumBackend.Controllers
             else return Ok(new { message = "Order could not be amended." });
 
         }
+<<<<<<< HEAD
         [HttpPost("UpdateOrderImagePathByID")]
         public IActionResult UpdateOrderImage([FromBody] string UpdateInfo)
         {
@@ -245,5 +252,8 @@ namespace PharmPracticumBackend.Controllers
         }
 
 >>>>>>> dev
+=======
+
+>>>>>>> parent of 4118e47 (Initial Main commit)
     }
 }

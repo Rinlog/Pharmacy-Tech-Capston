@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
+<<<<<<< HEAD:PharmFrontend/src/components/modals/addPatientModal.jsx
 <<<<<<< HEAD
 import { SanitizeName, SanitizeDate, SanitizeEmail, SanitizeInput} from "@components/datasanitization/sanitization";
+=======
+import { SanitizeName, SanitizeDate, SanitizeEmail, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
+>>>>>>> parent of 4118e47 (Initial Main commit):PharmPracticumFrontend/PharmFrontend/src/components/modals/addPatientModal.jsx
 
 =======
 import { SanitizeName, SanitizeDate, SanitizeEmail, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
@@ -19,6 +23,7 @@ const AddPatientModal = ({ isOpen, onClose}) => {
     const AddPatient = async () => {
 
         // Sanitize the inputs
+<<<<<<< HEAD:PharmFrontend/src/components/modals/addPatientModal.jsx
 <<<<<<< HEAD
         let fName = SanitizeInput(document.getElementById('firstName').value);
         let lName = SanitizeInput(document.getElementById('lastName').value);
@@ -36,6 +41,12 @@ const AddPatientModal = ({ isOpen, onClose}) => {
         let lName = SanitizeLength(SanitizeInput(document.getElementById('lastName').value));
         let dob = SanitizeLength(SanitizeInput(document.getElementById('dob').value));
         let sex = document.getElementById('sex').value;
+=======
+        let fName = SanitizeLength(SanitizeInput(document.getElementById('firstName').value));
+        let lName = SanitizeLength(SanitizeInput(document.getElementById('lastName').value));
+        let dob = SanitizeLength(SanitizeInput(document.getElementById('dob').value));
+        let sex = SanitizeLength(SanitizeInput(document.getElementById('sex').value));
+>>>>>>> parent of 4118e47 (Initial Main commit):PharmPracticumFrontend/PharmFrontend/src/components/modals/addPatientModal.jsx
         let address = SanitizeLength(SanitizeInput(document.getElementById('address').value));
         let city = SanitizeLength(SanitizeInput(document.getElementById('city').value));
         let hospital = SanitizeLength(SanitizeInput(document.getElementById('hospital').value));
@@ -43,7 +54,10 @@ const AddPatientModal = ({ isOpen, onClose}) => {
         let unit = SanitizeLength(SanitizeInput(document.getElementById('unit').value));
         let allergies = SanitizeLength(SanitizeInput(document.getElementById('allergies').value));
         let conditions = SanitizeLength(SanitizeInput(document.getElementById('conditions').value));
+<<<<<<< HEAD:PharmFrontend/src/components/modals/addPatientModal.jsx
 >>>>>>> dev
+=======
+>>>>>>> parent of 4118e47 (Initial Main commit):PharmPracticumFrontend/PharmFrontend/src/components/modals/addPatientModal.jsx
 
         try {
             // Call the API

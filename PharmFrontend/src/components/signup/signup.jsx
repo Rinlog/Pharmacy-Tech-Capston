@@ -160,8 +160,11 @@ function Signup() {
                         Password: password, Email: email, Campus: campus }),
                 });
                 const data = await response.json();
+<<<<<<< HEAD:PharmFrontend/src/components/signup/signup.jsx
 <<<<<<< HEAD
                 console.log(data.message);
+=======
+>>>>>>> parent of 4118e47 (Initial Main commit):PharmPracticumFrontend/PharmFrontend/src/components/signup/signup.jsx
     
 =======
                 setIsLoadingOpen(false)

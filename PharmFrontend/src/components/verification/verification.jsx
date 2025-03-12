@@ -86,8 +86,6 @@ function Verification() {
             // Filter out orders created by the current user
             fetchedData.data = fetchedData.data.filter(item => item.initiator !== document.cookie.split('; ').find(row => row.startsWith('user=')).split('=')[1]);
 
-            console.log(fetchedData);
-
             if (fetchedData.data.length > 0) {
                 
                 // We got data, so transform it
@@ -165,8 +163,6 @@ function Verification() {
 
     // Handle radio change
     const handleRadioChange = (e, item) => {
-        console.log("item")
-        console.log(item);
         if (e.target.checked) {
             setSelectedOrder({ ...item, selected: true });
         }
@@ -191,9 +187,12 @@ function Verification() {
     // Wait for the selected order to change
     useEffect(() => {
         if(selectedOrder.selected){
+<<<<<<< HEAD:PharmFrontend/src/components/verification/verification.jsx
 <<<<<<< HEAD
             console.log("selectedOrder");
             console.log(selectedOrder);
+=======
+>>>>>>> parent of 4118e47 (Initial Main commit):PharmPracticumFrontend/PharmFrontend/src/components/verification/verification.jsx
             setDisplay("verifyOrder");
 =======
             //this allows the verify order section to re-render each time a dif radio button is pressed

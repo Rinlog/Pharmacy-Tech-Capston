@@ -1829,7 +1829,10 @@ namespace PharmPracticumBackend.DL
                         dbOrders.Quantity = reader["quantity"].ToString();
                         dbOrders.StartDate = reader["startDate"].ToString();
                         dbOrders.StartTime = reader["startTime"].ToString();
+<<<<<<< HEAD
                         dbOrders.PrintStatusID = reader["PrintStatusID"].ToString();
+=======
+>>>>>>> parent of 4118e47 (Initial Main commit)
                         dbOrders.Comments = reader["comments"].ToString();
 
                         orders.Add(dbOrders);
@@ -1880,7 +1883,11 @@ namespace PharmPracticumBackend.DL
                 cmd.Parameters.AddWithValue("@startDate", DateTime.Parse(order.StartDate)); //date
                 cmd.Parameters.AddWithValue("@startTime", order.StartTime);
                 cmd.Parameters.AddWithValue("@comments", order.Comments);
+<<<<<<< HEAD
                 cmd.Parameters.AddWithValue("@imagePath", order.OrderImage);
+=======
+                cmd.Parameters.AddWithValue("@imagePath", "Test");
+>>>>>>> parent of 4118e47 (Initial Main commit)
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -1899,6 +1906,7 @@ namespace PharmPracticumBackend.DL
 
 
         }
+<<<<<<< HEAD
         public bool updateOrderPrintStatus(String OrderID, String PrintStatus)
         {
             try
@@ -1918,6 +1926,8 @@ namespace PharmPracticumBackend.DL
                 return false;
             }
         }
+=======
+>>>>>>> parent of 4118e47 (Initial Main commit)
 
         //LOG METHODS
 

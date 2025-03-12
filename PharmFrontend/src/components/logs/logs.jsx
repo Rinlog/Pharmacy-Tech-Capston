@@ -59,8 +59,6 @@ function Logs() {
             // Get the Data out of the response
             const fetchedData = await response.json();
 
-            console.log(fetchedData);
-
             // If there is an issue with the response, alert the user
             if(response.status != 200) {
                 setAlertMessage(fetchedData.message);

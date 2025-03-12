@@ -39,6 +39,7 @@ export function SanitizeInput(input) {
     return input;
   };
 
+<<<<<<< HEAD:PharmFrontend/src/components/datasanitization/sanitization.jsx
 <<<<<<< HEAD
 =======
 export function SanitizeLength(input, length) {
@@ -46,3 +47,10 @@ export function SanitizeLength(input, length) {
 return input.substring(0, length);
 }
 >>>>>>> dev
+=======
+  export function SanitizeLength(input, length) {
+    // We don't need to sanitize the input itself here, we can just cut it off at the desired length
+    return input.substring(0, length);
+  }
+
+>>>>>>> parent of 4118e47 (Initial Main commit):PharmPracticumFrontend/PharmFrontend/src/components/datasanitization/sanitization.jsx

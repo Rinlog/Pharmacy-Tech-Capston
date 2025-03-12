@@ -57,7 +57,6 @@ function PasswordReset() {
 
             // Get the response from the server
             const data = await response.json();
-            console.log(data);
 
             // If the password was changed successfully, redirect the user to the login page (returned OK status code)
             if (response.status === 200) {
