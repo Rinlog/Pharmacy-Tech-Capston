@@ -14,6 +14,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS insertLabel; 
     DROP PROCEDURE IF EXISTS insertConfirmationCode; 
     DROP PROCEDURE IF EXISTS insertResetCode; 
+    DROP PROCEDURE IF EXISTS AddNotification;
 
     -- Setters (Single Column Updates)
     DROP PROCEDURE IF EXISTS setUserActiveStatus; 
@@ -21,6 +22,8 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS setOrderStatus; 
     DROP PROCEDURE IF EXISTS setOrderImage; 
     DROP PROCEDURE IF EXISTS updateOrderPrintStatus;
+    DROP PROCEDURE IF EXISTS UpdateSeenStatus;
+    DROP PROCEDURE IF EXISTS UpdateOrderImagePath;
     -- Updates (Whole Row Updates)
     DROP PROCEDURE IF EXISTS updateUser; 
     DROP PROCEDURE IF EXISTS updatePatient; 
@@ -33,13 +36,14 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS isUserActive; 
 
     -- Checks (Complex)
+    DROP PROCEDURE IF EXISTS checkForPass;
     DROP PROCEDURE IF EXISTS checkPassword; 
     DROP PROCEDURE IF EXISTS checkConfirmationCode; 
     DROP PROCEDURE IF EXISTS checkResetCode; 
 
     -- Deletes
     DROP PROCEDURE IF EXISTS deleteUser; 
-    DROP PROCEDURE IF EXISTS deletePatient; 
+    DROP PROCEDURE IF EXISTS deletePatients; 
     DROP PROCEDURE IF EXISTS deletePhysician; 
     DROP PROCEDURE IF EXISTS deleteDrug; 
     DROP PROCEDURE IF EXISTS deleteOrder; 
@@ -48,6 +52,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS getIDByEmail; 
     DROP PROCEDURE IF EXISTS getEmailByID; 
     DROP PROCEDURE IF EXISTS getImagePathByOrderID; 
+    DROP PROCEDURE IF EXISTS GetOrderImageByID;
     -- Retrievals (Whole Row)
     DROP PROCEDURE IF EXISTS getUserInfo; 
     DROP PROCEDURE IF EXISTS getPatientInfo; 
@@ -55,6 +60,7 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS getDrugInfo; 
     DROP PROCEDURE IF EXISTS getOrderInfo; 
     DROP PROCEDURE IF EXISTS getLabelInfo; 
+    DROP PROCEDURE IF EXISTS GetAllOrderImages
 
     -- Retrievals (Whole Table)
     DROP PROCEDURE IF EXISTS getAllUsers; 
@@ -63,7 +69,9 @@ use pharmtechDB;
     DROP PROCEDURE IF EXISTS getAllDrugs; 
     DROP PROCEDURE IF EXISTS getAllOrders; 
     DROP PROCEDURE IF EXISTS getAllLogs; 
-
+    DROP PROCEDURE IF EXISTS getAllSIGS
+    DROP PROCEDURE IF EXISTS getOrdersVerifiedByUser;
+    DROP PROCEDURE IF EXISTS GetNotifications;
     -- Specific Procedures
     DROP PROCEDURE IF EXISTS getLogs; 
     DROP PROCEDURE IF EXISTS amendOrder; 
@@ -682,11 +690,11 @@ GO
         @userID char(6),
         @firstName varchar(255),
         @lastName varchar(255),
-        @email varchar(255),
-        @campus varchar(255),
+        --@email varchar(255),
+        --@campus varchar(255),
         @admin bit,
-        @active bit,
-        @expiration date
+        @active bit
+       -- @expiration date
         AS
         BEGIN
             -- Make sure the user exists
@@ -699,11 +707,11 @@ GO
             UPDATE UserTable
             SET fName = @firstName,
                 lName = @lastName,
-                email = @email,
-                campus = @campus,
+                --email = @email,
+                --campus = @campus,
                 admin = @admin,
-                active = @active,
-                expirationDate = @expiration
+                active = @active
+                --expirationDate = @expiration
             WHERE userID = @userID;
         END;
         GO
@@ -1017,6 +1025,35 @@ GO
         GO
 
 -- Deletes
+    CREATE PROCEDURE deleteOrder
+        -- Procedure: deleteOrder
+        -- Purpose: Delete an order from the database
+        -- Parameters:
+        --      @orderID - the ID of the order
+        -- Returns: None
+        -- Notes: This procedure will also delete any associated images, labels, and logs
+        --        It is worth noting this procedure is NOT called in deleteUser, deletion is handled separately in that procedure
+        @orderID int
+        AS
+        BEGIN
+            -- Check if the order exists
+            IF NOT EXISTS (SELECT * FROM OrderTable WHERE rxNum = @orderID)
+            BEGIN
+                RETURN;
+            END;
+
+             -- Delete any images associated with the order
+            DELETE FROM ImageTable WHERE rxNum = @orderID;
+
+            -- Delete any labels associated with the order
+            DELETE FROM LabelTable WHERE rxNum = @orderID;
+
+            DELETE FROM LogTable WHERE affectedOrder = @orderID;
+            -- Delete the order
+            DELETE FROM OrderTable WHERE rxNum = @orderID;
+        END;
+        GO
+
     CREATE PROCEDURE deleteUser
         -- Procedure: deleteUser
         -- Purpose: Delete a user from the database
@@ -1067,29 +1104,33 @@ GO
             -- Delete any reset codes
             DELETE FROM PasswordResetCodeTable WHERE userID = @userID;
 
-            -- Now, FINALLY, we can delete the user
-            DELETE FROM UserTable WHERE userID = @userID;
+            --Delete any notifications
+            DELETE FROM NotificationTable where recipient = @userID;
+
+            -- Now, FINALLY, we can delete the user(disable account)
+            UPDATE UserTable set removed = 1, active = 0 where userID = @userID;
         END;
         GO
 
-    CREATE PROCEDURE deletePatient
-        -- Procedure: deletePatient
-        -- Purpose: Delete a patient from the database
+    CREATE PROCEDURE deletePatients
+        -- Procedure: deletePatients
+        -- Purpose: Delete one or more patients from the database
         -- Parameters:
         --      @PPR - the PPR of the patient
         -- Returns: None
         -- Notes: Hopefully this is because the patient is cured :)
-        @PPR char(6)
+        @PPR nvarchar(4000)
         AS
         BEGIN
-            -- Check if the patient exists
-            IF NOT EXISTS (SELECT * FROM PatientTable WHERE PPR = @PPR)
+            --Delete the any orders associated with them first
+            DECLARE @OrderID int;
+            WHILE exists(select * from OrderTable Where PPR in(select * from string_split(@PPR,',')))
             BEGIN
-                RETURN;
+                select top 1 @OrderID = rxNum from OrderTable where PPR in(select * from string_split(@PPR,','))
+                exec deleteOrder @OrderID;
             END;
-
             -- Delete the patient
-            DELETE FROM PatientTable WHERE PPR = @PPR;
+            DELETE FROM PatientTable WHERE PPR in(select * from string_split(@PPR,','))
         END;
         GO
 
@@ -1109,6 +1150,13 @@ GO
                 RETURN;
             END;
 
+            --Delete the any orders associated with them first
+            DECLARE @OrderID int;
+            WHILE exists(select * from OrderTable Where physicianID = @physicianID)
+            BEGIN
+                select @OrderID = rxNum from OrderTable where physicianID = @physicianID
+                exec deleteOrder @OrderID;
+            END;
             -- Delete the physician
             DELETE FROM PhysicianTable WHERE physicianID = @physicianID;
         END;
@@ -1129,37 +1177,15 @@ GO
             BEGIN
                 RETURN;
             END;
-
+            --Delete the any orders associated with them first
+            DECLARE @OrderID int;
+            WHILE exists(select * from OrderTable Where DIN = @DIN)
+            BEGIN
+                select @OrderID = rxNum from OrderTable where DIN = @DIN
+                exec deleteOrder @OrderID;
+            END;
             -- Delete the drug
             DELETE FROM DrugTable WHERE DIN = @DIN;
-        END;
-        GO
-
-    CREATE PROCEDURE deleteOrder
-        -- Procedure: deleteOrder
-        -- Purpose: Delete an order from the database
-        -- Parameters:
-        --      @orderID - the ID of the order
-        -- Returns: None
-        -- Notes: This procedure will also delete any associated images, labels, and logs
-        --        It is worth noting this procedure is NOT called in deleteUser, deletion is handled separately in that procedure
-        @orderID int
-        AS
-        BEGIN
-            -- Check if the order exists
-            IF NOT EXISTS (SELECT * FROM OrderTable WHERE rxNum = @orderID)
-            BEGIN
-                RETURN;
-            END;
-
-             -- Delete any images associated with the order
-            DELETE FROM ImageTable WHERE rxNum = @orderID;
-
-            -- Delete any labels associated with the order
-            DELETE FROM LabelTable WHERE rxNum = @orderID;
-
-            -- Delete the order
-            DELETE FROM OrderTable WHERE rxNum = @orderID;
         END;
         GO
 
@@ -1244,7 +1270,7 @@ GO
             END;
 
             -- Return the user information
-            SELECT userID, fName, lName, email, admin, active, campus, createdDate, expirationDate
+            SELECT userID, fName, lName, email, admin, removed, active, campus, createdDate, expirationDate
             FROM UserTable
             WHERE userID = @userID;
         END;
@@ -1378,7 +1404,7 @@ GO
         AS
         BEGIN
             --Select
-            SELECT userID, fName, lName, email, admin, active, campus, createdDate, expirationDate
+            SELECT userID, fName, lName, email, admin, removed, active, campus, createdDate, expirationDate
             FROM UserTable
             WHERE userID <> '000000'
         END;
@@ -1440,9 +1466,18 @@ GO
                 o.startTime, o.comments, o.dateSubmitted, o.dateVerified, o.dateLastChanged, o.status, o.initiator, o.verifier, i.imagePath, o.PrintStatusID
             FROM OrderTable o
             LEFT JOIN ImageTable i
-            ON o.rxNum = i.rxNum
+            ON o.rxNum = i.rxNum order by o.rxNum asc
         END;
         GO
+
+    CREATE PROCEDURE getOrdersVerifiedByUser
+
+    @userID char(6)
+    AS
+        BEGIN
+            Select * from OrderTable where verifier = @userID and status = 'Approved';
+        end;
+    GO
 
     CREATE PROCEDURE getAllLogs
         -- Procedure: getAllLogs
@@ -1565,11 +1600,15 @@ GO
                 comments = @comments
             WHERE rxNum = @rxNum;
 
-            -- Update the status of the order
+            -- Update the status of the order this will also log it
             EXEC setOrderStatus @userID, @rxNum, 'Amended';
 
              -- Update the image path of the order
             EXEC setOrderImage @rxNum, @imagePath;
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev
         END;
         GO
 
@@ -1680,7 +1719,7 @@ GO
             -- Select orders for specific user
             SELECT rxNum, PPR, DIN, physicianID, status, initiator, verifier, dateSubmitted, 
 			dateLastChanged, dateVerified, SIG, SIGDescription, form, route, prescribedDose, frequency,
-			duration, quantity, startDate, startTime, comments from OrderTable where initiator = @userId
+			duration, quantity, startDate, startTime, PrintStatusID, comments from OrderTable where initiator = @userId
         END;
         GO
     CREATE PROCEDURE updateOrderPrintStatus
@@ -1701,3 +1740,60 @@ GO
             end;
     go
 
+    CREATE PROCEDURE dbo.getAllSIGS
+    -- will retrieve all sig codes from sig table
+    AS
+        select * from SIGTable;
+    GO
+
+    --Notification Procedures
+
+
+    CREATE PROCEDURE AddNotification
+        @Message nvarchar(250),
+        @Recipient char(6)
+    -- add more stored procedure parameters here
+    AS
+        -- body of the stored procedure
+        insert into NotificationTable(NMessage, Recipient) values(@Message,@Recipient);
+    GO
+
+
+    CREATE PROCEDURE GetNotifications
+        @UserID char(6),
+        @StartingRow int
+    AS
+
+        select * from NotificationTable where Recipient = @UserID order by DateAdded desc OFFSET (@StartingRow) Rows FETCH NEXT 5 Rows only;
+    GO
+
+    CREATE PROCEDURE UpdateSeenStatus
+        @NotificationID int,
+        @Status bit
+    AS
+
+        update NotificationTable set Seen = @Status where NotificationID = @NotificationID;
+    GO
+
+    CREATE PROCEDURE GetOrderImageByID
+        @rxNum int
+    AS
+        BEGIN
+            select * from ImageTable where rxNum = @rxNum;
+        end;
+    GO
+    CREATE PROCEDURE GetAllOrderImages
+    AS
+        BEGIN
+            select * from ImageTable
+        end;
+    GO
+
+    CREATE PROCEDURE UpdateOrderImagePath
+        @rxNum int,
+        @path nvarchar(200)
+    AS
+        BEGIN
+            update ImageTable set imagePath = @path where rxNum = @rxNum;
+        END;
+    GO

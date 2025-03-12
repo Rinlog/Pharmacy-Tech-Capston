@@ -90,25 +90,24 @@ namespace PharmPracticumBackend.Controllers
 
         }
 
-        [HttpPost("deletepatient")]
-        public async Task<IActionResult> DeletePatient([FromBody] patientsDTO patient)
+        [HttpPost("deletepatients")]
+        public async Task<IActionResult> DeletePatients([FromBody] string pprs)
         {
-            // Check that the PPR isn't null
-            if(patient == null || patient.PPR == null)
+            // Check that the PPRs are not null
+            if(pprs == null)
             {
                 return BadRequest(new { message = "Null Patient" });
             }
-            
             // Call DL
-            string result = await _pharmDL.DeletePatientAsync(patient.PPR);
+            string result = await _pharmDL.DeletePatientsAsync(pprs);
 
-            if (string.Equals(result,"Patient Deleted"))
+            if (string.Equals(result,"Patient Deleted") || string.Equals(result, "Patients Deleted"))
             {
-                return Ok();
+                return Ok(result);
             }
             else
             {
-                return BadRequest(new {message = result});
+                return BadRequest(result);
             }
 
         }

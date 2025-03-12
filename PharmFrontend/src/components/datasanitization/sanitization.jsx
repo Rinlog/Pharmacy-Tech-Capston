@@ -39,3 +39,10 @@ export function SanitizeInput(input) {
     return input;
   };
 
+<<<<<<< HEAD
+=======
+export function SanitizeLength(input, length) {
+// We don't need to sanitize the input itself here, we can just cut it off at the desired length
+return input.substring(0, length);
+}
+>>>>>>> dev

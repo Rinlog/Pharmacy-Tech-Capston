@@ -6,6 +6,7 @@
 USE pharmtechDB;
 
 -- Drop Tables if they exist
+DROP TABLE IF EXISTS NotificationTable;
 DROP TABLE IF EXISTS UserTable;
 DROP TABLE IF EXISTS PatientTable;
 DROP TABLE IF EXISTS PhysicianTable;
@@ -18,7 +19,6 @@ DROP TABLE IF EXISTS LogTable;
 DROP TABLE IF EXISTS ConfirmationCodeTable;
 DROP TABLE IF EXISTS PasswordResetCodeTable;
 DROP TABLE IF EXISTS PrintStatusTable;
-
 
 -- Create the table in the specified schema
 CREATE TABLE PrintStatusTable
@@ -46,6 +46,7 @@ CREATE TABLE UserTable (
 
     admin bit NOT NULL,                             -- If user is an admin (1) or not (0) (Students vs Admins/Instructors)
     active bit NOT NULL DEFAULT 0,                  -- If user is active (1) or not (0) (Deactivated or non verified users will be inactive)
+    removed bit NOT NULL DEFAULT 0,
     createdDate datetime NOT NULL,                  -- Date user was created
     expirationDate datetime                         -- Date user account expires (If NULL, account never expires)
 )
@@ -278,3 +279,20 @@ CREATE TABLE PasswordResetCodeTable (
 
     FOREIGN KEY (userID) REFERENCES UserTable(userID)
 )
+
+
+
+GO
+
+CREATE TABLE NotificationTable
+(
+    NotificationID INT NOT NULL PRIMARY KEY IDENTITY(1,1), -- primary key column
+    NMessage [NVARCHAR](999) NOT NULL,
+    Recipient char(6) NOT NULL,
+    Seen bit NOT NULL DEFAULT 0,
+    DateAdded DATETIME2 NOT NULL default CURRENT_TIMESTAMP,
+
+
+    FOREIGN KEY (Recipient) REFERENCES UserTable(UserID)
+);
+GO

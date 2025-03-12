@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using PharmPracticumBackend.Authentication;
 using PharmPracticumBackend.DL;
 using PharmPracticumBackend.Sanitization;
 
@@ -10,7 +11,7 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 
 // Register IConfiguration in the DI container
 builder.Services.AddSingleton(builder.Configuration);
-
+builder.Services.AddSingleton<AuthConstants>(); //defines constants for middleware to work like api header name and expected key.
 //CORS (local 
 builder.Services.AddCors(options =>
 {
@@ -38,6 +39,7 @@ var app = builder.Build();
 app.UseCors("AllowAll");
 
 app.UseRouting();
+app.UseMiddleware<ApiKeyMiddleWare>();
 app.UseAuthorization();
 app.MapControllers();
 app.UseStaticFiles();

@@ -3,9 +3,17 @@ import { useState, useEffect } from 'react';
 
 // HTML Entities import for decoding escaped entities (e.g. &amp; -> &)
 import he from 'he';
+import AlertModal from '../modals/alertModal';
+import Row from 'react-bootstrap/Row'
+import Container from 'react-bootstrap/Container'
+import Col from 'react-bootstrap/Col'
+import PrescriptionUpload from '../orders/pictureUpload';
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
+function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder, GetOrders}) { 
 
-function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) { 
-
+    //console.log(selectedOrder);
     //states for selected order
     const [rxNum, setRxNum] = useState('');
     const [patientName, setPatientName] = useState('');
@@ -43,7 +51,12 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
     const [commentsChecked, setCommentsChecked] = useState(false);
 
     const [allChecked, setAllChecked] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
+    //image upload stuff
+    const [savedImage, setSavedImage] = useState(null)
+    const [Preloaded, setPreloaded] = useState(false) //this is used for the amend order page, if an order is pre-loaded don't add the image again when the submit the edit.
     useEffect(() => {
         if (selectedOrder) {
         // Set the data to what's in the object
@@ -73,30 +86,33 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
         let reject = {
             RxNum: selectedOrder["Rx Number"],
             Status: "Rejected",
-            UserID: document.cookie.split('; ').find(row => row.startsWith('user=')).split('=')[1]
+            UserID: document.cookie.split('; ').find(row => row.startsWith('user=')).split('=')[1],
         }
 
         // Pass the Rx Number to the API to reject the order
         try{
-            const response = await fetch('https://localhost:7172/api/Verify/rejectorder' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Verify/rejectorder' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(reject)
             });
 
             if (response.ok) {
-                alert("Order rejected successfully");
+                setAlertMessage("Order rejected successfully");
+                setIsAlertModalOpen(true);
             }
             else{
                 // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
             
-            setDisplay("main");
-            setSelectedOrder({ "Rx Number": null, selected: false });
+            
+            //window.location.reload();
         }
         catch(error){
             console.error(error);
@@ -105,6 +121,12 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
 
     const VerifyOrder = async (e) => {
         e.preventDefault();
+
+        if (!allChecked) { //verification to make sure all checkboxes are selected. Better user experience
+            setAlertMessage("To verify, select all checkboxes.");
+            setIsAlertModalOpen(true);
+            return;
+        }
 
         //create an object for the verification with the Order number, status to change to, and the logged in user ID
         let verify = {
@@ -119,10 +141,11 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
         try{
 
             //api call
-            const response = await fetch('https://localhost:7172/api/Verify/verifyorder' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Verify/verifyorder' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(verify)
             });
@@ -133,19 +156,17 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
             else{
                 // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
             
-            setDisplay("main");
-            setSelectedOrder({ "Rx Number": null, selected: false });
+            
+            //setSelectedOrder({ "Rx Number": null, selected: false });
 
         }
         catch(error){
             console.error(error);
         }
-
-
-        
     }
 
     // Check if all checkboxes are checked
@@ -153,99 +174,132 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder}) {
         // Check if all checkboxes are checked
         setAllChecked(rxNumChecked && patientNameChecked && drugNameChecked && physicianNameChecked && initiatorChecked && SIGChecked && SIGDescriptionChecked && 
         formChecked && routeChecked && prescribedDoseChecked && frequencyChecked && durationChecked && quantityChecked && startDateChecked && startTimeChecked && commentsChecked);
-    }, [rxNumChecked, patientNameChecked, drugNameChecked, physicianNameChecked, initiatorChecked, SIGChecked, SIGDescriptionChecked, formChecked, routeChecked, prescribedDoseChecked, frequencyChecked, durationChecked, quantityChecked, startDateChecked, startTimeChecked, commentsChecked]);
+    }, [rxNumChecked, patientNameChecked, drugNameChecked, physicianNameChecked, initiatorChecked, SIGChecked, SIGDescriptionChecked, formChecked, routeChecked, prescribedDoseChecked, 
+        frequencyChecked, durationChecked, quantityChecked, startDateChecked, startTimeChecked, commentsChecked]);
 
     return(
 
-        <div>
+        <Container>
             {/* Displays order info */}
-            <form className="regular-form">
-                { /* Uneditable text boxes, just so the verifier (user) can check them against the prescription and checkboxes to check them off if theyre correct */}
-                <label>Rx Number</label>
-                <input type="text" value={rxNum} disabled/>
-                <input type="checkbox" onChange={(e) => setRxNumChecked(e.target.checked)}/>
-                <br></br>
+            <Row>
+                <Col>
+                    <form className="regular-form">
+                        { /* Uneditable text boxes, just so the verifier (user) can check them against the prescription and checkboxes to check them off if theyre correct */}
+                        <label>Rx Number</label>
+                        <input type="text" value={rxNum} disabled/>
+                        <input type="checkbox" onChange={(e) => setRxNumChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Patient</label>
-                <input type="text" value={patientName} disabled/>
-                <input type="checkbox" onChange={(e) => setPatientNameChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Patient</label>
+                        <input type="text" value={patientName} disabled/>
+                        <input type="checkbox" onChange={(e) => setPatientNameChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Drug</label>
-                <input type="text" value={drugName} disabled/>
-                <input type="checkbox" onChange={(e) => setDrugNameChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Drug</label>
+                        <input type="text" value={drugName} disabled/>
+                        <input type="checkbox" onChange={(e) => setDrugNameChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Physician</label>
-                <input type="text" value={physicianName} disabled/>
-                <input type="checkbox" onChange={(e) => setPhysicianNameChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Physician</label>
+                        <input type="text" value={physicianName} disabled/>
+                        <input type="checkbox" onChange={(e) => setPhysicianNameChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Initiator</label>
-                <input type="text" value={initiator} disabled/>
-                <input type="checkbox" onChange={(e) => setInitiatorChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Initiator</label>
+                        <input type="text" value={initiator} disabled/>
+                        <input type="checkbox" onChange={(e) => setInitiatorChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>SIG Code</label>
-                <input type="text" value={SIG} disabled/>
-                <input type="checkbox" onChange={(e) => setSIGChecked(e.target.checked)}/>
-                <br></br>
+                        <label>SIG Code</label>
+                        <input type="text" value={SIG} disabled/>
+                        <input type="checkbox" onChange={(e) => setSIGChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>SIG Description</label>
-                <input type="text" value={SIGDescription} disabled/>
-                <input type="checkbox" onChange={(e) => setSIGDescriptionChecked(e.target.checked)}/>
-                <br></br>
+                        <label>SIG Description</label>
+                        <input type="text" value={SIGDescription} disabled/>
+                        <input type="checkbox" onChange={(e) => setSIGDescriptionChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Form</label>
-                <input type="text" value={form} disabled/>
-                <input type="checkbox" onChange={(e) => setFormChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Form</label>
+                        <input type="text" value={form} disabled/>
+                        <input type="checkbox" onChange={(e) => setFormChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Route</label>
-                <input type="text" value={route} disabled/>
-                <input type="checkbox" onChange={(e) => setRouteChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Route</label>
+                        <input type="text" value={route} disabled/>
+                        <input type="checkbox" onChange={(e) => setRouteChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Prescribed Dose</label>
-                <input type="text" value={prescribedDose} disabled/>
-                <input type="checkbox" onChange={(e) => setPrescribedDoseChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Prescribed Dose</label>
+                        <input type="text" value={prescribedDose} disabled/>
+                        <input type="checkbox" onChange={(e) => setPrescribedDoseChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Frequency</label>
-                <input type="text" value={frequency} disabled/>
-                <input type="checkbox" onChange={(e) => setFrequencyChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Frequency</label>
+                        <input type="text" value={frequency} disabled/>
+                        <input type="checkbox" onChange={(e) => setFrequencyChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Duration</label>
-                <input type="text" value={duration} disabled/>
-                <input type="checkbox" onChange={(e) => setDurationChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Duration</label>
+                        <input type="text" value={duration} disabled/>
+                        <input type="checkbox" onChange={(e) => setDurationChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Quantity</label>
-                <input type="text" value={quantity} disabled/>
-                <input type="checkbox" onChange={(e) => setQuantityChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Quantity</label>
+                        <input type="text" value={quantity} disabled/>
+                        <input type="checkbox" onChange={(e) => setQuantityChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Start Date</label>
-                <input type="text" value={startDate} disabled/>
-                <input type="checkbox" onChange={(e) => setStartDateChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Start Date</label>
+                        <input type="text" value={startDate} disabled/>
+                        <input type="checkbox" onChange={(e) => setStartDateChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Start Time</label>
-                <input type="text" value={startTime} disabled/>
-                <input type="checkbox" onChange={(e) => setStartTimeChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Start Time</label>
+                        <input type="text" value={startTime} disabled/>
+                        <input type="checkbox" onChange={(e) => setStartTimeChecked(e.target.checked)}/>
+                        <br></br>
 
-                <label>Comments</label>
-                <input type="text" value={comments} disabled/>
-                <input type="checkbox" onChange={(e) => setCommentsChecked(e.target.checked)}/>
-                <br></br>
+                        <label>Comments</label>
+                        <input type="text" value={comments} disabled/>
+                        <input type="checkbox" onChange={(e) => setCommentsChecked(e.target.checked)}/>
+                        <br></br>
 
-                <button className="button" id="reject" onClick={RejectOrder}>Reject</button>
-                <button className="button" id="verify" onClick={VerifyOrder} disabled={!allChecked}>Verify</button>
+                        <button className="button" id="reject" onClick={RejectOrder}>Reject</button>
+                        <button className="button" id="verify" onClick={VerifyOrder} >Verify</button>
 
-            </form>
-        </div>
+                    </form>
+
+                    <AlertModal
+                        isOpen={isAlertModalOpen}
+                        message={alertMessage}
+                        onClose={() => {setIsAlertModalOpen(false)
+                            //if not all checkboxes are selected dont refresh the page
+                            if (alertMessage !== "To verify, select all checkboxes."){ 
+                                setSelectedOrder({ "Rx Number": null, selected: false });
+                                setDisplay("main");
+                                GetOrders();
+                            }
+                            else {
+                                setSelectedOrder({ "Rx Number": null, selected: false });
+                                GetOrders();
+                            }          
+                        }}
+                    />
+                </Col>
+                <Col className='mt-4'>
+                        <PrescriptionUpload
+                            OrderID={rxNum}
+                            setSavedImage={setSavedImage}
+                            savedImage={savedImage}
+                            setPreloaded={setPreloaded}
+                            onlyRotate={true}
+                        >
+                        </PrescriptionUpload>
+                </Col>
+            </Row>
+
+        </Container>
 
     )
 

@@ -1,54 +1,83 @@
 import { useState, useEffect } from "react";
+import AlertModal from "./alertModal";
+import { Button, Modal, Form, Dropdown} from "react-bootstrap";
 
+<<<<<<< HEAD
 const DeleteDrugModal = ({ isOpen, onClose, drugToDelete}) => {
+=======
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
+const DeleteDrugModal = ({ isOpen, onClose, drugToDelete, setDrugToDelete}) => {
+>>>>>>> dev
 
     const [modalHeight, setModalHeight] = useState('auto');
     const [isSecondModalOpen, setSecondModalOpen] = useState(false);
+
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     const handleDeleteDrug = () => {
         setSecondModalOpen(true);
     }
 
     const handleConfirmDelete = () => {
-        DeleteDrug();
         setSecondModalOpen(false);
-        handleClose();
+        DeleteDrugs();
     }
 
     const handleCancelDelete = () => {
         setSecondModalOpen(false);
     }
 
-    const DeleteDrug = async () => {
+    const DeleteDrugs = async () => {
         try {
-            // Call the API
-            const response = await fetch('https://localhost:7172/api/Drug/deletedrug', {
+
+            const drugsToDelete = drugToDelete.map(drug => drug.din);
+
+            //console.log("Drugs to delete SENDING", drugsToDelete); //dubugging
+
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Drug/deletedrug', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
-                body: JSON.stringify({
-                    "DIN": drugToDelete["DIN"]
-                })
-
+                body: JSON.stringify(drugsToDelete) //send the array of drugs to delete
             });
 
+    
             if (response.ok) {
+<<<<<<< HEAD
                 alert("Drug deleted successfully");
                 onClose();
+=======
+                //these needs to be in this order for proper deletion and updating list
+                setAlertMessage("Drugs Deleted Successfully");
+                
+                setDrugToDelete([]);
+                
+
+                // Explicitly call onClose after setting state
+                setIsAlertModalOpen(true);
+                
+>>>>>>> dev
             }
-            else{
-                // Alert out the message sent from the API
+            else {
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
         }
         catch (error) {
             console.log(error);
+            setAlertMessage("Error deleting drugs");
+            setIsAlertModalOpen(true);
         }
     }
 
     const handleClose = () => {
+        setDrugToDelete([]);
         onClose();
     }
 
@@ -59,26 +88,70 @@ const DeleteDrugModal = ({ isOpen, onClose, drugToDelete}) => {
 
     return (
         <>
-        {isOpen && (
-            <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight }}>
-                    <span className="close" onClick={handleClose}>&times;</span>
-                    <h1>Are you sure you want to delete {drugToDelete["Drug Name"]}?</h1>
-                    <button onClick={handleDeleteDrug}>Delete</button>
-                    <button onClick={handleClose}>Cancel</button>
-                </div>
-            </div>
-        )}
-        {isSecondModalOpen && (
-            <div className={`modal ${isSecondModalOpen ? 'isOpen' : ''}`} style={{ display: isSecondModalOpen ? 'flex' : 'none' }}>
-            <div className="modal-content" style={{ height: modalHeight }}>
-                <span className="close" onClick={handleCancelDelete}>&times;</span>
-                <h1>Are you REALLY sure you want to delete this drug? This will delete ALL orders accociated with the drug.</h1>
-                <button onClick={handleConfirmDelete}>Yes</button>
-                <button onClick={handleCancelDelete}>No</button>
-            </div>
-        </div>
-    )}
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {
+                    if (alertMessage == "Drugs Deleted Successfully"){
+                        handleClose();//This will refresh the drug list
+                    }
+                    setIsAlertModalOpen(false)
+                }}
+            />
+
+            <Modal
+                show={isOpen}
+                onHide={handleClose}
+                size="lg"
+                className="Modal"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <h3>Delete Drug</h3>
+                </Modal.Header>
+                <Modal.Body>
+                <h1>Are you sure you want to delete the following drug(s)?</h1>
+                <ul>{/*need to make sure to show all the drugs selected .map is used to ease*/}
+                    {drugToDelete.map((drug, index) => (
+                        <li key= {index}>{drug.name}</li>
+                    ))}
+                </ul>
+                <Button className="ModalbuttonG w-100" onClick={handleDeleteDrug}>Delete</Button>
+                <Button className="ModalbuttonB w-100" onClick={handleClose}>Cancel</Button>
+                </Modal.Body>
+                <Modal.Footer>
+
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={isSecondModalOpen}
+                onHide={function(){
+                    setSecondModalOpen(false)
+                    handleClose();
+                }}
+                size="lg"
+                className="Modal"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <h3>Delete Drug</h3>
+                </Modal.Header>
+                <Modal.Body>
+                <h1>Are you REALLY sure you want to delete the selected drug(s)? This will delete ALL orders associated with the drug(s).</h1>
+                <ul>{/*need to make sure to show all the drugs selected .map is used to ease*/}
+                    {drugToDelete.map((drug, index) => (
+                        <li key= {index}>{drug.name}</li>
+                    ))}
+                </ul>
+                <Button className="ModalbuttonG w-100" onClick={handleConfirmDelete}>Yes</Button>
+                <Button className="ModalbuttonB w-100" onClick={handleCancelDelete}>No</Button>
+                </Modal.Body>
+                <Modal.Footer>
+
+                </Modal.Footer>
+            </Modal>
+    
     </>
     );
 }

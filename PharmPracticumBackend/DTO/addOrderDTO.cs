@@ -17,6 +17,7 @@
         public string? Quantity { get; set; }
         public string? StartDate { get; set; }
         public string? StartTime { get; set; }
+        public string? OrderImage { get; set; }
         public string? Comments { get; set; }
     }
 }

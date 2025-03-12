@@ -54,10 +54,14 @@ namespace PharmPracticumBackend.Controllers
             {
                 return Ok(result);
             }
-
-            Console.WriteLine(result);
-
-            return BadRequest(new { message = "Drug could not be added." });
+            else if (result.Equals("Drug not added"))
+            {
+                return BadRequest(new { message = "Drug not added, please make sure DIN number is unique" }); //DIN number is only fail scenario besides an exception being throwns
+            }
+            else
+            {
+                return BadRequest(new { message = "Drug could not be added." }); //display this if exception occured
+            }
         }
 
         [HttpPost("editdrug")]
@@ -91,24 +95,24 @@ namespace PharmPracticumBackend.Controllers
         }
 
         [HttpPost("deletedrug")]
-        public async Task<IActionResult> DeleteDrug([FromBody] drugsDTO drug)
+        public async Task<IActionResult> DeleteDrug([FromBody] List<string> drugDINs)
         {
-            // Check that the DIN isn't null
-            if (drug == null || drug.DIN == null)
+            try
             {
-                return BadRequest(new { message = "Null Drug" });
-            }
+                string result = await _pharmDL.DeleteDrugAsync(drugDINs);
 
-            // Call DL
-            string result = await _pharmDL.DeleteDrugAsync(drug.DIN);
-
-            if (string.Equals(result, "Drug Deleted"))
-            {
-                return Ok();
+                if (result == "Drugs Deleted successfully")
+                {
+                    return Ok(new { message = "All selected drugs deleted successfully" });
+                }
+                else
+                {
+                    return BadRequest(new { message = result });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest(new { message = result });
+                return StatusCode(500, new { message = "An error occurred while deleting drugs", error = ex.Message });
             }
 
         }

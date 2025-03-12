@@ -8,5 +8,5 @@ export default defineConfig({
     alias: {
       '@components': '/src/components' // Alias for your components directory
     }
-  }
+  },
 })

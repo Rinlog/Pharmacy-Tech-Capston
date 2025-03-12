@@ -24,7 +24,7 @@ export function VarMatch(fVar, sVar) {
 //checks if pass meets requirements
 export function PassRequirements(pass) {
 
-const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;    //special characters can now be added
 
     return passRegex.test(pass);
 

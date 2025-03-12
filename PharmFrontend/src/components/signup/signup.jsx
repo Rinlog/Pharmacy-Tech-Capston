@@ -1,17 +1,17 @@
 //React imports
 import { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
-
-//css import
-import './signup.css';
-
+import LoadingModal from '../modals/loadingModal';
 //validation import
 import { NullCheck, CheckEmail, VarMatch, PassRequirements, CheckNBCCEmail } from '@components/validation/basicValidation.jsx';
 
 //sanitization import
 import { SanitizeEmail, SanitizeName } from '@components/datasanitization/sanitization.jsx'; 
+import AlertModal from '../modals/alertModal';
 
-
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 function Signup() {
 
     //states for form inputs
@@ -22,6 +22,11 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [campus, setCampus] = useState('Fredericton');
 
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
+    const [isLoadingOpen, setIsLoadingOpen] = useState(false);
     // Navigation
     const navigate = useNavigate();
 
@@ -43,7 +48,7 @@ function Signup() {
         let emailFormat = 'Please enter a valid email';
         let emailNBCC = 'Please enter a valid NBCC email';
         let passwordMatch = 'Passwords do not match';
-        let passwordReq = 'Password must be at least 8 characters long and contain at least one capital letter and one number';
+        let passwordReq = 'Password must contain at least 8 characters, one capital letter, one lower case, one number and a special character';
 
         // Error count
         let errors = 0;
@@ -144,24 +149,31 @@ function Signup() {
             
             //api call for submission
             try {
-                const response = await fetch('https://localhost:7172/api/User/signup', {
+                setIsLoadingOpen(true)
+                const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/signup', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Key-Auth':ApiAccess
                     },
                     body: JSON.stringify({ FirstName: firstName, LastName: lastName, 
                         Password: password, Email: email, Campus: campus }),
                 });
                 const data = await response.json();
+<<<<<<< HEAD
                 console.log(data.message);
     
+=======
+                setIsLoadingOpen(false)
+>>>>>>> dev
                 // Redirect to login page if successful
                 if (data.message === 'User added successfully') {
-                    alert('User added successfully, check your email for confirmation link');
-                    navigate('/login');
+                    setAlertMessage("User added successfully, check your email for confirmation link");
+                    setIsAlertModalOpen(true);
                 }
                 else {
-                    alert(data.message + ', please try again');
+                    setAlertMessage(data.message + ", please try again");
+                    setIsAlertModalOpen(true);
                 }
             }
             catch (error) {
@@ -178,13 +190,18 @@ function Signup() {
     return (
 
         <div id='formDiv'>
-            
+            <LoadingModal
+                isOpen={isLoadingOpen}
+                setIsOpen={setIsLoadingOpen}
+            ></LoadingModal>
             <form className='regular-form' onSubmit={handleSubmit}>
                 <h1>Sign Up</h1>
                 <br></br>
                 <div className='form-content'>
-                    <div className='left'>
-                        <label className='input-label'>First Name:</label>
+                    <div className='left d-flex flex-column justify-content-center align-items-center gap-1'>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>First Name:</label>
+                        </div>
                         <br></br>
                         <input
                             id='firstName'
@@ -198,8 +215,9 @@ function Signup() {
                         <br></br>
                         <span className='error fName'></span>
                         <br></br>                 
-
-                        <label className='input-label'>Campus:</label>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Campus:</label>
+                        </div>
                         <br></br>
                         <select
                             className="combo-input"
@@ -219,7 +237,9 @@ function Signup() {
                         <span className='error campus'></span>
 
                         <br></br>
-                        <label className='input-label'>Password:</label>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Password:</label>
+                        </div>
                         <br></br>
                         <input
                             className="text-input"
@@ -233,8 +253,10 @@ function Signup() {
                         <span className='error password'></span>
                     </div>
 
-                    <div className='right'>
-                        <label className='input-label'>Last Name:</label>
+                    <div className='right d-flex flex-column justify-content-center align-items-center gap-1'>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Last Name:</label>
+                        </div>
                         <br></br>
                         <input
                             className="text-input"
@@ -248,7 +270,9 @@ function Signup() {
                         <span className='error lName'></span>
 
                         <br></br>
-                        <label className='input-label'>Email:</label>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Email:</label>
+                        </div>
                         <br></br>
                         <input
                             className="text-input"
@@ -262,7 +286,9 @@ function Signup() {
                         <span className='error email'></span>
 
                         <br></br>
-                        <label className='input-label'>Confirm Password:</label>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Confirm Password:</label>
+                        </div>
                         <br></br>
                         <input
                             className="text-input"
@@ -276,11 +302,20 @@ function Signup() {
                         <span className='error passwordConfirm'></span>
                     </div>
                 </div>
+                <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {
+                        setIsAlertModalOpen(false);
+
+                    if (alertMessage === "User added successfully, check your email for confirmation link") {
+                        navigate('/login')}}
+                    }
+                />
                 <br></br>
                 <button className="button" type="submit">Submit</button>
-
+                <button className="button" onClick={() => navigate('/login')}>Back</button>
             </form>
-
         </div>
 
     )

@@ -43,7 +43,7 @@ use pharmtechDB;
 
 
 -- first we need to drop all the data except four users; me, dee, the 'deleted' user, and the test user
-DELETE FROM UserTable WHERE userID NOT IN ('FRBD00', 'FRDS00', '000000', 'FRLT01');
+--DELETE FROM UserTable WHERE userID NOT IN ('FRBD00', 'FRDS00', '000000', 'FRLT01');
 DELETE FROM OrderTable;
 DELETE FROM PhysicianTable;
 DELETE FROM SigTable;

@@ -4,15 +4,24 @@ import { useState } from 'react';
 // Other imports
 import readXlsxFile from 'read-excel-file';
 import { SanitizeInput } from '@components/datasanitization/sanitization';
+import AlertModal from '../modals/alertModal';
 
-function BulkPhysicians({setDisplay}) {
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
+function BulkPhysicians({setDisplay, getPhysicians}) {
 
     const [excelFile, setExcelFile] = useState(null);
+
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     const handleAdd = async () => {
 
         if (!excelFile) {
-            alert("Please select a file.");
+            setAlertMessage("Please select a file.");
+            setIsAlertModalOpen(true);
             return;
         }
 
@@ -55,9 +64,26 @@ function BulkPhysicians({setDisplay}) {
 
             // If headers don't match expected, send error
             if (!identical){
-                alert("Invalid Spreadsheet Format. Please check headers.");
+                setAlertMessage("Invalid Spreadsheet Format. Please check headers.");
+                setIsAlertModalOpen(true);
                 return;
             }
+
+            const provinceMapping = {
+                "alberta": "AB", 
+                "british columbia": "BC", 
+                "manitoba": "MB", 
+                "new brunswick": "NB",
+                "newfoundland and labrador": "NL", 
+                "northwest territories": "NT", 
+                "nova scotia": "NS",
+                "nunavut": "NU", 
+                "ontario": "ON", 
+                "prince edward island": "PE", 
+                "quebec": "QC",
+                "saskatchewan": "SK", 
+                "yukon": "YT"
+            };
 
             // Create them as keys and format data
 
@@ -70,20 +96,26 @@ function BulkPhysicians({setDisplay}) {
 
                     // Check for empty columns
                     if (!rawData[i][j]) {
-                        alert(`Empty cell found at row ${i + 1}, column ${j + 1}`);
+                        setAlertMessage(`Empty cell found at row ${i + 1}, column ${j + 1}`);
+                        setIsAlertModalOpen(true);
                         return;
                     }
                     // Use the mapping to get the changed key names
                     let key = headerMapping[keys[j]];
 
-                    // Convert the values to strings because type coercion is the devil
-                    rawData[i][j] = String(rawData[i][j]);
+                    let value = String(rawData[i][j]).trim();
 
-                    // Sanitize the input
-                    let sanitized = SanitizeInput(rawData[i][j]);
+                    if (key === "FName" || key === "LName") {
+                        value = value.charAt(0).toLocaleUpperCase() + value.slice(1).toLocaleLowerCase();
+                    }
+
+                    if (key === "Province") {
+                        let lowerCaseValue = value.toLocaleLowerCase();
+                        value = provinceMapping[lowerCaseValue] || value;
+                    }
 
                     // Assign each column to keys
-                    obj[key] = sanitized;
+                    obj[key] = SanitizeInput(value);
 
                 }
                 // Push the object to array
@@ -91,20 +123,22 @@ function BulkPhysicians({setDisplay}) {
 
             }
 
-            alert("Please wait. Do not refresh the page.");
+            //alert("Please wait. Do not refresh the page.");
 
             // API call
-            const response = await fetch('https://localhost:7172/api/Physician/bulkphysician' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/bulkphysician' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(formattedData),
             });
 
             // Make sure the response is ok
             if (!response.ok) {
-                alert("Error adding physicians. Please try again." + response.statusText + " " + response.status + "!");
+                setAlertMessage("Error adding physicians. Please try again." + response.statusText + " " + response.status + "!");
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -112,7 +146,8 @@ function BulkPhysicians({setDisplay}) {
 
             if (!response.ok) {
                 // Alert out the message sent from the API
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
            
             let totalResponse = "";
@@ -127,23 +162,59 @@ function BulkPhysicians({setDisplay}) {
                 totalResponse = "All physicians added successfully!";
             }
             
-            alert(totalResponse);
+            setAlertMessage(totalResponse);
+            setIsAlertModalOpen(true);
 
             // Set the display back to the main page
-            setDisplay("main");
+            //setDisplay("main");
 
         }
         catch (error) {
             console.error("Error reading Excel file:", error);
+            setAlertMessage("Only excel files are currently supported");
+            setIsAlertModalOpen(true);
         }
 
     }
 
     return(
 
-        <div>
-            <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
-            <button className="button" type="button" onClick={handleAdd}>Add Physicians</button><br></br><br></br>
+        <div>         
+            <div>
+                <h2>Format</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>City</th>
+                            <th>Province</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John</td>
+                            <td>Doe</td>
+                            <td>Moncton</td>
+                            <td>NB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <input type="file" placeholder="Select File" onChange={(event) => setExcelFile(event.target.files[0])}></input>
+                <button className="button" type="button" onClick={handleAdd}>Add Physicians</button><br></br><br></br>
+            </div>
+
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {
+                    setIsAlertModalOpen(false)
+                    setDisplay("main");
+                    getPhysicians();
+            }}
+            />
         </div>
 
     )

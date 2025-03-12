@@ -6,9 +6,17 @@ import he from 'he';
 
 // Sanitization import
 import { SanitizeInput } from '@components/datasanitization/sanitization';
+import AlertModal from '../modals/alertModal';
 
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
 
-function EditPhysician({setDisplay, selectedPhysician, setSelectedPhysician}) {
+function EditPhysician({setDisplay, selectedPhysician, setSelectedPhysician, getPhysicians}) {
+
+    //Modal things
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     //states for selected physician
     const [physicianID, setPhysicianID] = useState('');
@@ -50,26 +58,26 @@ function EditPhysician({setDisplay, selectedPhysician, setSelectedPhysician}) {
         try{
 
             //api call
-            const response = await fetch('https://localhost:7172/api/Physician/editphysician' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/editphysician' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(editedPhysician)
             });
 
             if (response.ok) {
-                alert("Physician edited successfully");
+                setAlertMessage("Physician edited successfully");
+                setIsAlertModalOpen(true);
             }
             else{
                 // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
             
-            setDisplay("main");
-            setSelectedPhysician({ "Physician ID": null, selected: false });
-
         }
         catch(error){
             console.error(error);
@@ -116,6 +124,16 @@ function EditPhysician({setDisplay, selectedPhysician, setSelectedPhysician}) {
 
                 <button className="button">Submit Changes</button>
 
+                <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {
+                    setIsAlertModalOpen(false)
+                    setDisplay("main");
+                    setSelectedPhysician({ "Physician ID": null, selected: false });
+                    getPhysicians();
+                }}
+            />
             </form>
         </div>
 

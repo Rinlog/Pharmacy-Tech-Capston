@@ -5,10 +5,18 @@ import { useState, useEffect } from 'react';
 import he from 'he';
 
 // Sanitization import
+<<<<<<< HEAD
 import { SanitizeInput } from '@components/datasanitization/sanitization';
+=======
+import { SanitizeInput, SanitizeLength } from '@components/datasanitization/sanitization';
+import AlertModal from '../modals/alertModal';
+>>>>>>> dev
 
+const ApiAccess = import.meta.env.VITE_APIAccess
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 
-function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
+function EditDrug({setDisplay, selectedDrug, setSelectedDrug, getDrugs}) {
 
     //states for selected drug
     const [din, setDin] = useState('');
@@ -19,6 +27,10 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
     const [concentration, setConcentration] = useState('');
     const [referenceBrand, setReferenceBrand] = useState('');
     const [containerSize, setContainerSize] = useState('');
+
+    //Modal things
+    const [isEditDrugModalOpen, setIsEditDrugOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     //What to do when data is selected
     const handleSelect = (rowData) => {
@@ -34,10 +46,13 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
     };
 
     useEffect(() => {
+        //console.log(selectedDrug); //debugging
         if (selectedDrug) {
             handleSelect(selectedDrug);
         }
     }, [selectedDrug]);
+
+    
 
     //submit changes to drug
     const SubmitEdit = async (e) => {
@@ -59,33 +74,31 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
         try{
 
             //api call
-            const response = await fetch('https://localhost:7172/api/Drug/editdrug' , {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Drug/editdrug' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify(editedDrug)
             });
-
+            
             if (response.ok) {
-                alert("Drug edited successfully");
+                setModalMessage("Drug edited successfully!");
+                setIsEditDrugOpen(true);
             }
             else{
-                // Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setModalMessage(data.message | "Error updating drug");
+                setIsEditDrugOpen(true);
             }
-            
-            setDisplay("main");
-            setSelectedDrug({ "DIN": null, selected: false });
 
         }
         catch(error){
             console.error(error);
-        }
-
-
-        
+            setModalMessage(error.message || "An error has occurred.");
+            setIsEditDrugOpen(true);     
+        }  
     }
 
     return(
@@ -126,9 +139,21 @@ function EditDrug({setDisplay, selectedDrug, setSelectedDrug}) {
                 <input type="text" id="containerSize" value={containerSize} onChange={(e) => setContainerSize(e.target.value)} required/>
                 <br></br>
 
-                <button className="button">Submit Changes</button>
-
+                <button type="submit" className="button">
+                    Submit Changes
+                    </button>   
             </form>
+
+            <AlertModal
+                    isOpen={isEditDrugModalOpen}
+                    message={modalMessage}
+                    onClose={() => {
+                        setIsEditDrugOpen(false);
+                        setDisplay("main");
+                        setSelectedDrug({ "DIN": null, selected: false });
+                        getDrugs();
+                    }}
+                    />
         </div>
 
     )

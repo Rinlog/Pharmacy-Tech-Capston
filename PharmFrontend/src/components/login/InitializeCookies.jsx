@@ -12,7 +12,7 @@ const InitializeCookies = ({ children }) => {
         if (!cookies.admin) {
             setCookie('admin', '', { path: '/', sameSite: 'none', secure: true });
         }
-    }, [cookies.user, cookies.admin, setCookie]); //use individual cookie values as dependencies
+    }, [cookies.user, cookies.admin]); //use individual cookie values as dependencies
 
     return children;
 };

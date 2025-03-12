@@ -9,6 +9,7 @@ using PdfSharp;
 using PdfSharp.Pdf;
 using PdfSharp.Drawing;
 using System.Text.Json.Serialization;
+using NetBarcode;
 namespace PharmPracticumBackend.Controllers
 {
     [Route("api/[controller]")]
@@ -18,9 +19,32 @@ namespace PharmPracticumBackend.Controllers
         readonly PharmDL _PharmDL;
         readonly String _PrinterName;
         static Bitmap? fileToPrint;
+        readonly String _Environment;
         public PrinterController(PharmDL pharmDL, IConfiguration configuration) {
             _PharmDL = pharmDL;
             _PrinterName = configuration.GetSection("PrinterName")["ZebraPrinter"];
+            _Environment = configuration.GetSection("Environment")["Status"];
+        }
+
+        [HttpPost("VerifyOrderNotPrinted")]
+        public IActionResult VerifyOrderNotPrinted([FromBody] String OrderID)
+        {
+            try
+            {
+                ordersDTO order = _PharmDL.GetOrderByID(OrderID);
+                if (order.PrintStatusID == "" || order.PrintStatusID == null) {
+                    return Ok(true);
+                }
+                else
+                {
+                    return Ok(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("Error verifying order");
+            }
         }
 
         [HttpPost("VerifyUser")]
@@ -31,6 +55,10 @@ namespace PharmPracticumBackend.Controllers
             try
             {
                 String[] Info = InfoString.Split("~!~");
+                if (Info.Length != 2)
+                {
+                    return BadRequest("All required api fields are not specified");
+                }
                 ordersDTO order = _PharmDL.GetOrderByID(Info[1]);
                 if (order.RxNum == null) { return BadRequest("Order does not exist"); }
                 if (Info[0] == order.Verifier)
@@ -50,17 +78,30 @@ namespace PharmPracticumBackend.Controllers
         }
         [SupportedOSPlatform("windows")]
         [HttpPost("PrintOrder")]
-        public IActionResult PrintOrder([FromBody] String OrderID)
+        public IActionResult PrintOrder([FromBody] String OrderInfo)
         {
             try
             {
-                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
-                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
+                //index 0 is the order id , index 1 is the print status code, index 2 is the quantity to print
+                String[] OrderInfoArray = OrderInfo.Split("~!~");
+                if (OrderInfoArray.Length != 3)
+                {
+                    return BadRequest("All required api fields are not specified");
+                }
+                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderInfoArray[0]);
+                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderInfoArray[0]); }
 
                 //update print status in db
-                _PharmDL.updateOrderPrintStatus(OrderID, "5");
-                Bitmap img = CreateOrderImage(ordersDTO);
-                return StartPrint(img);
+                _PharmDL.updateOrderPrintStatus(OrderInfoArray[0], OrderInfoArray[1]);
+                Bitmap img = CreateOrderImage(ordersDTO, OrderInfoArray[2]);
+                if (short.TryParse(OrderInfoArray[2], out short PrintQuantity))
+                {
+                    return StartPrint(img,PrintQuantity);
+                }
+                else
+                {
+                    return BadRequest("Print quantity is not a number");
+                }
             }
             catch (Exception ex)
             {
@@ -71,33 +112,52 @@ namespace PharmPracticumBackend.Controllers
         }
         [SupportedOSPlatform("windows")]
         [HttpPost("GeneratePrintPreview")]
-        public IActionResult GeneratePrintPreview([FromBody] String OrderID)
+        public IActionResult GeneratePrintPreview([FromBody] String OrderInfo)
         {
             try
-            { 
-                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
+            {
+                //index 0 is the order id, index 1 is the quantity
+                String[] OrderInfoArray = OrderInfo.Split("~!~");
+                if (OrderInfoArray.Length != 2)
+                {
+                    return BadRequest("All required api fields are not specified");
+                }
+                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderInfoArray[0]);
                 if (ordersDTO.RxNum == null || ordersDTO.DateVerified == "" || ordersDTO.DateSubmitted == null) { return Ok("/images/PrintPreview/Default.png"); }
-                Bitmap img = CreateOrderImage(ordersDTO);
-                img.Save("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg");
-                return Ok("/images/PrintPreview/Order " + OrderID + ".jpg");
+                Bitmap img = CreateOrderImage(ordersDTO, OrderInfoArray[1]);
+                if (_Environment == "Development")
+                {
+                    img.Save("../PharmFrontend/Public/images/PrintPreview/Order " + OrderInfoArray[0] + ".jpg");
+                }
+                else if (_Environment == "Deployed")
+                {
+                    img.Save("../PharmFrontend/images/PrintPreview/Order " + OrderInfoArray[0] + ".jpg");
+                }
+                return Ok("/images/PrintPreview/Order " + OrderInfoArray[0] +".jpg");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return BadRequest("Could not generate print preview");
+                Console.WriteLine(ex);
+                return BadRequest(ex.Message);
             }
         }
         [SupportedOSPlatform("windows")]
         [HttpGet("PrintToPDF")]
-        public IActionResult PrintToPDF([FromQuery] String OrderID)
+        public IActionResult PrintToPDF([FromQuery] String OrderInfo)
         {
             try
             {
-                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderID);
-                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderID); }
+                //index 0 is the order id , index 1 is the print status code
+                String[] OrderInfoArray = OrderInfo.Split("~!~");
+                if (OrderInfoArray.Length != 2)
+                {
+                    return BadRequest("All required api fields are not specified");
+                }
+                ordersDTO ordersDTO = _PharmDL.GetOrderByID(OrderInfoArray[0]);
+                if (ordersDTO.RxNum == null) { return BadRequest("Could not find order with Order ID " + OrderInfoArray[0]); }
 
                 //update order status in db
-                _PharmDL.updateOrderPrintStatus(OrderID, "1");
+                _PharmDL.updateOrderPrintStatus(OrderInfoArray[0], OrderInfoArray[1]);
 
                 //Print to pdf
                 PdfDocument pdfDocument = new PdfDocument();
@@ -105,13 +165,30 @@ namespace PharmPracticumBackend.Controllers
                 PdfPage page = pdfDocument.AddPage();
                 XGraphics gfx = XGraphics.FromPdfPage(page);
 
-                var Ximg = XBitmapImage.FromFile("../PharmFrontend/Public/images/PrintPreview/Order " + OrderID + ".jpg"); //reads the image to insert it into the pdf
-                gfx.DrawImage(Ximg, 50, 50);
-                Console.WriteLine("Made it to back end");
-                gfx.Save();
-                pdfDocument.Save("PrintedPDF.pdf"); //saves the pdf so we can send it back to the frontend
-                var stream = new FileStream(@"PrintedPDF.pdf", FileMode.Open);
-                return File(stream, "application/pdf","PDF Copy of Order " + ordersDTO.RxNum);
+                XImage Ximg = null;
+                if (_Environment == "Development")
+                {
+                    Ximg = XBitmapImage.FromFile("../PharmFrontend/Public/images/PrintPreview/Order " + OrderInfoArray[0] + ".jpg"); //reads the image to insert it into the pdf
+                }
+                else if ( _Environment == "Deployed")
+                {
+                    Ximg = XBitmapImage.FromFile("../PharmFrontend/images/PrintPreview/Order " + OrderInfoArray[0] + ".jpg"); //reads the image to insert it into the pdf
+                }
+
+                if (Ximg != null)
+                {
+                    gfx.DrawImage(Ximg, 50, 50);
+
+                    gfx.Save();
+                    pdfDocument.Save("PrintedPDF.pdf"); //saves the pdf so we can send it back to the frontend
+                    var stream = new FileStream(@"PrintedPDF.pdf", FileMode.Open);
+                    return File(stream, "application/pdf", "PDF Copy of Order " + ordersDTO.RxNum +".pdf");
+
+                }
+                else
+                {
+                    return BadRequest("Could not find image to print to pdf");
+                }
 
             }
             catch (Exception ex)
@@ -123,14 +200,15 @@ namespace PharmPracticumBackend.Controllers
         }
         //MAIN METHOD FOR PRINTING, Should be called by an api method
         [SupportedOSPlatform("windows")]
-        private IActionResult StartPrint(Bitmap file)
+        private IActionResult StartPrint(Bitmap file,short Copys)
         {
             try
             {
                 fileToPrint = file;
                 //If printer will not print but it is visible on network make sure to update printer IP in Windows Printer Properties on the Ports Tab
                 PageSettings pageSettings = new PageSettings();
-                Margins mg = new Margins(0, 0, 0, 0);
+                pageSettings.PaperSize = new PaperSize("LabelSize", 300, 300);
+                Margins mg = new Margins(5, 0, 0, 0);
                 pageSettings.Margins = mg;
                 PrinterResolution printerResolution = new PrinterResolution();
                 printerResolution.X = 203;
@@ -152,6 +230,7 @@ namespace PharmPracticumBackend.Controllers
                 }
                 PrintDocument pd = new PrintDocument();
                 pd.PrinterSettings.PrinterName = ExpectedPrinter;
+                pd.PrinterSettings.Copies = Copys;
                 pd.DefaultPageSettings = pageSettings;
                 pd.PrintPage += Pd_PrintPage;//sends the file to be printed when we run the Print() command
                 if (pd.PrinterSettings.IsValid)
@@ -163,7 +242,8 @@ namespace PharmPracticumBackend.Controllers
                     return BadRequest("No valid printers detected");
                 }
 
-                return Ok("Succefullly Printed Label");
+                //if you change this message change the frontend verification one as well, aka on print order page and all orders page
+                return Ok("Succefully Printed");
             }
             catch (Exception ex)
             {
@@ -182,7 +262,7 @@ namespace PharmPracticumBackend.Controllers
 
         //creates an image from all the order information that we can then print
         [SupportedOSPlatform("windows")]
-        private Bitmap CreateOrderImage(ordersDTO order)
+        private Bitmap CreateOrderImage(ordersDTO order, String quantity)
         {
             Bitmap img = null;
             try
@@ -190,7 +270,7 @@ namespace PharmPracticumBackend.Controllers
                 patientsDTO patient = _PharmDL.GetPatientbyID(order.PPR);
                 drugsDTO drug = _PharmDL.GetDrugByID(order.DIN);
 
-                img = DrawImage(patient, drug, order);
+                img = DrawImage(patient, drug, order, quantity);
                 return img;
             }
             catch (Exception ex)
@@ -200,7 +280,7 @@ namespace PharmPracticumBackend.Controllers
             return null;
         }
         [SupportedOSPlatform("windows")]
-        private Bitmap DrawImage(patientsDTO patient, drugsDTO drug, ordersDTO order)
+        private Bitmap DrawImage(patientsDTO patient, drugsDTO drug, ordersDTO order, String quantity)
         {
             try
             {
@@ -208,7 +288,7 @@ namespace PharmPracticumBackend.Controllers
                 Graphics drawing = Graphics.FromImage(bitmap);
                 drawing.Clear(Color.White);
                 Brush textBrush = new SolidBrush(Color.Black);
-                int NumberOfLinesToDraw = 18;
+                int NumberOfLinesToDraw = 19;
                 Font font = new Font("Arial", 15);
                 Font BoldFont = new Font("Arial", 15, FontStyle.Bold);
 
@@ -224,21 +304,21 @@ namespace PharmPracticumBackend.Controllers
                             drawing.DrawString(patient.HospitalName, BoldFont, textBrush, RightSideTextPoint);
                             break;
                         case 1:
-                        case 9:
-                        case 16:
+                        case 10:
+                        case 17:
                             drawing.DrawString(patient.LName + ", " + patient.FName, font, textBrush, StartingPoint);
                             drawing.DrawString(patient.PPR, font, textBrush, RightSideNumberPoint);
                             break;
                         case 2:
-                        case 11:
+                        case 12:
                             drawing.DrawString(drug.Name, font, textBrush, StartingPoint);
                             break;
                         case 3:
-                        case 12:
-                            drawing.DrawString(drug.Dosage, font, textBrush, StartingPoint);
+                        case 13:
+                            drawing.DrawString(order.PrescribedDose, font, textBrush, StartingPoint);
                             break;
                         case 4:
-                        case 15:
+                        case 16:
                             drawing.DrawString(".....................................................................................................", font, textBrush, StartingPoint);
                             break;
                         case 5:
@@ -246,36 +326,29 @@ namespace PharmPracticumBackend.Controllers
                             drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
                             break;
                         case 6:
-                            drawing.DrawString("Printing:1", font, textBrush, StartingPoint);
+                            drawing.DrawString("Dispensing:" + quantity, font, textBrush, StartingPoint);
                             drawing.DrawString("FILL BY: " + order.Initiator, font, textBrush, RightSideTextPoint);
                             break;
                         case 7:
-                            Pen BarCodePen = new Pen(textBrush, 2f);
-                            PointF StartingPointCopy = StartingPoint;
-                            StartingPointCopy.X += 10f;
-                            StartingPointCopy.Y += 5f;
-                            PointF EndPoint = StartingPoint;
-                            EndPoint.X += 10f;
-                            EndPoint.Y += 35f;
-                            for (int j = 0; j < 40; j++)
-                            {
-                                drawing.DrawLine(BarCodePen, StartingPointCopy, EndPoint);
-                                EndPoint.X += +5f;
-                                StartingPointCopy.X += 5f;
-                            }
+                            Barcode barcode = new Barcode(order.RxNum, NetBarcode.Type.Code128, false);
+                            Image img = barcode.GetImage();
+                            PointF CustomStartingPoint = StartingPoint;
+                            CustomStartingPoint.X += 5;
+                            CustomStartingPoint.Y += 5;
+                            drawing.DrawImage(img, CustomStartingPoint);
                             break;
-                        case 8:
+                        case 9:
                             drawing.DrawString("CHECK BY: " + order.Verifier, font, textBrush, RightSideTextPoint);
                             break;
-                        case 10:
-                        case 17:
+                        case 11:
+                        case 18:
                             drawing.DrawString(patient.UnitNumber + " " + patient.RoomNumber, font, textBrush, StartingPoint);
                             drawing.DrawString(order.RxNum, font, textBrush, RightSideNumberPoint);
                             break;
-                        case 13:
+                        case 14:
                             drawing.DrawString(drug.DIN, font, textBrush, StartingPoint);
                             break;
-                        case 14:
+                        case 15:
                             drawing.DrawString("FILL BY:" + order.Initiator + " " + order.DateSubmitted.Substring(0, 9), font, textBrush, StartingPoint);
                             drawing.DrawString("CHECK BY:" + order.Verifier + " " + order.DateVerified.Substring(0, 9), font, textBrush, RightSideTextPoint);
                             break;

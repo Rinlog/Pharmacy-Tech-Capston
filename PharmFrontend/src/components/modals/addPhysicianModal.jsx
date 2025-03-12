@@ -1,12 +1,24 @@
 import { useState, useEffect } from "react";
 import { SanitizeName } from "@components/datasanitization/sanitization";
 
+<<<<<<< HEAD
 import { SanitizeInput } from "@components/datasanitization/sanitization";
 
 
+=======
+import { SanitizeInput, SanitizeLength } from "@components/datasanitization/sanitization";
+import AlertModal from "./alertModal";
+import { Button, Modal, Form, Dropdown} from "react-bootstrap";
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
+>>>>>>> dev
 const AddPhysicianModal = ({ isOpen, onClose}) => {
 
     const [modalHeight, setModalHeight] = useState('auto');
+
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
 
     const AddPhysician = async () => {
 
@@ -18,10 +30,11 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
 
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Physician/addphysician', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Physician/addphysician', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
 
                 body: JSON.stringify({
@@ -36,13 +49,15 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
             
             if(response.status === 200) {
                 // Alert the user that the physician was added
-                alert("Physician Added");
+                setAlertMessage("Physician Added");
+                setIsAlertModalOpen(true);
                 // Close the modal
-                onClose();
+                //onClose();
             }
             else{// Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
             
         }
@@ -61,13 +76,28 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
     }
 
     return (
-        isOpen && (
-            <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight, width: '60%' }}>
-                    <span className="close" onClick={handleClose}>&times;</span>
-
+            <Modal
+                show={isOpen}
+                onHide={handleClose}
+                size="lg"
+                className="Modal"
+                centered
+            >
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {setIsAlertModalOpen(false);
+                    if (alertMessage === "Physician Added") {
+                        onClose();
+                    }
+                }
+            }
+            />
+                <Modal.Header closeButton>
+                    <h3>Add Physician</h3>
+                </Modal.Header>
+                <Modal.Body>
                     <form onSubmit={handleSubmit} style={{ width: '90%'}}>
-                        <h1>Add Physician</h1>
 
                         <label>First Name:</label>
                         <input id="firstName" type="text" required></input><br></br>
@@ -79,7 +109,7 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
                         <input id="city" type="text" required></input><br></br>
 
                         <label>Province:</label>
-                        <select id="province" required defaultValue="">
+                        <select id="province" required defaultValue="" style={{width:'50%'}}>
                             <option value="" disabled>Select Province</option>
                             <option value="AB">Alberta</option>
                             <option value="BC">British Columbia</option>
@@ -95,14 +125,17 @@ const AddPhysicianModal = ({ isOpen, onClose}) => {
                             <option value="NU">Nunavut</option>
                             <option value="YT">Yukon</option>
                         </select>
-
+                        <br></br>
 
                         <button type="submit">Add Physician</button>
                     </form>
-                </div>
-            </div>
+                </Modal.Body>
+                <Modal.Footer>
+
+                </Modal.Footer>
+            </Modal>
+
         )
-    );
 }
 
 export default AddPhysicianModal;

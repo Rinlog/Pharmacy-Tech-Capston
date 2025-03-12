@@ -90,24 +90,25 @@ namespace PharmPracticumBackend.Controllers
         }
 
         [HttpPost("deletephysician")]
-        public async Task<IActionResult> DeletePhysician([FromBody] physiciansDTO physician)
+        public async Task<IActionResult> DeletePhysician([FromBody] List<string> physicianIDs)
         {
-            // Check that the ID isn't null
-            if (physician == null || physician.PhysicianID == null)
+            try
             {
-                return BadRequest(new { message = "Null Physician" });
-            }
+                string result = await _pharmDL.DeletePhysicianAsync(physicianIDs);
 
-            // Call DL
-            string result = await _pharmDL.DeletePhysicianAsync(physician.PhysicianID);
-
-            if (string.Equals(result, "Physician Deleted"))
-            {
-                return Ok();
+                if (result == "Physicians Deleted Successfully")
+                {
+                    return Ok(new { message = "All selected physicians deleted successfully" });
+                }
+                else
+                {
+                    return BadRequest(new { message = result });
+                }
             }
-            else
+            
+            catch (Exception ex)
             {
-                return BadRequest(new { message = result });
+                return StatusCode(500, new { message = "An error occured while deleting physicians", error = ex.Message });
             }
 
         }

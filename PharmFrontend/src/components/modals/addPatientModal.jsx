@@ -1,13 +1,25 @@
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
 import { SanitizeName, SanitizeDate, SanitizeEmail, SanitizeInput} from "@components/datasanitization/sanitization";
 
+=======
+import { SanitizeName, SanitizeDate, SanitizeEmail, SanitizeInput, SanitizeLength} from "@components/datasanitization/sanitization";
+import AlertModal from "./alertModal";
+import { Button, Modal, Form, Dropdown} from "react-bootstrap";
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
+>>>>>>> dev
 const AddPatientModal = ({ isOpen, onClose}) => {
 
-    const [modalHeight, setModalHeight] = useState('auto');
+
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
     const AddPatient = async () => {
 
         // Sanitize the inputs
+<<<<<<< HEAD
         let fName = SanitizeInput(document.getElementById('firstName').value);
         let lName = SanitizeInput(document.getElementById('lastName').value);
         let dob = SanitizeInput(document.getElementById('dob').value);
@@ -19,13 +31,27 @@ const AddPatientModal = ({ isOpen, onClose}) => {
         let unit = SanitizeInput(document.getElementById('unit').value);
         let allergies = SanitizeInput(document.getElementById('allergies').value);
         let conditions = SanitizeInput(document.getElementById('conditions').value);
+=======
+        let fName = SanitizeLength(SanitizeInput(document.getElementById('firstName').value));
+        let lName = SanitizeLength(SanitizeInput(document.getElementById('lastName').value));
+        let dob = SanitizeLength(SanitizeInput(document.getElementById('dob').value));
+        let sex = document.getElementById('sex').value;
+        let address = SanitizeLength(SanitizeInput(document.getElementById('address').value));
+        let city = SanitizeLength(SanitizeInput(document.getElementById('city').value));
+        let hospital = SanitizeLength(SanitizeInput(document.getElementById('hospital').value));
+        let room = SanitizeLength(SanitizeInput(document.getElementById('room').value));
+        let unit = SanitizeLength(SanitizeInput(document.getElementById('unit').value));
+        let allergies = SanitizeLength(SanitizeInput(document.getElementById('allergies').value));
+        let conditions = SanitizeLength(SanitizeInput(document.getElementById('conditions').value));
+>>>>>>> dev
 
         try {
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Patient/addpatient', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Patient/addpatient', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
 
                 body: JSON.stringify({
@@ -47,18 +73,22 @@ const AddPatientModal = ({ isOpen, onClose}) => {
             
             if(response.status === 200) {
                 // Alert the user that the patient was added
-                alert("Patient Added");
+                setAlertMessage("Patient Added");
+                setIsAlertModalOpen(true);
                 // Close the modal
-                onClose();
+                //onClose();
             }
             else{// Alert out the message sent from the API
                 const data = await response.json();
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             }
             
         }
         catch (error) {
             console.error(error);
+            setAlertMessage("An error has occurred. Please contact the administrator.");
+            setIsAlertModalOpen(true);
         }
     }
 
@@ -72,13 +102,28 @@ const AddPatientModal = ({ isOpen, onClose}) => {
     }
 
     return (
-        isOpen && (
-            <div className={`modal ${isOpen ? 'isOpen' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
-                <div className="modal-content" style={{ height: modalHeight, width: '60%' }}>
-                    <span className="close" onClick={handleClose}>&times;</span>
-
+        <Modal
+            show={isOpen}
+            onHide={handleClose}
+            size="xl"
+            className="Modal"
+            centered
+        >
+        <AlertModal
+            isOpen={isAlertModalOpen}
+            message={alertMessage}
+            onClose={() => {setIsAlertModalOpen(false);
+                if (alertMessage === "Patient Added") {
+                    onClose();
+                }
+            }
+        }
+        />
+            <Modal.Header closeButton>
+                <h3>Add Patient</h3>
+            </Modal.Header>
+            <Modal.Body>
                     <form onSubmit={handleSubmit} style={{ width: '90%'}}>
-                        <h1>Add Patient</h1>
                         <div className='form-content'>
                             <div className='left'>
                                 <label>First Name</label> <br></br>
@@ -107,7 +152,12 @@ const AddPatientModal = ({ isOpen, onClose}) => {
                                 <label>Last Name</label> <br></br>
                                 <input type="text" id="lastName" tabIndex={2} required /> <br></br>
                                 <label>Sex</label> <br></br>
-                                <input type="text" id="sex" tabIndex={4} required /> <br></br>
+                                <select className="form-select" id="sex" tabIndex={4} required>
+                                    <option value=""></option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                    <option value="O">Other</option>
+                                </select>
                                 <label>City</label> <br></br>
                                 <input type="text" id="city" tabIndex={6} required /> <br></br>
                                 {/* Empty line to match up with the left side*/}
@@ -124,10 +174,13 @@ const AddPatientModal = ({ isOpen, onClose}) => {
 
                         <button type="submit" tabIndex={12}>Add Patient</button>
                     </form>
-                </div>
-            </div>
+            </Modal.Body>
+            <Modal.Footer>
+
+            </Modal.Footer>
+        </Modal>
         )
-    );
+
 }
 
 export default AddPatientModal;

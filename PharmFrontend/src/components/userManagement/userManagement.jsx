@@ -5,6 +5,8 @@ import AddUsers from "@components/userManagement/addusers.jsx";
 //react imports
 import { useState, useEffect } from "react";
 
+//jquery
+import $ from 'jquery';
 function UserManagement() {
 
     //states that manage what is shown
@@ -18,9 +20,13 @@ function UserManagement() {
         let select = e.target.id;
         
         if (select === "userAdd"){
+            $("#userAdd").addClass("selected");
+            $("#userEdit").removeClass("selected");
             setDisplay("userAdd");
         }
         if (select === "userEdit"){
+            $("#userAdd").removeClass("selected");
+            $("#userEdit").addClass("selected");
             setDisplay("userEdit");
         }
 
@@ -34,7 +40,7 @@ function UserManagement() {
                 setContent(null);
                 break;
             case "userAdd":
-                setContent(<AddUsers></AddUsers>)
+                setContent(<AddUsers setDisplay={setDisplay}></AddUsers>)
                 break;
             case "userEdit":
                 setContent(<EditUser></EditUser>)
@@ -46,7 +52,7 @@ function UserManagement() {
     return(
 
         <div>
-            <h1>User Management</h1>
+            <div className='page-header-name'>User Management</div>
             <hr/>
             <br></br>
 

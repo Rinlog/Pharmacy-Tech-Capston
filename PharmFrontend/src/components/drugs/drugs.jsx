@@ -7,22 +7,34 @@ const cookies = new Cookies();
 import he from 'he';
 
 // Import modals
-import "@components/modals/modalStyles.css";
 import AddDrugModal from '@components/modals/addDrugModal';
 import DeleteDrugModal from '@components/modals/deleteDrugModal';
 import EditDrug from '@components/drugs/editdrug';
 import BulkDrugs from '@components/drugs/bulkdrugs';
+import AlertModal from '../modals/alertModal';
+import headerSort from '@components/headerSort/HeaderSort';
 
+import Dropdown from 'react-bootstrap/Dropdown';
+const ApiAccess = import.meta.env.VITE_APIAccess
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 function Drugs() {
 
     // UseStates for drug data
-    const [data, setData] = useState([]);
-    const [search, setSearch] = useState('');
-    const [filteredData, setFilteredData] = useState([]);
+    const [SearchBy, setSearchBy] = useState("Drug Name");
+    const [OG_data, setOG_Data] = useState([]);
+    const [Data, setData] = useState([]);
+
     const [tableHeaders, setTableHeaders] = useState([]);
     const [dataObtained, setDataObtained] = useState(false);
     const [dataError, setDataError] = useState(false);
 
+    //delete multiple drugs
+    const [selectedDrugs, setSelectedDrugs] = useState([]);
+
+    //table sorting
+    const [column, setColumn] = useState(null);
+    const [sortOrder, setOrder] = useState('desc');
     // UseStates to manage displaying the bulk add and edit functionality
     const [display, setDisplay] = useState("main");
     const [content, setContent] = useState(null);
@@ -31,6 +43,42 @@ function Drugs() {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedDrug, setSelectedDrug] = useState({ "DIN": null, selected: false });
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
+
+    //checkbox changes
+    const handleSelectionChange = (e, item) => {
+        const { checked } = e.target;
+        const drugDIN = item["DIN"];
+        const drugName = item["Drug Name"];
+        
+        if (checked) {
+            //selected box gets added
+            setSelectedDrugs(prev => [...prev, {DIN: drugDIN, name: drugName}]);
+            //if its only one selected set it as new
+            if (selectedDrugs.length === 0) {
+                setSelectedDrug(item);
+                //console.log(item); //dubugging
+            }
+        } 
+        else {
+            //when unchecking a box update the array
+            setSelectedDrugs(prev => {
+                const updated = prev.filter(drug => drug.DIN !== drugDIN);
+                //if nothing is selected clear the array
+                if (updated.length === 0) {
+                    setSelectedDrug(null);
+
+                    if (display === "editDrug") {
+                        setDisplay("main");
+                    }
+                }
+                //console.log(updated); //dubugging
+                return updated;
+            });
+        }
+    };
 
     // Map the headers to the data for the table
     const headerMapping = {
@@ -47,11 +95,13 @@ function Drugs() {
     // Get the drugs
     const GetDrugs = async () => {
         try {
+            setDataObtained(false);
             // Call the API
-            const response = await fetch('https://localhost:7172/api/Drug/getdrugs', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/Drug/getdrugs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
             });
             // Get the data out of the response
@@ -59,7 +109,8 @@ function Drugs() {
 
             // If there is an issue with the response, alert the user
             if(response.status != 200) {
-                alert(fetchedData.message);
+                setAlertMessage(fetchedData.message);
+                setIsAlertModalOpen(true);
                 return;
             }
 
@@ -81,105 +132,119 @@ function Drugs() {
                         "Container Size": he.decode(item.containerSize)
                     };
                 });
-
+                setOG_Data(transformedData);
                 setData(transformedData);
                 const keys = Object.keys(transformedData[0]);
 
                 // Map the custom versions
                 const customHeaders = keys.map(key => headerMapping[key] || key);
                 setTableHeaders(customHeaders);
-                setDataObtained(true);
+                setTimeout(function(){
+                    setDataObtained(true);
+                },20)
                 setDataError(false);
 
             }
         } catch (error) {
-            alert("Error getting drugs. Please try again.");
+            setAlertMessage("Error getting drugs. Please try again.");
+            setIsAlertModalOpen(true);
             console.error(error);
             setDataObtained(false);
         }
     }
 
     // Handle radio change
-    const handleRadioChange = (e, item) => {
-        if (e.target.checked) {
-            setSelectedDrug({ ...item, selected: true });
-            setDisplay("main");
-        }
-    }
+    // const handleRadioChange = (e, item) => {
+    //     if (e.target.checked) {
+    //         setSelectedDrug({ ...item, selected: true });
+    //         setDisplay("main");
+    //     }
+    // }
 
     // Handle delete button click
     const handleDeleteClick = () => {
-        if (selectedDrug.selected) {
+        if (selectedDrugs.length > 0) {
+            
+            const drugsToDelete = selectedDrugs.map(drug => ({
+                din: drug.DIN,
+                name: drug.name
+            }));
+            setSelectedDrugs(drugsToDelete);
             setIsDeleteModalOpen(true);
         }
         else {
-            alert("Please select a drug to delete.");
+            setAlertMessage("Please select at least one drug to delete");
+            setIsAlertModalOpen(true);
         }
     }
 
-    // Get the drugs initially on page load
-    useEffect(() => {
-        GetDrugs();
-    }, []);
-
-    // Attempt to obtain drug data until success (max 3 attempts, 1 second interval)
-    useEffect(() => {
-        let attempts = 0;
-        const interval = setInterval(() => {
-            if (!dataObtained && attempts < 3) {
-                GetDrugs();
-                attempts++;
-            }
-            else {
-                if (attempts === 3) {
-                    // If we've tried 3 times and still haven't gotten the data, set an error to display
-                    setDataError(true);
-                }
-                clearInterval(interval);
-            }
-        }, 1000);
-
-        // Cleanup function
-        return () => clearInterval(interval);
-    }, []); // Empty dependency array to run the effect once on mount
+   
 
     // Filter drug data on search box input
-    useEffect(() => {
-        if (data.length > 0) {
-            const filtered = data.filter(item => {
-                for (const key in item) {
-                    if (item[key] && item[key].toString().toLowerCase().includes(search.toLowerCase())) {
-                        return true;
-                    }
+    function Search(SearchTerm){
+        let expression = RegExp("^"+SearchTerm+".*$","i");
+        let LocalData = OG_data //makes sure we start searching with every search option included.
+        if (SearchTerm != ""){
+            let FilteredData = LocalData.filter(function(Drug){
+            
+                let result = expression.test(Drug[SearchBy]);
+                if (result === true){
+                    return true;
                 }
-                return false;
-            });
-            setFilteredData(filtered);
+                else{
+                    return false;
+                }
+            })
+            setData(FilteredData);
         }
+<<<<<<< HEAD
     }, [search, data]);
 
     useEffect(() => {
     }, [selectedDrug]);
 
     // Update the data when the modals are closed
+=======
+        else{
+            setData(OG_data);
+        }
+    }
+    useEffect(function(){
+            if (column !== null){
+                headerSort(column,false,column, setColumn,sortOrder, setOrder, Data, setData); //tells it not to swap the order from asc/desc, just re-sort
+            }
+    },[Data])
+    // Update the data when the modals are closed this also loads the table in initially
+>>>>>>> dev
     useEffect(() => {
         if (!isAddModalOpen && !isDeleteModalOpen) {
             // If both modals are closed, fetch the data
             GetDrugs();
         }
+<<<<<<< HEAD
     }, [isAddModalOpen, isDeleteModalOpen, display]);
+=======
+    }, [isAddModalOpen, isDeleteModalOpen]);
+>>>>>>> dev
 
     const ChangeDisplay = (e) => {
         let select = e.target.id;
+
         if (select === "bulkDrug") {
             setDisplay("bulkDrug");
         }
+
         if (select === "editDrug") {
-            if (selectedDrug.selected) {
+            
+            if (selectedDrugs.length === 1) {
+                const currentSelectedDrug = Data.find(drug => drug["DIN"] === selectedDrugs[0].DIN);
+
+                setSelectedDrug(currentSelectedDrug);
                 setDisplay("editDrug");
             }
             else {
-                alert("Please select a drug to edit.");
+                setAlertMessage("Please select only one drug to delete");
+                setIsAlertModalOpen(true);
             }
         }
     }
@@ -190,22 +255,44 @@ function Drugs() {
                 setContent(null);
                 break;
             case "bulkDrug":
-                setContent(<BulkDrugs setDisplay={setDisplay} />);
+                setContent(<BulkDrugs setDisplay={setDisplay} getDrugs={GetDrugs}/>);
                 break;
             case "editDrug":
-                setContent(<EditDrug key={selectedDrug["DIN"]} setDisplay={setDisplay} setSelectedDrug={setSelectedDrug} selectedDrug={selectedDrug} />)
+                setContent(<EditDrug key={selectedDrugs["DIN"]} setDisplay={setDisplay} setSelectedDrug={setSelectedDrug} selectedDrug={selectedDrug } getDrugs={GetDrugs} />)
                 break;
         }
     }, [display, setContent]);
-    
     return(
 
         <div>
-            <h1>Drugs List</h1>
+            <div className='page-header-name'>Drugs List</div>
             <hr/>
 
-            <input type="text" id="drugSearch" placeholder="Search Drugs" value={search} onChange={e => setSearch(e.target.value)}/>
-            <br/><br/>
+            <div className='d-flex align-items-center'>
+                <div>
+                    <input type="text" id="drugSearch" placeholder={"Search by "+SearchBy} onChange={e => Search(e.target.value)}/>
+                </div>
+                <small className='pl-1'>SearchBy:</small>
+                <Dropdown>
+                    <Dropdown.Toggle className='HideButtonCSS SearchTypeButton'>
+                        <svg width={30} height={35} viewBox="1 -4 30 30" preserveAspectRatio="xMinYMin meet" >
+                            <rect id="svgEditorBackground" x="0" y="0" width="10px" height="10px" style={{fill: 'none', stroke: 'none'}}/>
+                            <circle id="e2_circle" cx="10" cy="10" style={{fill:'white',stroke:'black',strokeWidth:'2px'}} r="5"/>
+                            <line id="e3_line" x1="14" y1="14" x2="20.235" y2="20.235" style={{fill:'white',stroke:'black',strokeWidth:'2px'}}/>
+                        </svg>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item id="DIN" onClick={(e)=>{setSearchBy(e.target.id)}}>DIN</Dropdown.Item>
+                        <Dropdown.Item id="Drug Name" onClick={(e)=>{setSearchBy(e.target.id)}}>Drug Name</Dropdown.Item>
+                        <Dropdown.Item id="Dosage" onClick={(e)=>{setSearchBy(e.target.id)}}>Dosage</Dropdown.Item>
+                        <Dropdown.Item id="Strength" onClick={(e)=>{setSearchBy(e.target.id)}}>Strength</Dropdown.Item>
+                        <Dropdown.Item id="Manufacturer" onClick={(e)=>{setSearchBy(e.target.id)}}>Manufacturer</Dropdown.Item>
+                        <Dropdown.Item id="Concentration" onClick={(e)=>{setSearchBy(e.target.id)}}>Concentration</Dropdown.Item>
+                        <Dropdown.Item id="Reference Brand" onClick={(e)=>{setSearchBy(e.target.id)}}>Reference Brand</Dropdown.Item>
+                        <Dropdown.Item id="Container Size" onClick={(e)=>{setSearchBy(e.target.id)}}>Container Size</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
 
             {/* Only display the admin required buttons if the user is an admin */}
             {cookies.get('admin') === 'Y' && (
@@ -221,9 +308,22 @@ function Drugs() {
                     <button id="deleteDrug" onClick={handleDeleteClick}>Delete Drug</button>
                         <DeleteDrugModal 
                             isOpen={isDeleteModalOpen} 
+<<<<<<< HEAD
                             onClose={() => setIsDeleteModalOpen(false)} 
                             drugToDelete={selectedDrug}
+=======
+                            onClose={() => setIsDeleteModalOpen(false)}
+                            drugToDelete={selectedDrugs}
+                            setDrugToDelete={setSelectedDrugs}
+>>>>>>> dev
                         />
+
+                        <AlertModal
+                            isOpen={isAlertModalOpen}
+                            message={alertMessage}
+                            onClose={() => setIsAlertModalOpen(false)}
+                        />
+
                     <br/><br/>
                     <i>&nbsp;&nbsp;*For editing or deleting a drug, select a drug from the table below, then click the corresponding button.</i>
                 </div>
@@ -238,6 +338,7 @@ function Drugs() {
 
             {/* Displays when data has been obtained */}
             {dataObtained && (
+<<<<<<< HEAD
                 <table>
                     <thead>
                         <tr>
@@ -266,6 +367,38 @@ function Drugs() {
                         ))}
                     </tbody>
                 </table>
+=======
+                <div className='scroll-table'>
+                    <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            {tableHeaders.map(header => (
+                                <th key={header} onClick={() => headerSort(header,true,column, setColumn,sortOrder, setOrder, Data, setData)} style={{ cursor: 'pointer' }}>
+                                    {header} {column === header ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                        <tbody>
+                            {Data.map((item, index) => (
+                                <tr key={index}>
+                                    <td>
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedDrugs.some(drug => drug.DIN === item["DIN"])}
+                                            onChange={e => handleSelectionChange(e, item)}
+                                        />
+                                    </td>
+                                    {tableHeaders.map(header => (
+                                        <td key={header}>{item[header]}</td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+>>>>>>> dev
             )}
         </div>
 

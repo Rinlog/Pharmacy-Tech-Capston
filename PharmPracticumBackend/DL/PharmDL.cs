@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System.ComponentModel;
+using System.Globalization;
 
 
 namespace PharmPracticumBackend.DL
@@ -22,18 +23,19 @@ namespace PharmPracticumBackend.DL
         //private readonly IConfiguration _configuration;
 
         private readonly string _connectionString;
+        private readonly IConfiguration _configuration;
 
         public PharmDL(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnectionRemoteServer");
+            _configuration = configuration;
         }
 
         //Opens connection
         private SqlConnection GetOpenConnection()
         {
-            Console.WriteLine("GetOpenConnection");
+
             var connection = new SqlConnection(_connectionString);
-            Console.WriteLine("Connection State: " + connection.State);
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
@@ -132,17 +134,34 @@ namespace PharmPracticumBackend.DL
                 string userID = await GetIDByEmailAsync(email);
 
 
-                //if this returns a valid userID, check if active
+                //if this returns a valid userID, check if expired, active, etc
                 if (userID != "")
                 {
 
+                    //check if account is expired
+                    usersDTO userInfo = this.getUserbyID(userID);
+                    if (userInfo.ExpirationDate != "")
+                    {
+                        DateTime expirationDate = DateTime.ParseExact(userInfo.ExpirationDate, "G", CultureInfo.CreateSpecificCulture("en-CA"));
+                        DateTime CurrentDate = DateTime.Now;
+                        if (CurrentDate > expirationDate) //checks if account is expired
+                        {
+                            user.UserId = "expired";
+                            return user;
+                        }
+                    }
+                    //check if account deleted
+                    if (userInfo.Removed == true)
+                    {
+                        user.UserId = "account removed";
+                        return user;
+                    }
                     //check if user is active
-                    bool active = await IsUserActive(userID);
-
-                    Console.WriteLine(active.ToString());
                     //if not, return
+                    bool active = await IsUserActive(userID);
                     if (!active)
                     {
+                        user.UserId = "account inactive";
                         return user;
                     }
 
@@ -164,29 +183,32 @@ namespace PharmPracticumBackend.DL
                             //if we don't get one, send back an empty user
                             if (string.IsNullOrEmpty(dbHash))
                             {
+                                user.UserId = "password error";
                                 return user;
                             }
-
-                            //if we do, run the check
-                            PasswordHasher<object> hasher = new PasswordHasher<object>();
-
-                            PasswordVerificationResult verified = hasher.VerifyHashedPassword(null, dbHash, pass);
                             
-                            Console.WriteLine("Is my password ok: " + verified);
-                            switch (verified)
-                            {
+                            //if we do, run the check
+                                PasswordHasher<object> hasher = new PasswordHasher<object>();
 
-                                case PasswordVerificationResult.Success:
-                                    //pull info
-                                    user = await GetLoginInfoAsync(userID);
+                                PasswordVerificationResult verified = hasher.VerifyHashedPassword(null, dbHash, pass);
 
-                                    //return user info we need (email, id, admin)
-                                    return user;
-                                case PasswordVerificationResult.Failed:
-                                    return user;
+                                Console.WriteLine("Is my password ok: " + verified);
 
-                            }
 
+                                switch (verified)
+                                {
+
+                                    case PasswordVerificationResult.Success:
+                                        //pull info
+                                        user = await GetLoginInfoAsync(userID);
+
+                                        //return user info we need (email, id, admin)
+                                        return user;
+                                    case PasswordVerificationResult.Failed:
+                                        user.UserId = "";
+                                        return user;
+                                }
+                            
                         }
 
                     }
@@ -217,7 +239,7 @@ namespace PharmPracticumBackend.DL
 
                 // Make sure the campus is valid
                 //                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  IMPORTANT  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                // This list will need to be updated AS WELL AS the list in the insertUser stored procedure in the DB
+                // This list will need to be updated AS WELL AS the list in the insertUser stored procedure in the DB, and also front end to let user know (bulk add users page)
                 // If there is a mismatch it will not work as intended, either not accepting valid campuses (according to the DB)
                 // Or the back-end accepting campuses whose codes will be set to XX in the user ID
                 List<string> validCampuses = new List<string> { "Fredericton", "St. John", "Moncton", "St. Andrews", "Miramichi", "Woodstock" };
@@ -314,8 +336,36 @@ namespace PharmPracticumBackend.DL
             
 
         }
+        public usersDTO getUserbyID(String id)
+        {
+            usersDTO usersDTO = new usersDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetUserInfo",conn);
+                cmd.Parameters.AddWithValue("@userID", id);
+                cmd.CommandType = CommandType.StoredProcedure;
 
-        //Get a user's info
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read()) {
+                    usersDTO.Admin = reader["admin"].ToString();
+                    usersDTO.FName = reader["fName"].ToString();
+                    usersDTO.LName = reader["lName"].ToString();
+                    usersDTO.Email = reader["email"].ToString();
+                    usersDTO.Removed = (bool)reader["removed"];
+                    usersDTO.Active = reader["active"].ToString();
+                    usersDTO.Campus = reader["campus"].ToString();
+                    usersDTO.CreatedDate = reader["createdDate"].ToString();
+                    usersDTO.ExpirationDate = reader["expirationDate"].ToString();
+                }
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+            return usersDTO;
+        }
+        //auth a user
+
         public async Task<authUserDTO> GetLoginInfoAsync(string id)
         {
 
@@ -393,6 +443,11 @@ namespace PharmPracticumBackend.DL
                     if (signRes.Equals("Email already exists")) 
                     {
                         user.InsertResult = "Email already in use for " + user.Email;
+                        user.IsInserted = "N";
+                    }
+                    else if (signRes.Contains("Invalid Campus"))
+                    {
+                        user.InsertResult = "Invalid Campus for " + user.Email;
                         user.IsInserted = "N";
                     }
                     //if user inserted, return success
@@ -662,12 +717,30 @@ namespace PharmPracticumBackend.DL
                 if (usage  != null && usage == "Confirmation")
                 {
                     message.Subject = "Confirmation Email";
-                    message.Body = "Please click the link to confirm your account: http://localhost:5173/confirmation/" + urlCode + "/" + userID;
+                    if (_configuration.GetSection("Environment")["Status"] == "Development")
+                    {
+                        message.Body = "Please click the link to confirm your account: http://localhost:5173/confirmation/" + urlCode + "/" + userID;
+                    }
+                    else if (_configuration.GetSection("Environment")["Status"] == "Deployed")
+                    {
+                        String FrontendIP = _configuration.GetSection("DeployedSettings")["FrontendIP"];
+                        String FrontendPort = _configuration.GetSection("DeployedSettings")["FrontendPort"];
+                        message.Body = "Please click the link to confirm your account: https://" + FrontendIP + ":" + FrontendPort + "/confirmation/" + urlCode + "/" + userID;
+                    }
                 }
                 else if (usage != null && usage == "Reset")
                 {
                         message.Subject = "Password Reset Email";
-                        message.Body = "Please click the link to reset your password: http://localhost:5173/passwordreset/" + urlCode + "/" + userID;
+                    if (_configuration.GetSection("Environment")["Status"] == "Development")
+                    {
+                        message.Body = "Please click the link to confirm your account: http://localhost:5173/passwordreset/" + urlCode + "/" + userID;
+                    }
+                    else if (_configuration.GetSection("Environment")["Status"] == "Deployed")
+                    {
+                        String FrontendIP = _configuration.GetSection("DeployedSettings")["FrontendIP"];
+                        String FrontendPort = _configuration.GetSection("DeployedSettings")["FrontendPort"];
+                        message.Body = "Please click the link to confirm your account: https://"+FrontendIP+":"+FrontendPort+"/passwordreset/" + urlCode + "/" + userID;
+                    }
                 }
                 else
                 {
@@ -744,6 +817,8 @@ namespace PharmPracticumBackend.DL
 
                         //expirationDate
                         dbUser.ExpirationDate = reader["expirationDate"].ToString();
+
+                        dbUser.Removed = (bool)reader["removed"];
 
                         users.Add(dbUser);
 
@@ -953,34 +1028,39 @@ namespace PharmPracticumBackend.DL
             return result;
         }
 
-        public async Task<string> DeleteDrugAsync(string DIN)
+        public async Task<string> DeleteDrugAsync(List<string> DINs)
         {
-            string result = "Drug not deleted";
+
+            if (DINs == null || DINs.Count == 0)
+            {
+                return "No drugs were sent for deleting";
+            }
 
             try
             {
-                // Delete the drug
                 using var connection = GetOpenConnection();
-                SqlCommand cmd = new SqlCommand("dbo.deleteDrug", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@DIN", DIN);
-
-                int changed = await cmd.ExecuteNonQueryAsync();
-
-                if (changed > 0)
+                foreach (var DIN in DINs)
                 {
-                    result = "Drug Deleted";
+                   
+                    SqlCommand cmd = new SqlCommand("dbo.deleteDrug", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@DIN", DIN);
+
+                    await cmd.ExecuteNonQueryAsync();
+
+                    cmd.Parameters.Clear();
                 }
+                
+                return "Drugs Deleted successfully";
+                
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                result = ex.Message;
+                Console.WriteLine(ex.ToString()); //debugging
+                return ex.Message;
             }
-
-            return result;
-
         }
 
         public async Task<string> EditDrugAsync(drugsDTO drug)
@@ -1152,24 +1232,28 @@ namespace PharmPracticumBackend.DL
             return result;
         }
 
-        public async Task<string> DeletePatientAsync(string ppr)
+        public async Task<string> DeletePatientsAsync(string pprs)
         {
-            string result = "Patient not deleted";
+            string result = "Patients not deleted";
 
             try
             {
                 // Delete the patient
                 using var connection = GetOpenConnection();
-                SqlCommand cmd = new SqlCommand("dbo.deletePatient", connection);
+                SqlCommand cmd = new SqlCommand("dbo.deletePatients", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@PPR", ppr);
+                cmd.Parameters.AddWithValue("@PPR", pprs);
 
                 int changed = await cmd.ExecuteNonQueryAsync();
 
-                if (changed > 0)
+                if (changed == 1)
                 {
                     result = "Patient Deleted";
+                }
+                else if (changed > 1)
+                {
+                    result = "Patients Deleted";
                 }
             }
             catch (Exception ex)
@@ -1304,33 +1388,35 @@ namespace PharmPracticumBackend.DL
             return result;
         }
 
-        public async Task<string> DeletePhysicianAsync(string physicianID)
+        public async Task<string> DeletePhysicianAsync(List<string> physicianIDs)
         {
-            string result = "Physician not deleted";
-
+            if (physicianIDs == null || physicianIDs.Count == 0)
+            {
+                return "No physicians were sent for deleting";
+            }
+            
             try
             {
-                // Delete the physician
                 using var connection = GetOpenConnection();
-                SqlCommand cmd = new SqlCommand("dbo.deletePhysician", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@physicianID", physicianID);
-
-                int changed = await cmd.ExecuteNonQueryAsync();
-
-                if (changed > 0)
+                foreach (var ID in physicianIDs)
                 {
-                    result = "Physician Deleted";
+                    SqlCommand cmd = new SqlCommand("dbo.deletephysician", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@physicianID", ID);
+
+                    await cmd.ExecuteNonQueryAsync();
+
+                    cmd.Parameters.Clear();
                 }
+                return "Physicians Deleted Successfully";
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                result = ex.Message;
+                Console.WriteLine(ex.ToString()); //debugging
+                return ex.Message;
             }
-
-            return result;
 
         }
 
@@ -1368,6 +1454,81 @@ namespace PharmPracticumBackend.DL
         }
 
         //ORDER METHODS
+        public bool UpdateOrderImagePathByID(String RxNum, String Path)
+        {
+            bool result = false;
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.UpdateOrderImagePath",conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@rxNum",RxNum);
+                cmd.Parameters.AddWithValue("@path",Path);
+
+                result = (cmd.ExecuteNonQuery() == 1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return result;
+        }
+        public ImageDTO GetOrderImageByID(String RxNum)
+        {
+            ImageDTO imageDTO = new ImageDTO();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetOrderImageByID", conn);
+                cmd.CommandType= CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@rxNum",RxNum);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                //should only give back one row
+                while (reader.Read())
+                {
+                    return new ImageDTO()
+                    {
+                        imageID = reader[0].ToString(),
+                        rxNum = reader[1].ToString(),
+                        imagePath = reader[2].ToString()
+                    };
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return imageDTO;
+        }
+        public List<ImageDTO> GetAllOrderImages()
+        {
+            List<ImageDTO> images = new List<ImageDTO>();
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetAllOrderImages", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    images.Add(new ImageDTO()
+                    {
+                        imageID = reader[0].ToString(),
+                        rxNum = reader[1].ToString(),
+                        imagePath = reader[2].ToString()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return images;
+        }
         public ordersDTO GetOrderByID(String RxNum)
         {
             ordersDTO dbOrders = new ordersDTO();
@@ -1401,6 +1562,7 @@ namespace PharmPracticumBackend.DL
                     dbOrders.Quantity = reader["quantity"].ToString();
                     dbOrders.StartDate = reader["startDate"].ToString();
                     dbOrders.StartTime = reader["startTime"].ToString();
+                    dbOrders.PrintStatusID = reader["PrintStatusID"].ToString();
                     dbOrders.Comments = reader["comments"].ToString();
                 }
             }
@@ -1410,6 +1572,65 @@ namespace PharmPracticumBackend.DL
                 Console.WriteLine("This is an error message: "+ex);
             }
             return dbOrders;
+        }
+        public List<ordersDTO> getOrdersVerifiedByUser(String UserID)
+        {
+            List<ordersDTO> orders = new List<ordersDTO>();
+
+            try
+            {
+
+                using var connection = GetOpenConnection();
+
+                SqlCommand cmd = new SqlCommand("dbo.getOrdersVerifiedByUser", connection);
+                cmd.Parameters.AddWithValue("@userID", UserID);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var reader = cmd.ExecuteReader())
+                {
+
+                    while (reader.Read())
+                    {
+
+                        ordersDTO dbOrders = new ordersDTO();
+
+                        dbOrders.RxNum = reader["rxNum"].ToString();
+                        dbOrders.PPR = reader["PPR"].ToString();
+                        dbOrders.DIN = reader["DIN"].ToString();
+                        dbOrders.PhysicianID = reader["physicianID"].ToString();
+                        dbOrders.Status = reader["status"].ToString();
+                        dbOrders.Initiator = reader["initiator"].ToString();
+                        dbOrders.Verifier = reader["verifier"].ToString();
+                        dbOrders.DateSubmitted = reader["dateSubmitted"].ToString();
+                        dbOrders.DateLastChanged = reader["dateLastChanged"].ToString();
+                        dbOrders.DateVerified = reader["dateVerified"].ToString();
+                        dbOrders.SIG = reader["SIG"].ToString();
+                        dbOrders.SIGDescription = reader["SIGDescription"].ToString();
+                        dbOrders.Form = reader["form"].ToString();
+                        dbOrders.Route = reader["route"].ToString();
+                        dbOrders.PrescribedDose = reader["prescribedDose"].ToString();
+                        dbOrders.Frequency = reader["frequency"].ToString();
+                        dbOrders.Duration = reader["duration"].ToString();
+                        dbOrders.Quantity = reader["quantity"].ToString();
+                        dbOrders.StartDate = reader["startDate"].ToString();
+                        dbOrders.StartTime = reader["startTime"].ToString();
+                        dbOrders.PrintStatusID = reader["PrintStatusID"].ToString();
+                        dbOrders.Comments = reader["comments"].ToString();
+
+                        orders.Add(dbOrders);
+
+                    }
+
+                }
+
+                return orders;
+            }
+            catch (Exception ex)
+            {
+                orders.Clear();
+                Console.WriteLine("oh no" + ex.Message);
+                return orders;
+            }
         }
         public async Task<List<ordersDTO>> GetAllOrders()
         {
@@ -1452,6 +1673,7 @@ namespace PharmPracticumBackend.DL
                         dbOrders.Quantity = reader["quantity"].ToString();
                         dbOrders.StartDate = reader["startDate"].ToString();
                         dbOrders.StartTime = reader["startTime"].ToString();
+                        dbOrders.PrintStatusID = reader["PrintStatusID"].ToString();
                         dbOrders.Comments = reader["comments"].ToString();
 
                         orders.Add(dbOrders);
@@ -1527,7 +1749,7 @@ namespace PharmPracticumBackend.DL
                 cmd.Parameters.AddWithValue("@startDate", DateTime.Parse(order.StartDate)); //date
                 cmd.Parameters.AddWithValue("@startTime", order.StartTime);
                 cmd.Parameters.AddWithValue("@comments", order.Comments);
-                cmd.Parameters.AddWithValue("@imagePath", "Test");
+                cmd.Parameters.AddWithValue("@imagePath", order.OrderImage);
 
 
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -1607,6 +1829,7 @@ namespace PharmPracticumBackend.DL
                         dbOrders.Quantity = reader["quantity"].ToString();
                         dbOrders.StartDate = reader["startDate"].ToString();
                         dbOrders.StartTime = reader["startTime"].ToString();
+                        dbOrders.PrintStatusID = reader["PrintStatusID"].ToString();
                         dbOrders.Comments = reader["comments"].ToString();
 
                         orders.Add(dbOrders);
@@ -1657,7 +1880,7 @@ namespace PharmPracticumBackend.DL
                 cmd.Parameters.AddWithValue("@startDate", DateTime.Parse(order.StartDate)); //date
                 cmd.Parameters.AddWithValue("@startTime", order.StartTime);
                 cmd.Parameters.AddWithValue("@comments", order.Comments);
-                cmd.Parameters.AddWithValue("@imagePath", "Test");
+                cmd.Parameters.AddWithValue("@imagePath", order.OrderImage);
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -1750,6 +1973,117 @@ namespace PharmPracticumBackend.DL
             }
         }
 
+        //SIG related procedures
 
+        public List<SIGDTO> getAllSIGS()
+        {
+            List<SIGDTO> SIGDTOs = new List<SIGDTO>();
+
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.getAllSIGS", conn);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    SIGDTO sigDTO = new SIGDTO();
+
+                    sigDTO.abbreviation = reader["abbreviation"].ToString();
+                    sigDTO.description = reader["description"].ToString();
+
+                    SIGDTOs.Add(sigDTO);
+
+                }
+                return SIGDTOs;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return SIGDTOs;
+        }
+
+
+        //Notification related procedures
+
+        public List<NotificationDTO> getNotifications(String UserID,int StartingRow)
+        {
+            List <NotificationDTO> notifications = new List<NotificationDTO>();
+
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.GetNotifications", conn);
+                cmd.CommandType= CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@StartingRow", StartingRow);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    notifications.Add(new NotificationDTO()
+                    {
+                        NotificationID = reader["NotificationID"].ToString(),
+                        NMessage = reader["NMessage"].ToString(),
+                        Recipient = reader["Recipient"].ToString(),
+                        Seen = (bool)reader["Seen"],
+                        DateAdded = reader["DateAdded"].ToString()
+                    });
+                }
+                return notifications;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return notifications;
+
+        }
+
+        public bool addNotification(String Message, String UserID)
+        {
+            bool result = false;
+
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.AddNotification", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Message", Message);
+                cmd.Parameters.AddWithValue("@Recipient", UserID);
+                result = cmd.ExecuteNonQuery() == 1; 
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return result;
+
+        }
+
+        public bool updateNotificationStatus(String NotificationID, bool status)
+        {
+            bool result = false;
+
+            try
+            {
+                using var conn = GetOpenConnection();
+                SqlCommand cmd = new SqlCommand("dbo.UpdateSeenStatus", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@NotificationID", NotificationID);
+                cmd.Parameters.AddWithValue("@Status", status);
+                result = cmd.ExecuteNonQuery() == 1;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return result;
+
+        }
     }
 }

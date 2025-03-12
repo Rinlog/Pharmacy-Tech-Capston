@@ -5,20 +5,21 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Dropdown from "react-bootstrap/Dropdown";
 import Image from "react-bootstrap/Image"
-import './printorder.css';
-import { DropdownButton } from "react-bootstrap";
-import { Navigate, useParams } from "react-router-dom";
+import { DropdownButton, Nav } from "react-bootstrap";
 import { useCookies } from 'react-cookie';
+
+import { useParams } from "react-router-dom";
+import axios from "axios";
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
+const ApiAccess = import.meta.env.VITE_APIAccess
+import { useNavigate } from "react-router-dom";
+//alert modal
+import AlertModal from '@components/modals/alertModal';
 function printOrder(){
+    let Navigate = useNavigate();
     //this displays the print order page
 
-    //setting some default css
-    document.body.style = 'background-color: #007599';
-    $(document).ready(function(){
-        document.getElementById("navbarMenu").style = "margin-right: 1em";
-        let Items = document.getElementsByClassName("navbar-brand");
-        Items[0].style = "margin-left: 1em";
-    })
 
     const [show, setShow] = useState(false);
     const [PrintPreview,setPrintPreview] = useState();
@@ -29,15 +30,58 @@ function printOrder(){
 
     const {OrderID} = useParams(); //used to get the url Query String
 
-    const handleClose = () => setShow(false);
+    //modal alert stuff
+    const [AlertModalOpen, setAlertModalOpen] = useState(false);
+    const [AlertMessage, setAlertMessage] = useState();
+    
+    async function VerifyOrderNotPrinted(){
+        try{
+            await $.ajax({
+                method:"POST",
+                url:"https://"+BackendIP+':'+BackendPort+"/api/printer/VerifyOrderNotPrinted",
+                data: JSON.stringify(OrderID),
+                headers:{
+                    "Content-Type":"application/json",
+                    'Key-Auth':ApiAccess
+                },
+                success:function(data){
+                   if (data == false){
+                    console.log("test");
+                    Navigate("/home");
+                   }
+                }
+            });
+        }
+        catch(ex){
+            if (ex.responseText != null){
+                setAlertMessage(ex.responseText);
+                setAlertModalOpen(true);
+            }
+            else{
+                setAlertMessage("Sorry, something went wrong");
+                setAlertModalOpen(true);
+            }
+        }
+    }
+    //this line is so that the modal can stay popped up when someone hits print. React re-renders once the modal is set to visible so this prevents the page from verifying
+    //order status until the modal is closed
+    if (AlertModalOpen == false){
+        VerifyOrderNotPrinted(); //checks on page load if order was already printed
+    }
+
+    const handleClose = () => {
+        setPrinterOption("Print To PDF");
+        setShow(false);
+    }
     const handleShow = async () => {
         try{
             await $.ajax({
                 method:"POST",
-                url:"https://localhost:7172/api/printer/GeneratePrintPreview",
-                data: JSON.stringify(OrderID),
+                url:"https://"+BackendIP+':'+BackendPort+"/api/printer/GeneratePrintPreview",
+                data: JSON.stringify(OrderID+"~!~"+""),
                 headers:{
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    'Key-Auth':ApiAccess
                 },
                 success:function(data){
                     setPrintPreview(data);
@@ -47,10 +91,12 @@ function printOrder(){
         }
         catch(ex){
             if (ex.responseText != null){
-                alert(ex.responseText);
+                setAlertMessage(ex.responseText);
+                setAlertModalOpen(true);
             }
             else{
-                alert("Sorry, something went wrong");
+                setAlertMessage("Sorry, something went wrong");
+                setAlertModalOpen(true);
             }
         }
 
@@ -63,10 +109,11 @@ function printOrder(){
         try{
             await $.ajax({
                 method:"POST",
-                url:"https://localhost:7172/api/printer/VerifyUser",
+                url:"https://"+BackendIP+':'+BackendPort+"/api/printer/VerifyUser",
                 data: JSON.stringify(Info),
                 headers:{
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    'Key-Auth':ApiAccess
                 },
                 success:function(data){
                     Verified = data;
@@ -75,32 +122,57 @@ function printOrder(){
         }
         catch(ex){
             if (ex.responseText != null){
-                alert(ex.responseText);
-                return;
+                setAlertMessage(ex.responseText);
+                setAlertModalOpen(true);
             }
             else{
-                console.log(ex);
-                alert("could not connect to backend servers");
-                return;
+                setAlertMessage("Could not connect to backend servers");
+                setAlertModalOpen(true);
             }
         }
-        if (Verified == false){alert("Can not print an order that wasn't verified by you");return;}
+        if (Verified == false){
+            setAlertMessage("Can not print an order that wasn't verified by you");
+            setAlertModalOpen(true);
+        }
         //first is print to pdf
         if (PrinterOption.toLowerCase() === "print to pdf"){
             try{
                 if (OrderID != null){
-                    window.location = "https://localhost:7172/api/printer/PrintToPDF?OrderID="+OrderID;   
+                    let result = await axios({
+                        url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintToPDF?OrderInfo="+OrderID+"~!~"+"1",
+                        method: "get",
+                        headers:{
+                            "Key-Auth":ApiAccess
+                        },
+                        responseType: 'blob'
+                    })
+                    const href = URL.createObjectURL(result.data); //creates a custom link to the file to download
+
+                    //stores it in an a tag which we then click through code
+                    const link = document.createElement('a');
+                    link.href = href;
+                    link.setAttribute('download', 'PrintedPDF.pdf');
+                    $("body").append(link)
+                    link.click();
+
+                    //now we remove both the generated link and a tag
+                    $("body").remove(link);
+                    URL.revokeObjectURL(href);
+                    Navigate("/home");
                 }
                 else{
-                    alert("No order id Provided");
+                    setAlertMessage("No order id provided");
+                    setAlertModalOpen(true);
                 }
             }
             catch(ex){
-                if (ex.responseText != undefined){
-                    alert(ex.responseText);
+                if (ex.responseText != null){
+                    setAlertMessage(ex.responseText);
+                    setAlertModalOpen(true);
                 }
                 else{
-                    alert("Could not connect to backend servers")
+                    setAlertMessage("Could not connect to backend servers");
+                    setAlertModalOpen(true);
                 }
             }
         }
@@ -108,38 +180,40 @@ function printOrder(){
         else{
             try{
                 if (OrderID != null){
-                    await $.ajax({
+                    let result = await $.ajax({
                         method:"POST",
-                        url:"https://localhost:7172/api/printer/PrintOrder",
-                        data: JSON.stringify(OrderID),
+                        url:"https://"+BackendIP+':'+BackendPort+"/api/printer/PrintOrder",
+                        data: JSON.stringify(OrderID+"~!~"+"5"+"~!~"+"1"),
                         headers:{
-                            "Content-Type":"application/json"
-                        },
-                        success:function(data){
-                            alert(data)
+                            "Content-Type":"application/json",
+                            'Key-Auth':ApiAccess
                         }
                     });
+                    setAlertMessage(result);
+                    setAlertModalOpen(true);
                 }
                 else{
-                    alert("No order id Provided");
+                    setAlertMessage("No order id provided");
+                    setAlertModalOpen(true);
                 }
             }
             catch(ex){
-                if (ex.responseText != undefined){
-                    alert(ex.responseText);
+                if (ex.responseText != null){
+                    setAlertMessage(ex.responseText);
+                    setAlertModalOpen(true);
+                    return;
                 }
                 else{
-                    alert("Could not connect to backend servers")
+                    setAlertMessage("Could not connect to backend servers");
+                    setAlertModalOpen(true);
+                    return;
                 }
             }
             
         }
     }
-    
     function ChoosePrintOption(e){
         
-        $("#PrinterOption").text("");
-        $("#PrinterOption").text(e);
         setPrinterOption(e);
     }
     let PrintModal = (
@@ -159,6 +233,7 @@ function printOrder(){
                     <DropdownButton
                         onSelect={ChoosePrintOption}
                         title="Print Options"
+                        className="ModalDropDownB"
                     >
                         <Dropdown.Item eventKey={"Print To PDF"}>
                             Print To PDF
@@ -168,18 +243,31 @@ function printOrder(){
                         </Dropdown.Item>
                     </DropdownButton>
                     <div id="PrinterOption">
-                        {PrinterOption}
+                        <label>{PrinterOption}</label>
                     </div>
                 </div>
                 <div id="PrintImage">
-                    <Image src={PrintPreview} alt="Print Preview of Order" rounded fluid></Image>
+                    <div className="d-flex2" id="Loading3">
+                            <div className="Loading Dot1">
+                                .
+                            </div>
+                            <div className="Loading Dot2">
+                                .
+                            </div>
+                            <div className="Loading Dot3">
+                                .
+                            </div>
+                    </div>
+                    {<Image src={PrintPreview} alt="Print Preview of Order" rounded fluid onLoad={function(e){
+                        $("#Loading3").addClass("hide");
+                    }}></Image>}
                 </div>
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button className="ModalbuttonB" onClick={handleClose}>
                 Cancel
             </Button>
-            <Button variant="primary" onClick={HandlePrint}>
+            <Button className="ModalbuttonG" onClick={HandlePrint}>
                 Print
             </Button>
              </Modal.Footer>
@@ -188,10 +276,15 @@ function printOrder(){
 
     
     return(
-        
             <div className="Container">
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossOrigin="anonymous"/>
                 {PrintModal}
+                <AlertModal
+                    isOpen={AlertModalOpen}
+                    message={AlertMessage}
+                    onClose={function(){
+                        setAlertModalOpen(false);
+                    }}
+                ></AlertModal>
                 <div className="Header">
                     <h1>Order {OrderID} has been successfully verified</h1>
                 </div>
@@ -199,8 +292,10 @@ function printOrder(){
                     <img src="/images/GreenVerified.png" alt="Verification checkmark" className="VerifiedImage"></img>
                 </div>
                 <div className="Buttons">
-                    <button type="button" id="Home" className="RegularButton"><a href="/home">Home</a></button>
-                    <button type="button" id="Print" onClick={handleShow} className='RegularButton'>Print</button>
+                    <button type="button" id="Home"  onClick={function(e){
+                        Navigate("/home");
+                    }}>Home</button>
+                    <button type="button" id="Print" onClick={handleShow}>Print</button>
                 </div>
             </div>
     )

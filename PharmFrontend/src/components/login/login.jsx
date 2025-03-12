@@ -2,8 +2,20 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import AuthContext from '@components/login/AuthContext.jsx';
+import $ from 'jquery';
 
+const ApiAccess = import.meta.env.VITE_APIAccess
+import ResetPasswordModal from '../modals/resetPasswordModal';
+import AlertModal from '../modals/alertModal';
+const BackendIP = import.meta.env.VITE_BackendIP
+const BackendPort = import.meta.env.VITE_BackendPort
 const Login = () => {
+
+    // Modal things
+    const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -28,22 +40,24 @@ const Login = () => {
         }
 
         try {
-            const response = await fetch('https://localhost:7172/api/User/login', {
+            const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Key-Auth':ApiAccess
                 },
                 body: JSON.stringify({ Email: email, Password: password }),
             });
             const data = await response.json();
             if (data.message === "Wrong email or password entered.") {
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             } else if (data.message) {
-                alert(data.message);
+                setAlertMessage(data.message);
+                setIsAlertModalOpen(true);
             } else {
-                alert("Login successful, redirecting.");
-                setCookie('user', data.data.userId, { path: '/', sameSite: 'none', secure: true });
-                setCookie('admin', data.data.admin, { path: '/', sameSite: 'none', secure: true });
+                setCookie('user', data.data.userId, { path: '/', sameSite: 'none', secure: true});
+                setCookie('admin', data.data.admin, { path: '/', sameSite: 'none', secure: true});
 
                 // Update auth state
                 setAuthState({
@@ -51,37 +65,11 @@ const Login = () => {
                     isAdmin: data.data.admin === 'Y'
                 });
 
-                // Navigate to home page
-                navigate('/home');
             }
         } catch (error) {
             //console.log(error); //debugging
-            alert("Could not log you in at this time. Please contact the system administrator.");
-        }
-    };
-
-    const handleForgotPassword = async (e) => {
-        e.preventDefault();
-        let email = prompt("Please enter your email address to reset your password:");
-        if (email) {
-            try {
-                const response = await fetch('https://localhost:7172/api/User/resetrequest', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ Email: email }),
-                });
-                const data = await response.json();
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    alert("Password reset instructions have been sent to your email.");
-                }
-            } catch (error) {
-                //console.log(error); //debugging
-                alert("Could not process your request at this time. Please contact the system administrator.");
-            }
+            setAlertMessage("Could not log you in at this time. Please contact the system administrator.");
+            setIsAlertModalOpen(true);
         }
     };
 
@@ -111,9 +99,27 @@ const Login = () => {
             </form>
 
             <form className='regular-form'>
-                <h3>Don't have an account? <button className="button" onClick={() => navigate('/signup')}>Sign Up</button></h3>
-                <h3>Forgot your password? <button className="button" onClick={handleForgotPassword}>Reset Password</button></h3>
+                <div className='d-flex justify-content-center'>
+                    <h3>Don't have an account?</h3> 
+                    <button className="button" onClick={() => navigate('/signup')}>Sign Up</button>
+                </div>
+                <div className='d-flex justify-content-center'>
+                <h3>Forgot your password?</h3> 
+                <button type="button" className="button" onClick={() => setIsResetModalOpen(true)}>
+                    Reset Password
+                    </button>
+                    <ResetPasswordModal
+                        isOpen={isResetModalOpen} 
+                        onClose={() => setIsResetModalOpen(false)}
+                    />
+                </div>
             </form>
+            <AlertModal
+                isOpen={isAlertModalOpen}
+                message={alertMessage}
+                onClose={() => {setIsAlertModalOpen(false)}}
+            />
+            
         </div>
     );
 };
