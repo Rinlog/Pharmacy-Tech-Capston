@@ -9,7 +9,7 @@ const BackendIP = import.meta.env.VITE_BackendIP
 const BackendPort = import.meta.env.VITE_BackendPort
 const ApiAccess = import.meta.env.VITE_APIAccess
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
+  '/JS/pdf.worker.min.mjs',
   import.meta.url,
 ).toString();
 //converts a number range to another number range
