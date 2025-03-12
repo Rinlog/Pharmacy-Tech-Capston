@@ -15,7 +15,9 @@ html{
     --text: #242424;
     --inputBackground: #f0f0f0;
 }
-
+.combo-input{
+    width:12rem;
+}
 .regular-form {
     background-color: white;
     padding: 20px;
@@ -35,6 +37,18 @@ html{
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+.pl-9{
+    padding-left: 150px;
+}
+.pl-8{
+    padding-left: 130px;
+}
+.pl-7{
+    padding-left: 110px;
+}
+.pl-6{
+    padding-left: 90px;
 }
 .pl-5{
     padding-left: 70px;
@@ -152,7 +166,10 @@ select {
     border: 1px solid var(--nbcc-ocean-blue);
 
 }
-
+/*Static version of bootstrap w-25, needed for sign up page*/
+.sw-25{
+    width:12rem;
+}
 .form-content {
     width: 100%;
     padding: 10px;
@@ -704,4 +721,96 @@ th.asc::after {
     text-align: center;
     width:800px !important;
     height:300px !important; /*this should be same height as images*/
+  }
+  .loadingAnim{
+    animation: LoadingAnim 2s linear infinite;
+    transform-origin: 50% 50% 50% 50%;
+  }
+  .loadingAnimCarousel{
+    animation: LoadingAnim 2s linear infinite;
+    transform-origin: 50% 50%;
+    display:inline-block;
+    width:70%;
+    height:100%;
+  }
+  @keyframes LoadingAnim {
+    from{
+        transform: rotate(-0deg);
+    }
+    1%{transform: rotate(-0deg);}
+    to{
+        transform: rotate(-360deg);
+    }
+  }
+  .loadingModal div[class="modal-content"]{
+    background-color: transparent;
+    border-style: none;
+  }
+  .loadingModal{
+    background-color: rgba(255,255,255,0.5);
+  }
+  .modal-dialog-centered{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100% - var(--bs-modal-margin) * 2);
+  }
+  .LoadingSVGDot1{
+    animation: dotLoading1 1.5s infinite ease 0s;
+  }
+  .LoadingSVGDot2{
+    animation: dotLoading2 1.5s infinite ease 0.2s;
+  }
+  .LoadingSVGDot3{
+    animation: dotLoading3 1.5s infinite ease 0.4s;
+  }
+  .LoadingSVGDot4{
+    animation: dotLoading4 1.5s infinite ease 0.6s;
+  }
+  @keyframes dotLoading1 {
+    0%{
+        transform: translate(103.756243px,190px);
+    }
+    50%{
+        transform: translate(103.756243px,160px);
+    }
+    100%{
+        transform: translate(103.756243px,190px);
+    }
+  }
+  @keyframes dotLoading2 {
+    0%{
+        transform: translate(130.756243px,190px);
+    }
+    50%{
+        transform: translate(130.756243px,160px);
+    }
+    100%{
+        transform: translate(130.756243px,190px);
+    }
+  }
+  @keyframes dotLoading4 {
+    0%{
+        transform: translate(185.756243px,190px);
+    }
+    50%{
+        transform: translate(185.756243px,160px);
+    }
+    100%{
+        transform: translate(185.756243px,190px);
+    }
+  }
+  @keyframes dotLoading3 {
+    0%{
+        transform: translate(158.756243px,190px);
+    }
+    50%{
+        transform: translate(158.756243px,160px);
+    }
+    100%{
+        transform: translate(158.756243px,190px);
+    }
+  }
+  .NBCCFont{
+    font:var(--nbcc-font);
   }

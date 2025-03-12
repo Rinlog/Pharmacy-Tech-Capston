@@ -1,7 +1,7 @@
 //React imports
 import { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
-
+import LoadingModal from '../modals/loadingModal';
 //validation import
 import { NullCheck, CheckEmail, VarMatch, PassRequirements, CheckNBCCEmail } from '@components/validation/basicValidation.jsx';
 
@@ -26,6 +26,7 @@ function Signup() {
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
+    const [isLoadingOpen, setIsLoadingOpen] = useState(false);
     // Navigation
     const navigate = useNavigate();
 
@@ -148,6 +149,7 @@ function Signup() {
             
             //api call for submission
             try {
+                setIsLoadingOpen(true)
                 const response = await fetch('https://'+BackendIP+':'+BackendPort+'/api/User/signup', {
                     method: 'POST',
                     headers: {
@@ -158,12 +160,11 @@ function Signup() {
                         Password: password, Email: email, Campus: campus }),
                 });
                 const data = await response.json();
-    
+                setIsLoadingOpen(false)
                 // Redirect to login page if successful
                 if (data.message === 'User added successfully') {
                     setAlertMessage("User added successfully, check your email for confirmation link");
                     setIsAlertModalOpen(true);
-                    //navigate('/login');
                 }
                 else {
                     setAlertMessage(data.message + ", please try again");
@@ -184,13 +185,18 @@ function Signup() {
     return (
 
         <div id='formDiv'>
-            
+            <LoadingModal
+                isOpen={isLoadingOpen}
+                setIsOpen={setIsLoadingOpen}
+            ></LoadingModal>
             <form className='regular-form' onSubmit={handleSubmit}>
                 <h1>Sign Up</h1>
                 <br></br>
                 <div className='form-content'>
-                    <div className='left'>
-                        <label className='input-label'>First Name:</label>
+                    <div className='left d-flex flex-column justify-content-center align-items-center gap-1'>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>First Name:</label>
+                        </div>
                         <br></br>
                         <input
                             id='firstName'
@@ -204,8 +210,9 @@ function Signup() {
                         <br></br>
                         <span className='error fName'></span>
                         <br></br>                 
-
-                        <label className='input-label'>Campus:</label>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Campus:</label>
+                        </div>
                         <br></br>
                         <select
                             className="combo-input"
@@ -225,7 +232,9 @@ function Signup() {
                         <span className='error campus'></span>
 
                         <br></br>
-                        <label className='input-label'>Password:</label>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Password:</label>
+                        </div>
                         <br></br>
                         <input
                             className="text-input"
@@ -239,8 +248,10 @@ function Signup() {
                         <span className='error password'></span>
                     </div>
 
-                    <div className='right'>
-                        <label className='input-label'>Last Name:</label>
+                    <div className='right d-flex flex-column justify-content-center align-items-center gap-1'>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Last Name:</label>
+                        </div>
                         <br></br>
                         <input
                             className="text-input"
@@ -254,7 +265,9 @@ function Signup() {
                         <span className='error lName'></span>
 
                         <br></br>
-                        <label className='input-label'>Email:</label>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Email:</label>
+                        </div>
                         <br></br>
                         <input
                             className="text-input"
@@ -268,7 +281,9 @@ function Signup() {
                         <span className='error email'></span>
 
                         <br></br>
-                        <label className='input-label'>Confirm Password:</label>
+                        <div className='sw-25 d-flex'>
+                            <label className='input-label'>Confirm Password:</label>
+                        </div>
                         <br></br>
                         <input
                             className="text-input"
