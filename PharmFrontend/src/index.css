@@ -1,0 +1,816 @@
+/* Define constants for NBCC styles*/
+html{
+    --nbcc-ocean-blue: #007599;
+    --nbcc-ocean-blueDarkend: #015872;
+    --nbcc-possi-blue: #a1d8e0;
+    --nbcc-urban-green: #829600;
+    --nbcc-urban-greenDarkend: #5f6d01;
+    --nbcc-field-gold: #eaab00;
+    --nbcc-field-goldDarkend: #aa7d00;
+    --nbcc-nav: white;
+    --nbcc-nav-item:#012a3b;
+    --nbcc-background-nav-item: #005e99;
+    --nbcc-font: 'Calibri', sans-serif;
+  
+    --text: #242424;
+    --inputBackground: #f0f0f0;
+}
+.combo-input{
+    width:12rem;
+}
+.regular-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 100%;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+.selected{
+    border-width:0.3em;
+}
+.page-container {
+    margin: 20px auto 0 auto;
+    width: 90%;
+    background-color: rgb(235, 240, 252);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+.pl-9{
+    padding-left: 150px;
+}
+.pl-8{
+    padding-left: 130px;
+}
+.pl-7{
+    padding-left: 110px;
+}
+.pl-6{
+    padding-left: 90px;
+}
+.pl-5{
+    padding-left: 70px;
+}
+.pl-4{
+    padding-left: 50px;
+}
+.pl-3{
+    padding-left: 30px;
+}
+.pl-2{
+    padding-left: 15px;
+}
+.pl-1{
+    padding-left: 5px;
+}
+.scroll-table {
+    overflow-x: auto;
+    max-width: 100%;
+}
+.UserIcon{
+    border: 2px solid black;
+    padding:0.1em;
+    border-radius: 0.2em;
+    margin-right:0.3em;
+}
+#navbarMenu{
+    margin-right:1em;
+}
+.navbar-brand{
+    margin-left:1em;
+}
+body {
+    font-family: var(--nbcc-font);
+    margin: 0;
+    padding: 0;
+    background-color: var(--nbcc-ocean-blue);
+    color: var(--text);
+}
+
+input, select, button, textarea {
+    background-color: var(--inputBackground);
+    margin: 5px;
+    border-radius: 5px;
+}
+
+button {
+    background-color: var(--nbcc-urban-green);
+    border-color:grey;
+    color: white;
+    border-radius: 5px;
+    border-style:outset;
+    cursor: pointer;
+}
+button:hover{
+    background-color: var(--nbcc-urban-greenDarkend);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    border-style:inset;
+}
+.navbar-button:hover{
+    border-style:none;
+}
+select {
+    width: 90%;
+    height: 22px;
+}
+
+.error {
+    color: red;
+}
+
+table {
+    border-collapse: collapse;
+    width: 90%;
+    background-color: #f2f2f2;
+}
+
+th{
+    background-color: var(--nbcc-nav-item) !important;
+    color:white !important;
+    padding:0.4em 0em 0.2em 0em !important;
+    font-size: 1.15em !important;
+}
+table tr:nth-child(odd) td{
+    background-color: white;
+}
+table tr:nth-child(even) td{
+    background-color: #f8f8f8;
+}
+
+form input[type="date"] {
+    width: 64%;
+}
+label{
+    font-size:1.1em;
+    color:black !important;
+}
+.ProfileText:hover{
+    cursor: pointer;
+}
+
+.form-select {
+    height: auto;
+    width: 12em;
+    padding: 4px;
+    font-size: 16px;
+}
+
+/*SIGNUP CSS*/
+select {
+    width: 90%;
+    border-radius: 5px;
+    border: 1px solid var(--nbcc-ocean-blue);
+
+}
+/*Static version of bootstrap w-25, needed for sign up page*/
+.sw-25{
+    width:12rem;
+}
+.form-content {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+}
+
+.left {
+    width: 50%;
+    padding: 10px;
+    float: left;
+}
+
+.right {
+    width: 50%;
+    padding: 10px;
+    float: right;
+}
+/*SIGNUP CSS ENDING*/
+
+/*NAVBAR CSS*/
+.navbar {
+    background-color: var(--nbcc-nav); /* nbcc color taken from website using paint*/
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--nbcc-font);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky !important;
+    top:0; /*needed*/
+    z-index: 1;
+}
+
+.navbar-logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.navbar-logo:hover {
+    color: #ffcc00;
+}
+/* navbar toggler (for mobile responsiveness) we can make this better with some other things later */
+.navbar-toggler {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.navbar-toggler-icon {
+    display: inline-block;
+}
+
+.navbar-menu {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow:1;
+    justify-content: right;
+}
+
+.navbar-links {
+    display:flex;
+    align-items: center;
+    justify-content: right;
+    gap: 15px;
+}
+
+.navbar-hometext{
+    font-size: 40px;
+    font-weight: bold;
+    color: var(--nbcc-nav-item);
+}
+
+.navbar-item {
+    font-size:1.1em; 
+    text-decoration: none;
+    color: var(--nbcc-nav-item);
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar-item:hover {
+    background-color: var(--nbcc-background-nav-item);
+    color: white;
+}
+
+/* Navbar Button */
+.navbar-button {
+    background-color: rgba(255, 0, 0, 0.808); /* red button */
+    color: var(--nbcc-nav-item);
+    padding: 5px 10px;
+    font-size:1.1em; 
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.5s ease; /* slow transition to make it look better*/
+}
+
+.navbar-button:hover {
+    background-color: #a80000; /* dark red */
+}
+
+/* Responsive Navbar */
+.hide {
+    display: none;
+}
+
+/* logout button on nav bar */
+.logout-container {
+    display: flex;
+    align-items: center; /* Vertically align the text and button */
+}
+.Notifications{
+    overflow-y: scroll;
+    overflow-wrap: anywhere;
+    width:20vw;
+    white-space: normal;
+    max-height:calc(100vh - 150px);
+}
+.UnseenNotification a{
+    background-color: lightblue;
+}
+.UnseenNotification a:hover{
+    background-color: rgb(121, 192, 216);
+}
+/*NAVBAR CSS ENDING*/
+
+/*MODAL CSS*/
+.modal label {
+    color: black;
+}
+.modal span {
+    color: black;
+}
+.modal h3 {
+    color: black;
+}
+/*OLD CSS - LEFT HERE JUST INCASE SOMETHING BREAKS*/
+/* .modal {
+    display: none;
+    position: fixed; 
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); 
+}
+
+    .modal.isOpen {
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+    } */
+
+/* CSS for modal content */
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto; 
+    min-height: 200px; 
+}
+
+/* CSS for close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+/* CSS for table */
+.modal table {
+    border-collapse: collapse;
+}
+
+    .modal table th, table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .modal table th {
+        background-color: #012a3b;
+    }
+
+    .modal table tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    .modal table tr:hover {
+        background-color: #f5f5f5;
+    }
+    .modal table tr.selected{
+        background-color: #7bc09a;
+    }
+    .modal table tr.selected-red{
+        background-color: #db3d37;
+    }
+
+.modal textarea {
+    resize: none;
+    border: 2px inset black;
+}
+/*MODAL CSS ENDING*/
+
+
+/*Orders css*/
+div[class="scroll-table"]{
+    padding-right:0em;
+    padding-bottom:auto;
+    margin:auto;
+
+}
+div[class="scroll-table"] th{
+    padding: 0em 0.1em 0em 0.3em;
+}
+div[class="scroll-table"] table{
+    width: 100%;
+}
+.ApprovedButtons{
+    display: flex;
+    justify-content: right;
+    margin-bottom: 0.5em;
+    gap:0.5em;
+}
+.d-flex2{
+    display: flex;
+}
+.hide{
+    display:none;
+}
+/*Loading animation*/
+@keyframes LoadingAnim1{
+    0% {bottom:0px;}
+    25% {bottom:100px;}
+    50% {bottom: 0px;}
+    75% {bottom:100px;}
+    100% {bottom:0px;}
+
+}
+.Loading{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color:var(--nbcc-ocean-blue);
+    font-size: 15em;
+}
+.Dot1{
+    animation: LoadingAnim1 4s;
+    animation-iteration-count: infinite;
+}
+.Dot2{
+    animation: LoadingAnim1 4s;
+    animation-iteration-count: infinite;
+    animation-delay:0.25s;
+}
+.Dot3{
+    animation: LoadingAnim1 4s;
+    animation-iteration-count: infinite;
+    animation-delay:0.5s;
+}
+
+/*PRINT ORDER CSS*/
+.HideATagDefaults{
+    text-decoration: none;
+    color:white;
+}
+.Header{
+    display:flex;
+    justify-content: center;
+}
+.Buttons{
+    display:flex;
+    justify-content: center;
+}
+.DisplayText{
+    display:flex;
+    justify-content: center;
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+.VerifiedImage{
+    height:20em;
+}
+/*PRINT ORDER CSS ENDING*/
+
+/*ALERT MODAL CSS*/
+.Modal div div[class="modal-content"]{
+    background-color: (235, 240, 252);
+}
+.Modal div div[class="modal-content"] div[class="modal-body"] div[id="PrintImage"]{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding:0.2em;
+    background-color: black;
+
+}
+.Modal div div[class="modal-content"] div[class="modal-body"] div[class="PrintOptionsSection"]{
+    display:flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+    gap:0.5em;
+}
+/*ALERT MODAL CSS ENDING*/
+
+/*Login page css*/
+.BlueBackground{
+    background-color: var(--nbcc-possi-blue) !important;
+}
+
+/*  Table sorting things for allOrders page    */
+th.asc::after {
+    content: " ▲";
+  }
+  
+  th.desc::after {
+    content: " ▼";
+  }
+
+/* ############# Modal Things ############### */
+.ModalDropDownB button{
+    background-color: var(--nbcc-ocean-blue) !important;
+    border-color:grey !important;
+    border-style: outset;
+    border-width: 0.15em;
+}
+.ModalDropDownB button:hover, .ModalDropDownY button:active, .ModalDropDownY button:focus{
+    background-color: var(--nbcc-ocean-blueDarkend) !important;
+    border-color: grey!important;
+    border-style: inset;
+}
+
+.ModalbuttonG{
+    background-color: var(--nbcc-urban-green);
+    color: white;
+    border-radius: 5px;
+    border-color:grey;
+    border-style:outset;
+    border-width: 0.15em;
+    cursor: pointer;
+}
+.ModalbuttonB{
+    background-color: var(--nbcc-ocean-blue);
+    color: white;
+    border-radius: 5px;
+    border-color:grey;
+    border-style:outset;
+    border-width: 0.15em;;
+    cursor: pointer;
+}
+.ModalbuttonB:hover, .ModalbuttonB:active, .ModalbuttonB:focus{
+    background-color: var(--nbcc-ocean-blueDarkend) !important;
+    border-color:grey !important;
+    border-style:inset;
+}
+
+.ModalbuttonG:hover, .ModalbuttonG:active, .ModalbuttonG:focus{
+    background-color: var(--nbcc-urban-greenDarkend) !important;
+    border-color:grey !important;
+    border-style:inset;
+}
+
+.modal-content{
+    border: #005e99 6px solid;
+}
+.InputBackroundColor{
+    background-color: var(--inputBackground);
+}
+/* Animation for headers on page */
+.page-header-name {
+    font-size: 40px;
+    animation: slideUp 1s ease-in-out;
+}
+.HideButtonCSS{
+    background-color: inherit !important;
+    border-color: inherit !important;
+    border-style: none !important;
+}
+.HideButtonCSS::after{
+    content: none;
+}
+.HideButtonCSS:hover, .HideButtonCSS:active, .HideButtonCSS:focus{
+    background-color: inherit !important;
+    border-color: inherit !important;
+    border-style: none !important;
+}
+.SearchTypeButton:hover svg, .SearchTypeButton:active svg{
+    width:35px;
+    height: 35px;
+}
+@keyframes slideUp {
+    0% {
+        transform: scale(1.1);
+        opacity: 0;
+    }
+}
+.UploadedImageContainer{
+    min-width: 500px;
+    max-width: 600px;
+    min-height:500px;
+    max-height:600px;
+    border: 0.1em solid black;
+    overflow-y:hidden;
+    overflow-x:hidden;
+}
+.ImageStylingForUpload{
+    min-width: 500px;
+    max-width: 600px;
+    min-height:500px;
+    max-height:600px;
+}
+#ImageOverLay{
+    border: 1px solid black;
+    background-size: 1500px 1500px;
+    scale:2em;
+    width:600px;
+    height:600px;
+    background-repeat: no-repeat;
+    z-index: 999;
+    position:absolute;
+    left:350px;
+}
+
+
+/*Home page*/
+.home-container {
+    text-align: center;
+    font-family: var(--nbcc-font);
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  .home-header {
+    background-color: var(--nbcc-ocean-blue);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .pictures-rounded {
+      border-radius: 25px;
+      height: 100px;
+      width: 150px;
+  }
+  
+  .home-logo {
+    height: 100px;
+    margin: 20px 0;
+  }
+  
+  .home-description {
+    font-size: 18px;
+    color: #333;
+    margin: 20px;
+  }
+  
+  .button-with-image {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+  
+  /* grid buttons */
+  .button-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 20px;
+    margin-top: 20px;
+    justify-items: center;
+    width: 100%;
+  }
+  
+  .admin-section {
+    margin-top: 40px; /* Space from the normal buttons */
+  }
+    
+  .home-button, .one, .two, .three, .four, .five {
+    background-color: var(--nbcc-background-nav-item);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    width: 300px;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* some nice effects to add */
+  }
+    
+  .home-button:hover, .one:hover, .two:hover, .three:hover, .four:hover, .five:hover {
+    background-color: #004472;
+    transform: scale(1.05);
+  }
+  
+  .admin-separator {
+    grid-column: span 2;
+    width: 100%;
+    margin: 30px auto;
+    border: none;
+    border-top: 2px solid #000000; /* Light gray line */
+  }
+  
+  @media (max-width: 600px) {
+    .home-header {
+      font-size: 24px;
+    }
+  
+    .home-button {
+      font-size: 14px;
+      padding: 8px 15px;
+    }
+  }
+  
+  @media (max-width: 744px) {
+    .button-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 1176px) {
+    .home-button {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+  .CarouselSizing{
+    margin:auto;
+    text-align: center;
+    width:800px !important;
+    height:300px !important; /*this should be same height as images*/
+  }
+  .loadingAnim{
+    animation: LoadingAnim 2s linear infinite;
+    transform-origin: 50% 50% 50% 50%;
+  }
+  .loadingAnimCarousel{
+    animation: LoadingAnim 2s linear infinite;
+    transform-origin: 50% 50%;
+    display:inline-block;
+    width:70%;
+    height:100%;
+  }
+  @keyframes LoadingAnim {
+    from{
+        transform: rotate(-0deg);
+    }
+    1%{transform: rotate(-0deg);}
+    to{
+        transform: rotate(-360deg);
+    }
+  }
+  .loadingModal div[class="modal-content"]{
+    background-color: transparent;
+    border-style: none;
+  }
+  .loadingModal{
+    background-color: rgba(255,255,255,0.5);
+  }
+  .modal-dialog-centered{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100% - var(--bs-modal-margin) * 2);
+  }
+  .LoadingSVGDot1{
+    animation: dotLoading1 1.5s infinite ease 0s;
+  }
+  .LoadingSVGDot2{
+    animation: dotLoading2 1.5s infinite ease 0.2s;
+  }
+  .LoadingSVGDot3{
+    animation: dotLoading3 1.5s infinite ease 0.4s;
+  }
+  .LoadingSVGDot4{
+    animation: dotLoading4 1.5s infinite ease 0.6s;
+  }
+  @keyframes dotLoading1 {
+    0%{
+        transform: translate(103.756243px,190px);
+    }
+    50%{
+        transform: translate(103.756243px,160px);
+    }
+    100%{
+        transform: translate(103.756243px,190px);
+    }
+  }
+  @keyframes dotLoading2 {
+    0%{
+        transform: translate(130.756243px,190px);
+    }
+    50%{
+        transform: translate(130.756243px,160px);
+    }
+    100%{
+        transform: translate(130.756243px,190px);
+    }
+  }
+  @keyframes dotLoading4 {
+    0%{
+        transform: translate(185.756243px,190px);
+    }
+    50%{
+        transform: translate(185.756243px,160px);
+    }
+    100%{
+        transform: translate(185.756243px,190px);
+    }
+  }
+  @keyframes dotLoading3 {
+    0%{
+        transform: translate(158.756243px,190px);
+    }
+    50%{
+        transform: translate(158.756243px,160px);
+    }
+    100%{
+        transform: translate(158.756243px,190px);
+    }
+  }
+  .NBCCFont{
+    font:var(--nbcc-font);
+  }
