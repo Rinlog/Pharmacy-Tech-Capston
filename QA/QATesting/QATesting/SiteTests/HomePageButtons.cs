@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using QATesting.SitePageElements;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace QATesting.SiteTests
             Pass.SendKeys("Password1!");
             Thread.Sleep(1000);
             Submit.Click();
+
             Thread.Sleep(2000);
             IWebElement DrugButton = HomeElements.DrugsButton(driver);
 

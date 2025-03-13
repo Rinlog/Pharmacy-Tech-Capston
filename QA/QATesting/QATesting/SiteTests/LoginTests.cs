@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
+using OpenQA.Selenium.Support.UI;
 using QATesting.SitePageElements;
 using static System.Net.WebRequestMethods;
 
@@ -21,19 +22,27 @@ namespace QATesting.SiteTests
             //account must be valid that we are testing with
             Email.SendKeys("test@nbcc.ca");
             Pass.SendKeys("Password1!");
-            Thread.Sleep(1000);
+            Thread.Sleep(250);
             Submit.Click();
-            Thread.Sleep(1000);
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+            try
+            {
+                var PageLoaded = wait.Until(e => e.Url == BaseUrl + "/home");
 
-            if (driver.Url == BaseUrl+"/login")
-            {
-                return false;
+                if (driver.Url == BaseUrl + "/login")
+                {
+                    return false;
+                }
+                else if (driver.Url == BaseUrl + "/home")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else if (driver.Url == BaseUrl+"/home")
-            {
-                return true;
-            }
-            else
+            catch (Exception ex)
             {
                 return false;
             }
@@ -48,19 +57,30 @@ namespace QATesting.SiteTests
             //account must be valid that we are testing with
             Email.SendKeys("test@nbcc.ca");
             Pass.SendKeys("Password!");
-            Thread.Sleep(1000);
+            Thread.Sleep(250);
             Submit.Click();
-            Thread.Sleep(1000);
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5))
+            {
+                PollingInterval = TimeSpan.FromSeconds(1)
+            };
+            try
+            {
+                var PageLoaded = wait.Until(e => e.Url == BaseUrl + "/login");
 
-            if (driver.Url == BaseUrl + "/login")
-            {
-                return true;
+                if (driver.Url == BaseUrl + "/login")
+                {
+                    return true;
+                }
+                else if (driver.Url == BaseUrl + "/home")
+                {
+                    return false;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else if (driver.Url == BaseUrl + "/home")
-            {
-                return false;
-            }
-            else
+            catch (Exception ex)
             {
                 return false;
             }

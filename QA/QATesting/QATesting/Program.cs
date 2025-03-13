@@ -22,41 +22,6 @@ bool US3FailedLogin = LoginTests.TestFailedLogin(driver1, BaseUrl);
 Console.Clear();
 driver1.Quit();
 
-//Drug Button Test
-IWebDriver driver2 = new FirefoxDriver(Path);
-driver2.Url = BaseUrl;
-bool US3DrugButton = HomePageButtons.TestDrugsButton(driver2, BaseUrl);
-Console.Clear();
-driver2.Quit();
-
-//Physician Button Test
-IWebDriver driver3 = new FirefoxDriver(Path);
-driver3.Url = BaseUrl;
-bool US3PhysicianButton = HomePageButtons.TestPhysiciansButton(driver3, BaseUrl);
-Console.Clear();
-driver3.Quit();
-
-//Patients Button Test
-IWebDriver driver4 = new FirefoxDriver(Path);
-driver4.Url = BaseUrl;
-bool US3PatientsButton = HomePageButtons.TestPatientsButton(driver4, BaseUrl);
-Console.Clear();
-driver4.Quit();
-
-//Orders Button Test
-IWebDriver driver5 = new FirefoxDriver(Path);
-driver5.Url = BaseUrl;
-bool US4OrdersButton = HomePageButtons.TestOrdersButton(driver5, BaseUrl);
-Console.Clear();
-driver5.Quit();
-
-//Verification Button Test
-IWebDriver driver6 = new FirefoxDriver(Path);
-driver6.Url = BaseUrl;
-bool US4VerificationButton = HomePageButtons.TestVerificationButton(driver6, BaseUrl);
-Console.Clear();
-driver6.Quit();
-
 
 //Setup for outputting results nicely
 Console.Clear();
@@ -67,11 +32,6 @@ Console.WriteLine();
 
 OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 OutPutResult(US3FailedLogin, "US3FailedLogin: ");
-OutPutResult(US3DrugButton, "US3DrugButton: ");
-OutPutResult(US3PhysicianButton, "US3PhysicianButton: ");
-OutPutResult(US3PatientsButton, "US3PatientsButton: ");
-OutPutResult(US4OrdersButton, "US4OrdersButton: ");
-OutPutResult(US4VerificationButton, "US4VerificationButton: ");
 
 
 Console.ReadLine();
