@@ -54,11 +54,11 @@ namespace QATesting.SiteTests
 
             if (driver.Url == BaseUrl + "/login")
             {
-                return false;
+                return true;
             }
             else if (driver.Url == BaseUrl + "/home")
             {
-                return true;
+                return false;
             }
             else
             {
