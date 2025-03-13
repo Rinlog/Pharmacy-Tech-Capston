@@ -45,6 +45,7 @@ const ResetPasswordModal = ({ isOpen, onClose }) => {
                 //onClose();
             }
         } catch (error) {
+            setIsLoadingOpen(false)
             setAlertMessage("Could not process your request a this time. Please contact the system administrator.");
             setIsAlertModalOpen(true);
         }
