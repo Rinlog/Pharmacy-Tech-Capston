@@ -692,30 +692,7 @@ th.asc::after {
     border: none;
     border-top: 2px solid #000000; /* Light gray line */
   }
-  
-  @media (max-width: 600px) {
-    .home-header {
-      font-size: 24px;
-    }
-  
-    .home-button {
-      font-size: 14px;
-      padding: 8px 15px;
-    }
-  }
-  
-  @media (max-width: 744px) {
-    .button-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  
-  @media (max-width: 1176px) {
-    .home-button {
-      width: 100%;
-      max-width: 500px;
-    }
-  }
+
   .CarouselSizing{
     margin:auto;
     text-align: center;
@@ -813,4 +790,34 @@ th.asc::after {
   }
   .NBCCFont{
     font:var(--nbcc-font);
+  }
+
+  @media (max-width: 600px) {
+    .form-content {
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+  }
+  
+  @media (max-width: 744px) {
+    
+
+    .button-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 1176px) {
+    .home-button {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+  @media (max-width: 1600px) {
+    .navbar-hometext {
+        font-size: clamp(30px, 3vw + 18px, 40px);
+    }
   }

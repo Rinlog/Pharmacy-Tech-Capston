@@ -172,7 +172,7 @@ function Signup() {
                 }
             }
             catch (error) {
-    
+                setIsLoadingOpen(false)
                 console.log(error);
                 return;
     
