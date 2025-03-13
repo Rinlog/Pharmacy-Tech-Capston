@@ -54,26 +54,23 @@ namespace QATesting.SiteTests
             IWebElement Pass = LoginElements.LoginPass(driver);
             IWebElement Submit = LoginElements.LoginSubmitButton(driver);
 
-            //account must be valid that we are testing with
+            //account must be INVALID that we are testing with
             Email.SendKeys("test@nbcc.ca");
             Pass.SendKeys("Password!");
             Thread.Sleep(250);
             Submit.Click();
+
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5))
             {
                 PollingInterval = TimeSpan.FromSeconds(1)
             };
             try
             {
-                var PageLoaded = wait.Until(e => e.Url == BaseUrl + "/login");
-
-                if (driver.Url == BaseUrl + "/login")
+                wait.Until(e => LoginElements.LoginAlertResponse(e).Displayed); //waits until the alert pops up
+                var AlertPopup = LoginElements.LoginAlertResponse(driver);
+                if (AlertPopup.Text.ToLower().Contains("wrong email or password"))
                 {
                     return true;
-                }
-                else if (driver.Url == BaseUrl + "/home")
-                {
-                    return false;
                 }
                 else
                 {

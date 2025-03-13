@@ -28,5 +28,9 @@ namespace QATesting.SitePageElements
         {
             return driver.FindElement(By.CssSelector("button[qa-id='ResetPass']"));
         }
+        public static IWebElement LoginAlertResponse(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(".modal-body > h5:nth-child(1)"));
+        }
     }
 }
