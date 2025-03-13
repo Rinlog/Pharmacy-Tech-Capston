@@ -83,6 +83,7 @@ const Login = () => {
                 <input
                     className="text-input"
                     type="text"
+                    qa-id="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)} />
                 {emailError && <div style={{ color: 'red', fontSize: '12px' }}>{emailError}</div>}
@@ -91,21 +92,22 @@ const Login = () => {
                 <input
                     className="text-input"
                     type="password"
+                    qa-id="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)} />
                 {passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{passwordError}</div>}
                 <br /><br />
-                <button className="button" type="submit">Login</button>
+                <button className="button" type="submit" qa-id="Login">Login</button>
             </form>
 
             <form className='regular-form'>
                 <div className='d-flex justify-content-center'>
                     <h3>Don't have an account?</h3> 
-                    <button className="button" onClick={() => navigate('/signup')}>Sign Up</button>
+                    <button className="button" onClick={() => navigate('/signup')} qa-id="SignUp">Sign Up</button>
                 </div>
                 <div className='d-flex justify-content-center'>
                 <h3>Forgot your password?</h3> 
-                <button type="button" className="button" onClick={() => setIsResetModalOpen(true)}>
+                <button type="button" className="button" onClick={() => setIsResetModalOpen(true)} qa-id="ResetPass">
                     Reset Password
                     </button>
                     <ResetPasswordModal
