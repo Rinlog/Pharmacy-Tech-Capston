@@ -35,17 +35,7 @@ namespace QATesting.SiteTests
                 wait.Until(e =>
                 {
                     var result1 = e.FindElements(By.CssSelector(PatientsElements.PatientTableSelector())).Count == 1;
-                    var result2 = e.FindElements(By.CssSelector(PatientsElements.PatientTableLoadingSelector())).Count == 1;
-
-                    if (result1 == true || result2 == true)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
+                    return result1;
                 }); //waits for table to appear, or for loading text to appear, if they appear than we know that we can view the patient page
                 return true;
 
