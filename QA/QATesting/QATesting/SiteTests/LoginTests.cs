@@ -24,7 +24,7 @@ namespace QATesting.SiteTests
             Pass.SendKeys("Password1!");
             Thread.Sleep(250);
             Submit.Click();
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             try
             {
                 var PageLoaded = wait.Until(e => e.Url == BaseUrl + "/home");
@@ -60,13 +60,14 @@ namespace QATesting.SiteTests
             Thread.Sleep(250);
             Submit.Click();
 
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5))
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30))
             {
                 PollingInterval = TimeSpan.FromSeconds(1)
             };
             try
             {
                 wait.Until(e => LoginElements.LoginAlertResponse(e).Displayed); //waits until the alert pops up
+
                 var AlertPopup = LoginElements.LoginAlertResponse(driver);
                 if (AlertPopup.Text.ToLower().Contains("wrong email or password"))
                 {

@@ -13,6 +13,14 @@ namespace QATesting.SitePageElements
         {
             return driver.FindElement(By.CssSelector(".scroll-table > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(1) > input:nth-child(1)"));
         }
+        public static IWebElement DrugTable(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(".scroll-table"));
+        }
+        public static IWebElement DrugTableLoading(IWebElement driver)
+        {
+            return driver.FindElement(By.CssSelector(".page-container > div:nth-child(3) > label:nth-child(5)")); //fetching data label
+        }
         public static IWebElement EditDrugButton(IWebDriver driver)
         {
             return driver.FindElement(By.CssSelector("#editDrug"));

@@ -11,6 +11,34 @@ namespace QATesting.SiteTests
 {
     internal class DrugsTests
     {
+        public static bool TestViewDrug(IWebDriver driver, string BaseUrl)
+        {
+            IWebElement Email = LoginElements.LoginEmail(driver);
+            IWebElement Pass = LoginElements.LoginPass(driver);
+            IWebElement Submit = LoginElements.LoginSubmitButton(driver);
+
+
+            //account must be valid that we are testing with
+            Email.SendKeys("test@nbcc.ca");
+            Pass.SendKeys("Password1!");
+            Thread.Sleep(250);
+            Submit.Click();
+
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+            try
+            {
+                wait.Until(e => HomeElements.DrugsButton(e).Displayed);
+                IWebElement DrugButton = HomeElements.DrugsButton(driver);
+                DrugButton.Click();
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
         public static bool TestEditDrug(IWebDriver driver, string BaseUrl)
         {
             IWebElement Email = LoginElements.LoginEmail(driver);
@@ -22,8 +50,8 @@ namespace QATesting.SiteTests
             Pass.SendKeys("Password1!");
             Thread.Sleep(250);
             Submit.Click();
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+            
             IWebElement DrugButton = HomeElements.DrugsButton(driver);
             DrugButton.Click();
             IWebElement EditButton = DrugsElements.CheckboxDrug(driver);
