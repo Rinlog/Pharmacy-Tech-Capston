@@ -30,7 +30,7 @@ namespace QATesting.SiteTests
                 wait.Until(e => HomeElements.DrugsButton(e).Displayed);
                 IWebElement DrugButton = HomeElements.DrugsButton(driver);
                 DrugButton.Click();
-
+                return true;
 
             }
             catch (Exception ex)
