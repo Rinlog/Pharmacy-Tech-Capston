@@ -22,7 +22,7 @@ bool US3FailedLogin = LoginTests.TestFailedLogin(driver1, BaseUrl);
 Console.Clear();
 driver1.Quit();
 
-//Failed Login Test
+//Edit Drug Test
 IWebDriver driver3 = new FirefoxDriver(Path);
 driver3.Url = BaseUrl;
 bool US16EditDrug = DrugsTests.TestEditDrug(driver3, BaseUrl);
