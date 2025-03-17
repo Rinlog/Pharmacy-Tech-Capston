@@ -5,7 +5,7 @@ using QATesting.SiteTests;
 
 string Path = System.IO.Path.GetFullPath("../../../../../GeckoDriver");
 Console.WriteLine("Path to GeckoDriver: "+ Path);
-string BaseUrl = "https://pharmtech.nbcc.ca"; //feel free to change this to a local frontend ip.
+string BaseUrl = "https://pharmtech.nbcc.ca"; //feel free to change this to a local frontend ip. //http://localhost:5173  //https://pharmtech.nbcc.ca
 Console.WriteLine("Site Testing: "+ BaseUrl);
 
 //Valid Login Test
@@ -29,6 +29,13 @@ bool US16EditDrug = DrugsTests.TestEditDrug(driver3, BaseUrl);
 Console.Clear();
 driver3.Quit();
 
+//Edit physician Test
+IWebDriver driver4 = new FirefoxDriver(Path);
+driver4.Url = BaseUrl;
+bool US20EditDrug = DrugsTests.TestEditDrug(driver4, BaseUrl);
+Console.Clear();
+driver4.Quit();
+
 
 //Setup for outputting results nicely
 Console.Clear();
@@ -40,6 +47,7 @@ Console.WriteLine();
 OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 OutPutResult(US3FailedLogin, "US3FailedLogin: ");
 OutPutResult(US16EditDrug, "US16EditDrug: ");
+OutPutResult(US20EditDrug, "US20EditDrug: ");
 
 
 Console.ReadLine();
