@@ -8,5 +8,6 @@ namespace QATesting.SitePageElements
 {
     internal class OrderElements
     {
+
     }
 }

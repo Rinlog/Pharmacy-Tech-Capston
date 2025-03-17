@@ -22,6 +22,13 @@ bool US3FailedLogin = LoginTests.TestFailedLogin(driver1, BaseUrl);
 Console.Clear();
 driver1.Quit();
 
+//View Drug Test
+IWebDriver driver2 = new FirefoxDriver(Path);
+driver2.Url = BaseUrl;
+bool US14ViewDrugs = DrugsTests.TestViewDrug(driver2, BaseUrl);
+Console.Clear();
+driver2.Quit();
+
 //Edit Drug Test
 IWebDriver driver3 = new FirefoxDriver(Path);
 driver3.Url = BaseUrl;
@@ -29,19 +36,33 @@ bool US16EditDrug = DrugsTests.TestEditDrug(driver3, BaseUrl);
 Console.Clear();
 driver3.Quit();
 
-//Edit physician Test
+//View physician Test
 IWebDriver driver4 = new FirefoxDriver(Path);
 driver4.Url = BaseUrl;
-bool US20EditPhysician = PhysiciansTests.TestEditPhysician(driver4, BaseUrl);
+bool US18ViewPhysician = PhysiciansTests.TestViewPhysician(driver4, BaseUrl);
 Console.Clear();
 driver4.Quit();
 
-//Edit patient Test
+//Edit physician Test
 IWebDriver driver5 = new FirefoxDriver(Path);
 driver5.Url = BaseUrl;
-bool US24EditPatient = PatientsTests.TestEditPatient(driver5, BaseUrl);
+bool US20EditPhysician = PhysiciansTests.TestEditPhysician(driver5, BaseUrl);
 Console.Clear();
 driver5.Quit();
+
+//View Patient Test
+IWebDriver driver6 = new FirefoxDriver(Path);
+driver6.Url = BaseUrl;
+bool US22ViewPatients = PatientsTests.TestViewPatient(driver6, BaseUrl);
+Console.Clear();
+driver6.Quit();
+
+//Edit patient Test
+IWebDriver driver7 = new FirefoxDriver(Path);
+driver7.Url = BaseUrl;
+bool US24EditPatient = PatientsTests.TestEditPatient(driver7, BaseUrl);
+Console.Clear();
+driver7.Quit();
 
 
 //Setup for outputting results nicely
@@ -53,8 +74,11 @@ Console.WriteLine();
 
 OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 OutPutResult(US3FailedLogin, "US3FailedLogin: ");
+OutPutResult(US14ViewDrugs, "US14ViewDrugs: ");
 OutPutResult(US16EditDrug, "US16EditDrug: ");
+OutPutResult(US18ViewPhysician, "US18ViewPhysicians: ");
 OutPutResult(US20EditPhysician, "US20EditPhysician: ");
+OutPutResult(US22ViewPatients, "US22ViewPatients: ");
 OutPutResult(US24EditPatient, "US24EditPatient: ");
 
 

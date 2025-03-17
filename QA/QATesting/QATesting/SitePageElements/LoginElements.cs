@@ -10,23 +10,43 @@ namespace QATesting.SitePageElements
     internal class LoginElements
     {
         public static IWebElement LoginEmail(IWebDriver driver) {
-            return driver.FindElement(By.CssSelector("input[qa-id='Email']"));
+            return driver.FindElement(By.CssSelector(LoginEmailSelector()));
+        }
+        public static string LoginEmailSelector()
+        {
+            return "input[qa-id='Email']";
         }
         public static IWebElement LoginPass(IWebDriver driver)
         {
-            return driver.FindElement(By.CssSelector("input[qa-id='Password']"));
+            return driver.FindElement(By.CssSelector(LoginPassSelector()));
+        }
+        public static string LoginPassSelector()
+        {
+            return "input[qa-id='Password']";
         }
         public static IWebElement LoginSubmitButton(IWebDriver driver)
         {
-            return driver.FindElement(By.CssSelector("button[qa-id='Login']"));
+            return driver.FindElement(By.CssSelector(LoginSubmitButtonSelector()));
+        }
+        public static string LoginSubmitButtonSelector()
+        {
+            return "button[qa-id='Login']";
         }
         public static IWebElement LoginSignUp(IWebDriver driver)
         {
-            return driver.FindElement(By.CssSelector("button[qa-id='SignUp']"));
+            return driver.FindElement(By.CssSelector(LoginSignUpSelector()));
+        }
+        public static string LoginSignUpSelector()
+        {
+            return "button[qa-id='SignUp']";
         }
         public static IWebElement LoginResetPass(IWebDriver driver)
         {
-            return driver.FindElement(By.CssSelector("button[qa-id='ResetPass']"));
+            return driver.FindElement(By.CssSelector(LoginResetPassSelector()));
+        }
+        public static string LoginResetPassSelector()
+        {
+            return "button[qa-id='ResetPass']";
         }
         public static IWebElement LoginAlertResponse(IWebDriver driver)
         {

@@ -27,10 +27,26 @@ namespace QATesting.SiteTests
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             try
             {
-                wait.Until(e => HomeElements.DrugsButton(e).Displayed);
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.DrugButtonSelector())).Count == 1);
                 IWebElement DrugButton = HomeElements.DrugsButton(driver);
                 DrugButton.Click();
+                wait.Until(e => 
+                {
+                    var result1 = e.FindElements(By.CssSelector(DrugsElements.DrugTableSelector())).Count == 1;
+                    var result2 = e.FindElements(By.CssSelector(DrugsElements.DrugTableLoadingSelector())).Count == 1;
+
+                    if (result1 == true || result2 == true)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    
+                }); //waits for table to appear, or for loading text to appear, if they appear than we know that we can view the drug page
                 return true;
+                
 
             }
             catch (Exception ex)
