@@ -36,7 +36,11 @@ namespace QATesting.SitePageElements
 
         public static IWebElement UserManagementButton(IWebDriver driver)
         {
-            return driver.FindElement(By.XPath("/html/body/div/div/div[2]/div[2]/div/div[7]/a"));
+            return driver.FindElement(By.CssSelector("div.button-with-image:nth-child(8) > a:nth-child(2)"));
+        }
+
+        public static IWebElement LogsButton(IWebDriver driver) {
+            return driver.FindElement(By.CssSelector("div.button-with-image:nth-child(9) > a:nth-child(1)"));
         }
 
         public static IWebElement LogoutButton(IWebDriver driver)

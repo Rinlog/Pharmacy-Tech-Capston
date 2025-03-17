@@ -5,7 +5,7 @@ using QATesting.SiteTests;
 
 string Path = System.IO.Path.GetFullPath("../../../../../GeckoDriver");
 Console.WriteLine("Path to GeckoDriver: "+ Path);
-string BaseUrl = "https://pharmtech.nbcc.ca"; //feel free to change this to a local frontend ip.
+string BaseUrl = "https://pharmtech.nbcc.ca"; //feel free to change this to a local frontend ip. //http://localhost:5173  //https://pharmtech.nbcc.ca
 Console.WriteLine("Site Testing: "+ BaseUrl);
 
 //Valid Login Test
@@ -22,6 +22,27 @@ bool US3FailedLogin = LoginTests.TestFailedLogin(driver1, BaseUrl);
 Console.Clear();
 driver1.Quit();
 
+//Edit Drug Test
+IWebDriver driver3 = new FirefoxDriver(Path);
+driver3.Url = BaseUrl;
+bool US16EditDrug = DrugsTests.TestEditDrug(driver3, BaseUrl);
+Console.Clear();
+driver3.Quit();
+
+//Edit physician Test
+IWebDriver driver4 = new FirefoxDriver(Path);
+driver4.Url = BaseUrl;
+bool US20EditPhysician = PhysiciansTests.TestEditPhysician(driver4, BaseUrl);
+Console.Clear();
+driver4.Quit();
+
+//Edit patient Test
+IWebDriver driver5 = new FirefoxDriver(Path);
+driver5.Url = BaseUrl;
+bool US24EditPatient = PatientsTests.TestEditPatient(driver5, BaseUrl);
+Console.Clear();
+driver5.Quit();
+
 
 //Setup for outputting results nicely
 Console.Clear();
@@ -32,6 +53,9 @@ Console.WriteLine();
 
 OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 OutPutResult(US3FailedLogin, "US3FailedLogin: ");
+OutPutResult(US16EditDrug, "US16EditDrug: ");
+OutPutResult(US20EditPhysician, "US20EditPhysician: ");
+OutPutResult(US24EditPatient, "US24EditPatient: ");
 
 
 Console.ReadLine();
