@@ -30,7 +30,11 @@ namespace QATesting.SitePageElements
         }
         public static IWebElement LoginAlertResponse(IWebDriver driver)
         {
-            return driver.FindElement(By.CssSelector(".modal-body > h5:nth-child(1)"));
+            return driver.FindElement(By.CssSelector(LoginAlertSelector()));
+        }
+        public static string LoginAlertSelector()
+        {
+            return ".modal-body > h5:nth-child(1)";
         }
     }
 }

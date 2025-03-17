@@ -66,8 +66,7 @@ namespace QATesting.SiteTests
             };
             try
             {
-                wait.Until(e => LoginElements.LoginAlertResponse(e).Displayed); //waits until the alert pops up
-
+                var Response = wait.Until(e => e.FindElements(By.CssSelector(LoginElements.LoginAlertSelector())).Count == 1); //waits until the alert pops up
                 var AlertPopup = LoginElements.LoginAlertResponse(driver);
                 if (AlertPopup.Text.ToLower().Contains("wrong email or password"))
                 {
