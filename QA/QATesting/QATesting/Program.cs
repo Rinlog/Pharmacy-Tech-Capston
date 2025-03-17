@@ -32,7 +32,7 @@ driver3.Quit();
 //Edit physician Test
 IWebDriver driver4 = new FirefoxDriver(Path);
 driver4.Url = BaseUrl;
-bool US20EditDrug = DrugsTests.TestEditDrug(driver4, BaseUrl);
+bool US20EditPhysician = PhysiciansTests.TestEditPhysician(driver4, BaseUrl);
 Console.Clear();
 driver4.Quit();
 
@@ -47,7 +47,7 @@ Console.WriteLine();
 OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 OutPutResult(US3FailedLogin, "US3FailedLogin: ");
 OutPutResult(US16EditDrug, "US16EditDrug: ");
-OutPutResult(US20EditDrug, "US20EditDrug: ");
+OutPutResult(US20EditPhysician, "US20EditPhysician: ");
 
 
 Console.ReadLine();
