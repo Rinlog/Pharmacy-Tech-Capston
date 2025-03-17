@@ -22,6 +22,13 @@ bool US3FailedLogin = LoginTests.TestFailedLogin(driver1, BaseUrl);
 Console.Clear();
 driver1.Quit();
 
+//Failed Login Test
+IWebDriver driver3 = new FirefoxDriver(Path);
+driver3.Url = BaseUrl;
+bool US16EditDrug = DrugsTests.TestEditDrug(driver3, BaseUrl);
+Console.Clear();
+driver3.Quit();
+
 
 //Setup for outputting results nicely
 Console.Clear();
@@ -32,6 +39,7 @@ Console.WriteLine();
 
 OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 OutPutResult(US3FailedLogin, "US3FailedLogin: ");
+OutPutResult(US16EditDrug, "US16EditDrug: ");
 
 
 Console.ReadLine();
