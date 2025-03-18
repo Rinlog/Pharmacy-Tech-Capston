@@ -64,6 +64,14 @@ bool US24EditPatient = PatientsTests.TestEditPatient(driver7, BaseUrl);
 Console.Clear();
 driver7.Quit();
 
+//Leave this commented out for now, uncomment it when we have a create user test
+////Delete User Test
+//IWebDriver driver8 = new FirefoxDriver(Path);
+//driver8.Url = BaseUrl;
+//bool US2DeleteUser = UserManagementTests.DeleteUser(driver8, BaseUrl);
+//Console.Clear();
+//driver8.Quit();
+
 
 //Setup for outputting results nicely
 Console.Clear();
@@ -80,6 +88,7 @@ OutPutResult(US18ViewPhysician, "US18ViewPhysicians: ");
 OutPutResult(US20EditPhysician, "US20EditPhysician: ");
 OutPutResult(US22ViewPatients, "US22ViewPatients: ");
 OutPutResult(US24EditPatient, "US24EditPatient: ");
+//OutPutResult(US2DeleteUser, "US2DeleteUser: ");
 
 
 Console.ReadLine();
