@@ -58,21 +58,32 @@ namespace QATesting.SiteTests
             Submit.Click();
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
 
-            IWebElement PhysicianButton = HomeElements.PhysicianButton(driver);
-            PhysicianButton.Click();
-            IWebElement EditButton = PhysiciansElements.CheckboxPhysician(driver);
-            EditButton.Click();
-            IWebElement EditPhysicianButton = PhysiciansElements.EditPhysicianButton(driver);
-            EditPhysicianButton.Click();
-            IWebElement EditPhysicianName = PhysiciansElements.EditPhysicianName(driver);
-            EditPhysicianName.Clear();
-            EditPhysicianName.SendKeys("Edit Test Physician");
-            IWebElement EditPhysicianSubmitButton = PhysiciansElements.EditPhysicianSubmitButton(driver);
-            EditPhysicianSubmitButton.Click();
 
             try
             {
-                wait.Until(e => PhysiciansElements.EditPhysicianAlertMessage(e).Displayed);
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.PhysicianButtonSelector())).Count == 1);
+                IWebElement PhysicianButton = HomeElements.PhysicianButton(driver);
+                PhysicianButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.CheckboxPhysicianSelector())).Count == 1);
+                IWebElement EditButton = PhysiciansElements.CheckboxPhysician(driver);
+                EditButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.EditPhysicianButtonSelector())).Count == 1);
+                IWebElement EditPhysicianButton = PhysiciansElements.EditPhysicianButton(driver);
+                EditPhysicianButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.EditPhysicianNameSelector())).Count == 1);
+                IWebElement EditPhysicianName = PhysiciansElements.EditPhysicianName(driver);
+                EditPhysicianName.Clear();
+                EditPhysicianName.SendKeys("Edit Test Physician");
+
+                wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.EditPhysicianSubmitButtonSelector())).Count == 1);
+                IWebElement EditPhysicianSubmitButton = PhysiciansElements.EditPhysicianSubmitButton(driver);
+                EditPhysicianSubmitButton.Click();
+
+
+                wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.EditPhysicianAlertMessageSelector())).Count == 1);
                 var DrugAlert = PhysiciansElements.EditPhysicianAlertMessage(driver);
                 if (DrugAlert.Text == "Physician edited successfully")
                 {

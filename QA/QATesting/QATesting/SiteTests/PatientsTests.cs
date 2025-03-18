@@ -60,24 +60,33 @@ namespace QATesting.SiteTests
             Submit.Click();
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
 
-            IWebElement PatientButton = HomeElements.PatientsButton(driver);
-            PatientButton.Click();
-            IWebElement EditButton = PatientsElements.CheckboxPatient(driver);
-            EditButton.Click();
-            IWebElement EditPatientButton = PatientsElements.EditPatientButton(driver);
-            EditPatientButton.Click();
-            IWebElement EditPatientName = PatientsElements.EditPatientName(driver);
-            EditPatientName.Clear();
-            EditPatientName.SendKeys("Edit Test Patient");
-            IWebElement EditPatientSubmitButton = PatientsElements.EditPatientSubmitButton(driver);
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", EditPatientSubmitButton);
-            Thread.Sleep(500);
-            EditPatientSubmitButton.Click();
-
             try
             {
-                wait.Until(e => PatientsElements.EditPatientAlertMessage(e).Displayed);
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.PatientsButtonSelector())).Count == 1);
+                IWebElement PatientButton = HomeElements.PatientsButton(driver);
+                PatientButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(PatientsElements.CheckboxPatientSelector())).Count == 1);
+                IWebElement EditButton = PatientsElements.CheckboxPatient(driver);
+                EditButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(PatientsElements.EditPatientButtonSelector())).Count == 1);
+                IWebElement EditPatientButton = PatientsElements.EditPatientButton(driver);
+                EditPatientButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(PatientsElements.EditPatientNameSelector())).Count == 1);
+                IWebElement EditPatientName = PatientsElements.EditPatientName(driver);
+                EditPatientName.Clear();
+                EditPatientName.SendKeys("Edit Test Patient");
+
+                wait.Until(e => e.FindElements(By.CssSelector(PatientsElements.EditPatientSubmitButtonSelector())).Count == 1);
+                IWebElement EditPatientSubmitButton = PatientsElements.EditPatientSubmitButton(driver);
+                IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", EditPatientSubmitButton);
+                Thread.Sleep(500);
+                EditPatientSubmitButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(PatientsElements.EditPatientAlertMessageSelector())).Count == 1);
                 var PatientAlert = PatientsElements.EditPatientAlertMessage(driver);
                 if (PatientAlert.Text == "Patient edited successfully")
                 {
