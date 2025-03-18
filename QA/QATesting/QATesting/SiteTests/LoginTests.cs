@@ -67,7 +67,7 @@ namespace QATesting.SiteTests
             try
             {
                 wait.Until(e => e.FindElements(By.CssSelector(LoginElements.LoginAlertSelector())).Count == 1); //waits until the alert pops up
-                var AlertPopup = LoginElements.LoginAlertResponse(driver);
+                var AlertPopup = LoginElements.LoginAlert(driver);
                 if (AlertPopup.Text.ToLower().Contains("wrong email or password"))
                 {
                     return true;
@@ -78,6 +78,34 @@ namespace QATesting.SiteTests
                 }
             }
             catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public static bool TestPasswordReset(IWebDriver driver, string BaseUrl)
+        {
+            var ResetPassButton = LoginElements.LoginResetPass(driver);
+            ResetPassButton.Click();
+
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+            wait.Until(e => e.FindElements(By.CssSelector(LoginElements.ResetPassInputBoxSelector())).Count == 1);
+            wait.Until(e => e.FindElements(By.CssSelector(LoginElements.ResetPassSubmitSelector())).Count == 1);
+
+            var TextBox = LoginElements.ResetPassInputBox(driver);
+            var Submit = LoginElements.ResetPassSubmit(driver);
+
+            TextBox.SendKeys("test@nbcc.ca");
+            Submit.Click();
+
+            wait.Until(e => e.FindElements(By.CssSelector(LoginElements.LoginAlertSelector())).Count == 1);
+            var Alert = LoginElements.LoginAlert(driver);
+
+            if (Alert.Text.ToLower().Contains("password reset instructions have been sent to your email."))
+            {
+                return true;
+            }
+            else
             {
                 return false;
             }

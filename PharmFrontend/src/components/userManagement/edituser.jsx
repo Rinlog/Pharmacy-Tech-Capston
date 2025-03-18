@@ -374,13 +374,17 @@ function EditUser() {
                                     <input
                                         type="radio"
                                         name="selectedRow"
+                                        qa-id={item["Email"]}
                                         onChange={() => handleSelect(item)}
                                     />
                                     </td>
 
-                                {tableHeaders.map(header => (
-                                    <td className="table-data" key={header}>{item[header]}</td>
-                                ))}
+                                {tableHeaders.map(header => {
+                                        return (
+                                            <td className="table-data" key={header}>{item[header]}</td>
+                                        )
+                                }
+                                )}
 
                             </tr>
                         ))}

@@ -19,7 +19,7 @@ namespace QATesting.SitePageElements
         }
         public static string UserManagementRadioButtonSelector()
         {
-            return ".table > tbody:nth-child(2) > tr:nth-child(5) > td:nth-child(1) > input:nth-child(1)";
+            return "input[qa-id^='QATEST']";
         }
         public static IWebElement LastNameEdit(IWebDriver driver)
         {
