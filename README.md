@@ -5,3 +5,7 @@
 <p align="center">
   <img src="https://github.com/user-attachments/assets/8cbe0b02-96da-429e-b43a-efbcfa6a45b8" height=250>
 </p>
+
+<p align="center">
+ any documentation about the project setup or how to navigate it is inside the git repos "Documentaion Folder"
+</p>
