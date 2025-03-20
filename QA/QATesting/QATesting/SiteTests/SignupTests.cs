@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Bogus;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using QATesting.Methods;
 using QATesting.SitePageElements;
 
 namespace QATesting.SiteTests
@@ -79,8 +80,8 @@ namespace QATesting.SiteTests
 
                     Submit.Click();
 
-                    wait.Until(e => e.FindElements(By.CssSelector(SignupElements.ModalAlertSelector())).Count == 1);
-                    wait.Until(e => e.FindElements(By.CssSelector(SignupElements.ModalAlertCloseButtonSelector())).Count == 1);
+                    MultiWait.Wait(SignupElements.ModalAlertSelector(), driver);
+                    MultiWait.Wait(SignupElements.ModalAlertCloseButtonSelector(), driver);
 
                     var ModalAlert = SignupElements.ModalAlert(driver);
                     var CloseButton = SignupElements.ModalAlertCloseButton(driver);
