@@ -146,5 +146,55 @@ namespace QATesting.SiteTests
                 return false;
             }
         }
+
+        public static bool US8AmendPrescriptionOrder(IWebDriver driver, string BaseUrl)
+        {
+            try
+            {
+                bool result = LoginTests.TestValidLogin(driver, BaseUrl);
+                if (result == true)
+                {
+                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                    wait.Until(e => e.FindElements(By.CssSelector(HomeElements.OrdersButtonSelector())).Count == 1);
+                    IWebElement OrderButton = HomeElements.OrdersButton(driver);
+                    OrderButton.Click();
+                    wait.Until(e => e.FindElements(By.CssSelector(OrderElements.MyOrderSelector())).Count == 1);
+                    var MyOrder = OrderElements.MyOrder(driver);
+                    MyOrder.Click();
+
+                    MultiWait.Wait(
+                        OrderElements.AmendOrderSelector()
+                        , driver);
+                    var OrderToAmend = OrderElements.AmendOrder(driver);
+                    OrderToAmend.Click();
+
+                    MultiWait.Wait(OrderElements.AmendSubmitSelector() , driver);
+                    var Submit = OrderElements.AmendSubmit(driver);
+                    IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                    js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", Submit);
+                    Thread.Sleep(500);
+                    Submit.Click();
+
+                    MultiWait.Wait(OrderElements.OrderAlertMessageSelector(), driver);
+                    var AlertMessage = OrderElements.OrderAlertMessage(driver);
+                    if (AlertMessage.Text.ToLower().Contains("order successfully amended"))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

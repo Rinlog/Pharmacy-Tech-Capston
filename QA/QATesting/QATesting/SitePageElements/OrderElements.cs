@@ -204,5 +204,31 @@ namespace QATesting.SitePageElements
         {
             return ".modal-body > h5:nth-child(1)";
         }
+
+        //amend order elements below
+        public static IWebElement MyOrder(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(MyOrderSelector()));
+        }
+        public static string MyOrderSelector()
+        {
+            return "#ordermy";
+        }
+        public static IWebElement AmendOrder(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(AmendOrderSelector()));
+        }
+        public static string AmendOrderSelector()
+        {
+            return "#Rejected > tr:nth-child(1) > td:nth-child(1) > button[id='TESTORDER']:nth-child(1)";
+        }
+        public static IWebElement AmendSubmit(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(AmendSubmitSelector()));
+        }
+        public static string AmendSubmitSelector()
+        {
+            return "button.button:nth-child(49)";
+        }
     }
 }

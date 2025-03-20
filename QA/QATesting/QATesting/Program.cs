@@ -44,20 +44,36 @@ Console.WriteLine("Site Testing: "+ BaseUrl);
 //Console.Clear();
 //driver10.Quit();
 
-////Create Order Test
-//IWebDriver driver11 = new FirefoxDriver(Path);
-//driver11.Url = BaseUrl;
-//bool US4CreateOrder = OrderTests.US4EnterPrescriptionOrder(driver11, BaseUrl);
-//Console.Clear();
-//driver11.Quit();
+//Create Order Test
+IWebDriver driver11 = new FirefoxDriver(Path);
+driver11.Url = BaseUrl;
+bool US4CreateOrder = OrderTests.US4EnterPrescriptionOrder(driver11, BaseUrl);
+Console.Clear();
+driver11.Quit();
 
+//Reject Order Test
+IWebDriver driver13 = new FirefoxDriver(Path);
+driver13.Url = BaseUrl;
+bool US7RejectOrder = VerificationTests.US7TestRejectOrderVerification(driver13, BaseUrl);
+Console.Clear();
+driver13.Quit();
+
+//Amend Order Test, doing it after reject order test so we can amend that rejected order
+IWebDriver driver14 = new FirefoxDriver(Path);
+driver14.Url = BaseUrl;
+bool US8AmendOrder = OrderTests.US8AmendPrescriptionOrder(driver14, BaseUrl);
+Console.Clear();
+driver14.Quit();
 
 //Verify Order Test
 IWebDriver driver12 = new FirefoxDriver(Path);
 driver12.Url = BaseUrl;
-bool US7VerifyOrder = VerificationTests.US7TestApprovedVerification(driver12,BaseUrl);
+bool US7VerifyOrder = VerificationTests.US7TestApprovedVerification(driver12, BaseUrl);
 Console.Clear();
 driver12.Quit();
+
+//ImageUpload, aka everything above tested with images, not complete but i planned on doing it all in one driver test, basically just using above logic
+
 ////View Drug Test
 //IWebDriver driver2 = new FirefoxDriver(Path);
 //driver2.Url = BaseUrl;
@@ -113,8 +129,10 @@ Console.WriteLine();
 //OutPutResult(US2DeleteUser, "US2DeleteUser: ");
 //OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 //OutPutResult(US3FailedLogin, "US3FailedLogin: ");
-//OutPutResult(US4CreateOrder, "US3CreateOrder: ");
+OutPutResult(US4CreateOrder, "US3CreateOrder: ");
+OutPutResult(US7RejectOrder, "US7RejectOrder: ");
 OutPutResult(US7VerifyOrder, "US7VerifyOrder: ");
+OutPutResult(US8AmendOrder, "US8AmendOrder: ");
 //OutPutResult(US3PasswordReset, "US3PasswordReset: ");
 //OutPutResult(US14ViewDrugs, "US14ViewDrugs: ");
 //OutPutResult(US16EditDrug, "US16EditDrug: ");

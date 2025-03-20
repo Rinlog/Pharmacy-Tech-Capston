@@ -520,7 +520,7 @@ function MyOrders(){
                     message={AlertMessage}
                     onClose={function(){
                         setAlertModalOpen(false);
-                        if (AlertMessage == "Order successfuly amended."){
+                        if (AlertMessage == "Order successfully amended."){
                             location.reload();
                         }
                     }}
