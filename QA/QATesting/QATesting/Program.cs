@@ -116,6 +116,12 @@ driver12.Quit();
 //Console.Clear();
 //driver7.Quit();
 
+//Timeout Test
+//IWebDriver driver13 = new FirefoxDriver(Path);
+//driver13.Url = BaseUrl;
+//bool US11TimeOut = TimeOutTest.TestTimeOut(driver13, BaseUrl);
+//Console.Clear();
+//driver13.Quit();
 
 //Setup for outputting results nicely
 Console.Clear();
@@ -142,6 +148,8 @@ OutPutResult(US8AmendOrder, "US8AmendOrder: ");
 //OutPutResult(US24EditPatient, "US24EditPatient: ");
 
 
+//Only run this when needed. Takes 2 minutes to do this test!
+//OutPutResult(US11TimeOut, "US25TimeOut: ");
 
 Console.ReadLine();
 
