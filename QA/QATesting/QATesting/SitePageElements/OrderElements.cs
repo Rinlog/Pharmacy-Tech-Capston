@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -254,6 +255,48 @@ namespace QATesting.SitePageElements
         public static string RemoveSavedImageSelector()
         {
             return "div.col:nth-child(2) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > button:nth-child(2)";
+        }
+
+        //all orders elements
+        public static ReadOnlyCollection<IWebElement> PrintButtons(IWebDriver driver)
+        {
+            return driver.FindElements(By.CssSelector(PrintButtonSelector()));
+        }
+        public static string PrintButtonSelector()
+        {
+            return "#Approved button[qa-id='PrintTest']";
+        }
+        public static ReadOnlyCollection<IWebElement> RePrintButtons(IWebDriver driver)
+        {
+            return driver.FindElements(By.CssSelector(RePrintButtonSelector()));
+        }
+        public static string RePrintButtonSelector()
+        {
+            return "#Approved button[qa-id='RePrintTest']";
+        }
+        public static IWebElement AllOrdersSection(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(AllOrdersSectionSelector()));
+        }
+        public static string AllOrdersSectionSelector()
+        {
+            return "#orderall";
+        }
+        public static IWebElement ChangePrintOption(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(ChangePrintOptionSelector()));
+        }
+        public static string ChangePrintOptionSelector()
+        {
+            return "div.PrintOptionsSection:nth-child(1) > div:nth-child(1) > button:nth-child(1)";
+        }
+        public static IWebElement ConfirmPrint(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(ConfirmPrintSelector()));
+        }
+        public static string ConfirmPrintSelector()
+        {
+            return ".ModalbuttonG";
         }
     }
 }

@@ -303,5 +303,44 @@ namespace QATesting.SiteTests
                 return false;
             }
         }
+        //not complete
+        public static bool US9PrintOrder(IWebDriver driver, string BaseUrl)
+        {
+            if (LoginTests.LoginAsUserSpecified(driver, BaseUrl, "test5@nbcc.ca", "Password1!"))
+            {
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.OrdersButtonSelector())).Count == 1);
+                IWebElement OrderButton = HomeElements.OrdersButton(driver);
+                OrderButton.Click();
+
+                MultiWait.Wait(OrderElements.AllOrdersSectionSelector(), driver);
+                var AllOrdersSection = OrderElements.AllOrdersSection(driver);
+                AllOrdersSection.Click();
+
+                //first print will be to pdf
+                MultiWait.Wait(OrderElements.PrintButtonSelector(), driver);
+                var PrintButton = OrderElements.PrintButtons(driver);
+
+                IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                int SecondLast = (PrintButton.Count >= 2) ? PrintButton.Count-2: 0; //using the second last print button, in some cases thats the first
+
+                js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", PrintButton[SecondLast]);
+                Thread.Sleep(500);
+                PrintButton[SecondLast].Click();
+
+                MultiWait.Wait(
+                    OrderElements.ChangePrintOptionSelector(),
+                    OrderElements.ConfirmPrintSelector(),
+                    driver);
+                var ConfirmPrint1 = OrderElements.ConfirmPrint(driver);
+                ConfirmPrint1.Click();
+                Thread.Sleep(5000);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace QATesting.SiteTests
                 {
                     var result1 = e.FindElements(By.CssSelector(DrugsElements.DrugTableSelector())).Count == 1;
                     return result1;
-                }); //waits for table to appear, or for loading text to appear, if they appear than we know that we can view the drug page
+                }); //waits for table to appear, if it appears than we know that we can view the drug page
                 return true;
                 
 

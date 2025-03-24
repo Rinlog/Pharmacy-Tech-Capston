@@ -20,7 +20,7 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -44,8 +44,8 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -70,9 +70,9 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -98,10 +98,10 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -128,11 +128,11 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -160,12 +160,12 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -194,13 +194,13 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector7)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector7)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -230,14 +230,14 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector7)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector8)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector7)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector8)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -268,15 +268,15 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector7)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector8)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector9)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector7)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector8)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector9)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -308,16 +308,16 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector7)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector8)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector9)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector10)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector7)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector8)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector9)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector10)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -351,17 +351,17 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector7)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector8)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector9)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector10)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector11)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector7)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector8)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector9)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector10)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector11)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -396,18 +396,18 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector7)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector8)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector9)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector10)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector11)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector12)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector7)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector8)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector9)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector10)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector11)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector12)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -443,19 +443,19 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector7)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector8)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector9)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector10)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector11)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector12)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector13)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector7)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector8)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector9)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector10)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector11)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector12)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector13)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -492,20 +492,20 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector7)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector8)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector9)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector10)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector11)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector12)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector13)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector14)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector7)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector8)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector9)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector10)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector11)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector12)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector13)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector14)).Count >= 1);
 
                 foreach (var result in results)
                 {
@@ -543,21 +543,21 @@ namespace QATesting.Methods
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             wait.Until(e => {
                 List<bool> results = new List<bool>();
-                results.Add(e.FindElements(By.CssSelector(selector1)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector2)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector3)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector4)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector5)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector6)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector7)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector8)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector9)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector10)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector11)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector12)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector13)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector14)).Count == 1);
-                results.Add(e.FindElements(By.CssSelector(selector15)).Count == 1);
+                results.Add(e.FindElements(By.CssSelector(selector1)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector2)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector3)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector4)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector5)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector6)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector7)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector8)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector9)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector10)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector11)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector12)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector13)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector14)).Count >= 1);
+                results.Add(e.FindElements(By.CssSelector(selector15)).Count >= 1);
 
                 foreach (var result in results)
                 {

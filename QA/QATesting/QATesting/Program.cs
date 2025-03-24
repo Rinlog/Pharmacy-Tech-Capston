@@ -72,13 +72,21 @@ Console.WriteLine("Site Testing: "+ BaseUrl);
 //Console.Clear();
 //driver12.Quit();
 
-//ImageUpload, aka everything above tested with images
+////ImageUpload, aka everything above tested with images
+//IWebDriver driver15 = new FirefoxDriver(Path);
+//driver15.Url = BaseUrl;
+//bool US5UploadImage = OrderTests.US5UploadPrescriptionOrder(driver15, BaseUrl);
+//Console.Clear();
+//driver15.Quit();
 
-IWebDriver driver15 = new FirefoxDriver(Path);
-driver15.Url = BaseUrl;
-bool US5UploadImage = OrderTests.US5UploadPrescriptionOrder(driver15,BaseUrl);
+//Print Order
+IWebDriver driver16 = new FirefoxDriver(Path);
+driver16.Manage().Window.Maximize();
+driver16.Url = BaseUrl;
+bool US9PrintOrder = OrderTests.US9PrintOrder(driver16, BaseUrl);
 Console.Clear();
-driver15.Quit();
+driver16.Quit();
+
 ////View Drug Test
 //IWebDriver driver2 = new FirefoxDriver(Path);
 //driver2.Url = BaseUrl;
@@ -141,10 +149,11 @@ Console.WriteLine();
 //OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 //OutPutResult(US3FailedLogin, "US3FailedLogin: ");
 //OutPutResult(US4CreateOrder, "US4CreateOrder: ");
-OutPutResult(US5UploadImage, "US5UploadImage: ");
+//OutPutResult(US5UploadImage, "US5UploadImage: ");
 //OutPutResult(US7RejectOrder, "US7RejectOrder: ");
 //OutPutResult(US7VerifyOrder, "US7VerifyOrder: ");
 //OutPutResult(US8AmendOrder, "US8AmendOrder: ");
+OutPutResult(US9PrintOrder, "US9PrintOrder: ");
 //OutPutResult(US3PasswordReset, "US3PasswordReset: ");
 //OutPutResult(US14ViewDrugs, "US14ViewDrugs: ");
 //OutPutResult(US16EditDrug, "US16EditDrug: ");
