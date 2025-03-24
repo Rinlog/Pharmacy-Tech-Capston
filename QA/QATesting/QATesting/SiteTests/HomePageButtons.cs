@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.DevTools.V131.Storage;
 using OpenQA.Selenium.Support.UI;
 using QATesting.SitePageElements;
 using System;
@@ -13,158 +14,135 @@ namespace QATesting.SiteTests
     {
         public static bool TestDrugsButton(IWebDriver driver, string BaseUrl)
         {
-            IWebElement Email = LoginElements.LoginEmail(driver);
-            IWebElement Pass = LoginElements.LoginPass(driver);
-            IWebElement Submit = LoginElements.LoginSubmitButton(driver);
-            
-
-            //account must be valid that we are testing with
-            Email.SendKeys("test@nbcc.ca");
-            Pass.SendKeys("Password1!");
-            Thread.Sleep(1000);
-            Submit.Click();
-
-            Thread.Sleep(2000);
-            IWebElement DrugButton = HomeElements.DrugsButton(driver);
-
-            DrugButton.Click();
-
-            if (driver.Url == BaseUrl + "/drugs")
+            bool result = LoginTests.TestValidLogin(driver, BaseUrl);
+            if (result == true)
             {
-                return true;
-            }
-            else if (driver.Url == BaseUrl + "/home")
-            {
-                return false;
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.DrugButtonSelector())).Count == 1);
+                IWebElement DrugButton = HomeElements.DrugsButton(driver);
+                DrugButton.Click();
+
+                if (driver.Url == BaseUrl + "/drugs")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 return false;
             }
+
         }
 
         public static bool TestPhysiciansButton(IWebDriver driver, string BaseUrl)
         {
-            IWebElement Email = LoginElements.LoginEmail(driver);
-            IWebElement Pass = LoginElements.LoginPass(driver);
-            IWebElement Submit = LoginElements.LoginSubmitButton(driver);
+            bool result = LoginTests.TestValidLogin(driver, BaseUrl);
 
-
-            //account must be valid that we are testing with
-            Email.SendKeys("test@nbcc.ca");
-            Pass.SendKeys("Password1!");
-            Thread.Sleep(1000);
-            Submit.Click();
-            Thread.Sleep(2000);
-            IWebElement PhysicianButton = HomeElements.PhysicianButton(driver);
-
-            PhysicianButton.Click();
-
-            if (driver.Url == BaseUrl + "/physicians")
+            if (result == true)
             {
-                return true;
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.PhysicianButtonSelector())).Count == 1);
+                IWebElement PhysicianButton = HomeElements.PhysicianButton(driver);
+                PhysicianButton.Click();
+
+                if (driver.Url == BaseUrl + "/physicians")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else if (driver.Url == BaseUrl + "/home")
-            {
-                return false;
-            }
-            else
+            else 
             {
                 return false;
             }
+
         }
 
         public static bool TestPatientsButton(IWebDriver driver, string BaseUrl)
         {
-            IWebElement Email = LoginElements.LoginEmail(driver);
-            IWebElement Pass = LoginElements.LoginPass(driver);
-            IWebElement Submit = LoginElements.LoginSubmitButton(driver);
+            bool result = LoginTests.TestValidLogin(driver, BaseUrl);
 
-
-            //account must be valid that we are testing with
-            Email.SendKeys("test@nbcc.ca");
-            Pass.SendKeys("Password1!");
-            Thread.Sleep(1000);
-            Submit.Click();
-            Thread.Sleep(2000);
-            IWebElement PatientsButton = HomeElements.PatientsButton(driver);
-
-            PatientsButton.Click();
-
-            if (driver.Url == BaseUrl + "/patients")
+            if (result == false)
             {
-                return true;
-            }
-            else if (driver.Url == BaseUrl + "/home")
-            {
-                return false;
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.PatientsButtonSelector())).Count == 1);
+                IWebElement PatientsButton = HomeElements.PatientsButton(driver);
+                PatientsButton.Click();
+
+                if (driver.Url == BaseUrl + "/patients")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 return false;
             }
+            
         }
 
         public static bool TestOrdersButton(IWebDriver driver, string BaseUrl)
         {
-            IWebElement Email = LoginElements.LoginEmail(driver);
-            IWebElement Pass = LoginElements.LoginPass(driver);
-            IWebElement Submit = LoginElements.LoginSubmitButton(driver);
+            bool result = LoginTests.TestValidLogin(driver, BaseUrl);
 
-
-            //account must be valid that we are testing with
-            Email.SendKeys("test@nbcc.ca");
-            Pass.SendKeys("Password1!");
-            Thread.Sleep(1000);
-            Submit.Click();
-            Thread.Sleep(2000);
-            IWebElement OrdersButton = HomeElements.OrdersButton(driver);
-
-            OrdersButton.Click();
-
-            if (driver.Url == BaseUrl + "/orders")
+            if (result == true)
             {
-                return true;
-            }
-            else if (driver.Url == BaseUrl + "/home")
-            {
-                return false;
+                IWebElement OrdersButton = HomeElements.OrdersButton(driver);
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.OrdersButtonSelector())).Count == 1);
+                OrdersButton.Click();
+
+                if (driver.Url == BaseUrl + "/orders")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 return false;
             }
+            
         }
 
         public static bool TestVerificationButton(IWebDriver driver, string BaseUrl)
         {
-            IWebElement Email = LoginElements.LoginEmail(driver);
-            IWebElement Pass = LoginElements.LoginPass(driver);
-            IWebElement Submit = LoginElements.LoginSubmitButton(driver);
+            bool result = LoginTests.TestValidLogin(driver, BaseUrl);
 
-
-            //account must be valid that we are testing with
-            Email.SendKeys("test@nbcc.ca");
-            Pass.SendKeys("Password1!");
-            Thread.Sleep(1000);
-            Submit.Click();
-            Thread.Sleep(2000);
-            IWebElement VerificationButton = HomeElements.VerificationButton(driver);
-
-            VerificationButton.Click();
-
-            if (driver.Url == BaseUrl + "/verification")
+            if (result == true )
             {
-                return true;
-            }
-            else if (driver.Url == BaseUrl + "/home")
-            {
-                return false;
+                IWebElement VerificationButton = HomeElements.VerificationButton(driver);
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.VerificationButtonSelector())).Count == 1);
+                VerificationButton.Click();
+                if (driver.Url == BaseUrl + "/verification")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 return false;
             }
+            
         }
     }
 }
