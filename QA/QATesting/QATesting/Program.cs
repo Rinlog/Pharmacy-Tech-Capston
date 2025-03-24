@@ -74,17 +74,18 @@ Console.WriteLine("Site Testing: "+ BaseUrl);
 
 //ImageUpload, aka everything above tested with images
 
-IWebDriver driver15 = new FirefoxDriver(Path);
-driver15.Url = BaseUrl;
-bool US5UploadImage = OrderTests.US5UploadPrescriptionOrder(driver15,BaseUrl);
-Console.Clear();
-driver15.Quit();
-////View Drug Test
-//IWebDriver driver2 = new FirefoxDriver(Path);
-//driver2.Url = BaseUrl;
-//bool US14ViewDrugs = DrugsTests.TestViewDrug(driver2, BaseUrl);
+//IWebDriver driver15 = new FirefoxDriver(Path);
+//driver15.Url = BaseUrl;
+//bool US5UploadImage = OrderTests.US5UploadPrescriptionOrder(driver15,BaseUrl);
 //Console.Clear();
-//driver2.Quit();
+//driver15.Quit();
+
+////View Drug Test
+IWebDriver driver2 = new FirefoxDriver(Path);
+driver2.Url = BaseUrl;
+bool US14ViewDrugs = DrugsTests.TestViewDrug(driver2, BaseUrl);
+Console.Clear();
+driver2.Quit();
 
 ////Edit Drug Test
 //IWebDriver driver3 = new FirefoxDriver(Path);
@@ -94,11 +95,11 @@ driver15.Quit();
 //driver3.Quit();
 
 ////View physician Test
-//IWebDriver driver4 = new FirefoxDriver(Path);
-//driver4.Url = BaseUrl;
-//bool US18ViewPhysician = PhysiciansTests.TestViewPhysician(driver4, BaseUrl);
-//Console.Clear();
-//driver4.Quit();
+IWebDriver driver4 = new FirefoxDriver(Path);
+driver4.Url = BaseUrl;
+bool US18ViewPhysician = PhysiciansTests.TestViewPhysician(driver4, BaseUrl);
+Console.Clear();
+driver4.Quit();
 
 ////Edit physician Test
 //IWebDriver driver5 = new FirefoxDriver(Path);
@@ -108,11 +109,11 @@ driver15.Quit();
 //driver5.Quit();
 
 ////View Patient Test
-//IWebDriver driver6 = new FirefoxDriver(Path);
-//driver6.Url = BaseUrl;
-//bool US22ViewPatients = PatientsTests.TestViewPatient(driver6, BaseUrl);
-//Console.Clear();
-//driver6.Quit();
+IWebDriver driver6 = new FirefoxDriver(Path);
+driver6.Url = BaseUrl;
+bool US22ViewPatients = PatientsTests.TestViewPatient(driver6, BaseUrl);
+Console.Clear();
+driver6.Quit();
 
 ////Edit patient Test
 //IWebDriver driver7 = new FirefoxDriver(Path);
@@ -120,6 +121,13 @@ driver15.Quit();
 //bool US24EditPatient = PatientsTests.TestEditPatient(driver7, BaseUrl);
 //Console.Clear();
 //driver7.Quit();
+
+//View Orders Test
+IWebDriver driver20 = new FirefoxDriver(Path);
+driver20.Url = BaseUrl;
+bool US17ViewOrders = HomePageButtons.TestOrdersButton(driver20, BaseUrl);
+Console.Clear();
+driver20.Quit();
 
 //Timeout Test
 //IWebDriver driver13 = new FirefoxDriver(Path);
@@ -141,17 +149,18 @@ Console.WriteLine();
 //OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 //OutPutResult(US3FailedLogin, "US3FailedLogin: ");
 //OutPutResult(US4CreateOrder, "US4CreateOrder: ");
-OutPutResult(US5UploadImage, "US5UploadImage: ");
+//OutPutResult(US5UploadImage, "US5UploadImage: ");
 //OutPutResult(US7RejectOrder, "US7RejectOrder: ");
 //OutPutResult(US7VerifyOrder, "US7VerifyOrder: ");
 //OutPutResult(US8AmendOrder, "US8AmendOrder: ");
 //OutPutResult(US3PasswordReset, "US3PasswordReset: ");
-//OutPutResult(US14ViewDrugs, "US14ViewDrugs: ");
+OutPutResult(US14ViewDrugs, "US14ViewDrugs: ");
 //OutPutResult(US16EditDrug, "US16EditDrug: ");
-//OutPutResult(US18ViewPhysician, "US18ViewPhysicians: ");
+OutPutResult(US18ViewPhysician, "US18ViewPhysicians: ");
 //OutPutResult(US20EditPhysician, "US20EditPhysician: ");
-//OutPutResult(US22ViewPatients, "US22ViewPatients: ");
+OutPutResult(US22ViewPatients, "US22ViewPatients: ");
 //OutPutResult(US24EditPatient, "US24EditPatient: ");
+OutPutResult(US17ViewOrders, "US17ViewOrders: ");
 
 
 //Only run this when needed. Takes 2 minutes to do this test!
