@@ -147,7 +147,7 @@ namespace QATesting.SiteTests
             }
         }
 
-        public static bool US8AmendPrescriptionOrder(IWebDriver driver, string BaseUrl)
+        public static bool US8AmendPrescriptionOrder(IWebDriver driver, string BaseUrl, bool ChangeImage = false)
         {
             try
             {
@@ -167,7 +167,22 @@ namespace QATesting.SiteTests
                         , driver);
                     var OrderToAmend = OrderElements.AmendOrder(driver);
                     OrderToAmend.Click();
+                    if (ChangeImage == true)
+                    {
+                        MultiWait.Wait(OrderElements.RemoveSavedImageSelector() , driver);
+                        var RemoveSavedImage = OrderElements.RemoveSavedImage(driver);
+                        RemoveSavedImage.Click();
 
+                        MultiWait.Wait(OrderElements.UploadImageSelector() , driver);
+                        var UploadImage = OrderElements.UploadImage(driver);
+                        string FullPath = System.IO.Path.GetFullPath(@".\Images\TestImage.jpg");
+                        UploadImage.SendKeys(FullPath); //make sure this file exists otherwise test will not work
+
+                        MultiWait.Wait(OrderElements.SaveImageSelector() , driver);
+                        var SaveImage = OrderElements.SaveImage(driver);
+                        SaveImage.Click();
+
+                    }
                     MultiWait.Wait(OrderElements.AmendSubmitSelector() , driver);
                     var Submit = OrderElements.AmendSubmit(driver);
                     IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
@@ -193,6 +208,98 @@ namespace QATesting.SiteTests
             }
             catch (Exception ex)
             {
+                return false;
+            }
+        }
+
+        //note, if there are extra orders created from only QA tests (regular orders will not break it) than the test below will not work
+        public static bool US5UploadPrescriptionOrder(IWebDriver driver, string BaseUrl)
+        {
+            try
+            {
+                bool result = LoginTests.TestValidLogin(driver, BaseUrl);
+                if (result == true)
+                {
+                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                    wait.Until(e => e.FindElements(By.CssSelector(HomeElements.OrdersButtonSelector())).Count == 1);
+                    IWebElement OrderButton = HomeElements.OrdersButton(driver);
+                    OrderButton.Click();
+                    wait.Until(e => e.FindElements(By.CssSelector(OrderElements.OrderAddSelector())).Count == 1);
+                    var OrderAdd = OrderElements.OrderAdd(driver);
+                    OrderAdd.Click();
+
+                    if (FillInOrderForm(driver))
+                    {
+                        //once we filled in the order form, now we test the image upload
+                        MultiWait.Wait(OrderElements.UploadImageSelector(), driver);
+                        var UploadImage = OrderElements.UploadImage(driver);
+                        IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                        js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", UploadImage);
+                        Thread.Sleep(500);
+                        string FullPath = System.IO.Path.GetFullPath(@".\Images\TestImage.jpg");
+                        UploadImage.SendKeys(FullPath); //make sure this file exists otherwise test will not work
+
+                        MultiWait.Wait(
+                            OrderElements.SaveImageSelector(),
+                            OrderElements.OrderAddSubmitButtonSelector(),
+                            driver);
+                        var SaveImage = OrderElements.SaveImage(driver);
+                        SaveImage.Click();
+
+                        var Submit = OrderElements.OrderAddSubmitButton(driver);
+                        js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", Submit);
+                        Thread.Sleep(500);
+                        Submit.Click();
+
+                        MultiWait.Wait(OrderElements.OrderAlertMessageSelector(), driver);
+                        var AlertMessage = OrderElements.OrderAlertMessage(driver);
+                        if (AlertMessage.Text.ToLower().Contains("order successfully created"))
+                        {
+                            driver.Url = BaseUrl + "/orders";
+                            NavTests.NavLogout(driver,BaseUrl);
+                            if (VerificationTests.US7TestRejectOrderVerification(driver, BaseUrl)) //rejects the order so we can test uploading an image on the amend order screen
+                            {
+                                driver.Url = BaseUrl + "/orders";
+                                NavTests.NavLogout(driver, BaseUrl);
+
+                                //amend the prescription order and change the image to test image upload there
+                                if (OrderTests.US8AmendPrescriptionOrder(driver, BaseUrl, true) == true)
+                                {
+                                    driver.Url = BaseUrl + "/orders";
+                                    NavTests.NavLogout(driver, BaseUrl);
+
+                                    bool result3 = VerificationTests.US7TestApprovedVerification(driver, BaseUrl,true);//verifys the order with an image, making sure an image is associated
+                                    return result3;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Thread.Sleep(10000);
                 return false;
             }
         }

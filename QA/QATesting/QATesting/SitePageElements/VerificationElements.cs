@@ -187,5 +187,13 @@ namespace QATesting.SitePageElements
             return ".modal-body > h5:nth-child(1)";
         }
 
+        public static IWebElement ImageUploadVisible(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(ImageUploadVisibleSelector()));
+        }
+        public static string ImageUploadVisibleSelector()
+        {
+            return ".ImageStylingForUpload";
+        }
     }
 }

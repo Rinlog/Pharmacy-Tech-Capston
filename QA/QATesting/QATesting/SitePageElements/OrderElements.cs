@@ -230,5 +230,30 @@ namespace QATesting.SitePageElements
         {
             return "button.button:nth-child(49)";
         }
+        //upload image componants
+        public static IWebElement UploadImage(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(UploadImageSelector()));
+        }
+        public static string UploadImageSelector()
+        {
+            return ".hidden";
+        }
+        public static IWebElement SaveImage(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(SaveImageSelector()));
+        }
+        public static string SaveImageSelector()
+        {
+            return "div.d-flex:nth-child(2) > div:nth-child(1) > div:nth-child(4) > button:nth-child(2)";
+        }
+        public static IWebElement RemoveSavedImage(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(RemoveSavedImageSelector()));
+        }
+        public static string RemoveSavedImageSelector()
+        {
+            return "div.col:nth-child(2) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > button:nth-child(2)";
+        }
     }
 }

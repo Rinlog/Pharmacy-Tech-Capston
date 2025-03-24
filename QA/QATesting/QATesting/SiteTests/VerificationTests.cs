@@ -11,7 +11,7 @@ namespace QATesting.SiteTests
 {
     internal class VerificationTests
     {
-        public static bool US7TestApprovedVerification(IWebDriver driver, string BaseURL)
+        public static bool US7TestApprovedVerification(IWebDriver driver, string BaseURL, bool VerifyImageAssociated = false)
         {
             if (LoginTests.LoginAsUserSpecified(driver, BaseURL,"test5@nbcc.ca","Password1!"))
             {
@@ -35,6 +35,10 @@ namespace QATesting.SiteTests
                     Thread.Sleep(500);
                     TestOrder.Click();
 
+                    if (VerifyImageAssociated == true)
+                    {
+                        MultiWait.Wait(VerificationElements.ImageUploadVisibleSelector(), driver); //just waits for the image to be visible, if it is, that means it's good
+                    }
                     //waiting for the first set of visible checkboxes
                     MultiWait.Wait(
                         VerificationElements.RxNumberSelector(),
