@@ -44,55 +44,80 @@ Console.WriteLine("Site Testing: "+ BaseUrl);
 //Console.Clear();
 //driver10.Quit();
 
-////Create Order Test
-//IWebDriver driver11 = new FirefoxDriver(Path);
-//driver11.Url = BaseUrl;
-//bool US4CreateOrder = OrderTests.US4EnterPrescriptionOrder(driver11, BaseUrl);
-//Console.Clear();
-//driver11.Quit();
+//Create Order Test
+IWebDriver driver11 = new FirefoxDriver(Path);
+driver11.Url = BaseUrl;
+bool US4CreateOrder = OrderTests.US4EnterPrescriptionOrder(driver11, BaseUrl);
+Console.Clear();
+driver11.Quit();
 
-////Reject Order Test
-//IWebDriver driver13 = new FirefoxDriver(Path);
-//driver13.Url = BaseUrl;
-//bool US7RejectOrder = VerificationTests.US7TestRejectOrderVerification(driver13, BaseUrl);
-//Console.Clear();
-//driver13.Quit();
+//Reject Order Test
+IWebDriver driver13 = new FirefoxDriver(Path);
+driver13.Url = BaseUrl;
+bool US7RejectOrder = VerificationTests.US7TestRejectOrderVerification(driver13, BaseUrl);
+Console.Clear();
+driver13.Quit();
 
-////Amend Order Test, doing it after reject order test so we can amend that rejected order
-//IWebDriver driver14 = new FirefoxDriver(Path);
-//driver14.Url = BaseUrl;
-//bool US8AmendOrder = OrderTests.US8AmendPrescriptionOrder(driver14, BaseUrl);
-//Console.Clear();
-//driver14.Quit();
+//Amend Order Test, doing it after reject order test so we can amend that rejected order
+IWebDriver driver14 = new FirefoxDriver(Path);
+driver14.Url = BaseUrl;
+bool US8AmendOrder = OrderTests.US8AmendPrescriptionOrder(driver14, BaseUrl);
+Console.Clear();
+driver14.Quit();
 
-////Verify Order Test
-//IWebDriver driver12 = new FirefoxDriver(Path);
-//driver12.Url = BaseUrl;
-//bool US7VerifyOrder = VerificationTests.US7TestApprovedVerification(driver12, BaseUrl);
-//Console.Clear();
-//driver12.Quit();
+//Verify Order Test
+IWebDriver driver12 = new FirefoxDriver(Path);
+driver12.Url = BaseUrl;
+bool US7VerifyOrder = VerificationTests.US7TestApprovedVerification(driver12, BaseUrl);
+Console.Clear();
+driver12.Quit();
 
-////ImageUpload, aka everything above tested with images
-//IWebDriver driver15 = new FirefoxDriver(Path);
-//driver15.Url = BaseUrl;
-//bool US5UploadImage = OrderTests.US5UploadPrescriptionOrder(driver15, BaseUrl);
-//Console.Clear();
-//driver15.Quit();
+//ImageUpload, aka everything above tested with images
+IWebDriver driver15 = new FirefoxDriver(Path);
+driver15.Url = BaseUrl;
+bool US5UploadImage = OrderTests.US5UploadPrescriptionOrder(driver15, BaseUrl);
+Console.Clear();
+driver15.Quit();
 
-//Print Order
+//Print Order To PDF
 IWebDriver driver16 = new FirefoxDriver(Path);
+driver16.Manage().Window.Maximize();
 driver16.Url = BaseUrl;
-bool US9PrintOrder = OrderTests.US9PrintOrder(driver16, BaseUrl);
+bool US9PrintOrderToPDF = OrderTests.US9PrintOrderToPDF(driver16, BaseUrl);
 Console.Clear();
 driver16.Quit();
 
-
-//View Drug Test
-IWebDriver driver2 = new FirefoxDriver(Path);
-driver2.Url = BaseUrl;
-bool US14ViewDrugs = DrugsTests.TestViewDrug(driver2, BaseUrl);
+//Print Order To Printer
+IWebDriver driver17 = new FirefoxDriver(Path);
+driver17.Manage().Window.Maximize();
+driver17.Url = BaseUrl;
+bool US9PrintOrderToPrinter = OrderTests.US9PrintOrderToPrinter(driver17, BaseUrl);
 Console.Clear();
-driver2.Quit();
+driver17.Quit();
+
+//RePrint Order To PDF
+IWebDriver driver18 = new FirefoxDriver(Path);
+driver18.Manage().Window.Maximize();
+driver18.Url = BaseUrl;
+bool US10RePrintOrderToPDF = OrderTests.US10RePrintOrderToPDF(driver18, BaseUrl);
+Console.Clear();
+driver18.Quit();
+
+//RePrint Order To Printer
+IWebDriver driver19 = new FirefoxDriver(Path);
+driver19.Manage().Window.Maximize();
+driver19.Url = BaseUrl;
+bool US10RePrintOrderToPrinter = OrderTests.US10RePrintOrderToPrinter(driver19, BaseUrl);
+Console.Clear();
+driver19.Quit();
+
+
+////View Drug Test
+//IWebDriver driver2 = new FirefoxDriver(Path);
+//driver2.Url = BaseUrl;
+//bool US14ViewDrugs = DrugsTests.TestViewDrug(driver2, BaseUrl);
+//Console.Clear();
+//driver2.Quit();
 
 
 ////Edit Drug Test
@@ -103,11 +128,11 @@ driver2.Quit();
 //driver3.Quit();
 
 ////View physician Test
-IWebDriver driver4 = new FirefoxDriver(Path);
-driver4.Url = BaseUrl;
-bool US18ViewPhysician = PhysiciansTests.TestViewPhysician(driver4, BaseUrl);
-Console.Clear();
-driver4.Quit();
+//IWebDriver driver4 = new FirefoxDriver(Path);
+//driver4.Url = BaseUrl;
+//bool US18ViewPhysician = PhysiciansTests.TestViewPhysician(driver4, BaseUrl);
+//Console.Clear();
+//driver4.Quit();
 
 ////Edit physician Test
 //IWebDriver driver5 = new FirefoxDriver(Path);
@@ -117,11 +142,11 @@ driver4.Quit();
 //driver5.Quit();
 
 ////View Patient Test
-IWebDriver driver6 = new FirefoxDriver(Path);
-driver6.Url = BaseUrl;
-bool US22ViewPatients = PatientsTests.TestViewPatient(driver6, BaseUrl);
-Console.Clear();
-driver6.Quit();
+//IWebDriver driver6 = new FirefoxDriver(Path);
+//driver6.Url = BaseUrl;
+//bool US22ViewPatients = PatientsTests.TestViewPatient(driver6, BaseUrl);
+//Console.Clear();
+//driver6.Quit();
 
 ////Edit patient Test
 //IWebDriver driver7 = new FirefoxDriver(Path);
@@ -131,11 +156,11 @@ driver6.Quit();
 //driver7.Quit();
 
 //View Orders Test
-IWebDriver driver20 = new FirefoxDriver(Path);
-driver20.Url = BaseUrl;
-bool US12ViewOrders = HomePageButtons.TestOrdersButton(driver20, BaseUrl);
-Console.Clear();
-driver20.Quit();
+//IWebDriver driver20 = new FirefoxDriver(Path);
+//driver20.Url = BaseUrl;
+//bool US12ViewOrders = HomePageButtons.TestOrdersButton(driver20, BaseUrl);
+//Console.Clear();
+//driver20.Quit();
 
 //Timeout Test
 //IWebDriver driver13 = new FirefoxDriver(Path);
@@ -156,20 +181,23 @@ Console.WriteLine();
 //OutPutResult(US2DeleteUser, "US2DeleteUser: ");
 //OutPutResult(US3ValidLogin, "US3ValidLogin: ");
 //OutPutResult(US3FailedLogin, "US3FailedLogin: ");
-//OutPutResult(US4CreateOrder, "US4CreateOrder: ");
-//OutPutResult(US5UploadImage, "US5UploadImage: ");
-//OutPutResult(US7RejectOrder, "US7RejectOrder: ");
-//OutPutResult(US7VerifyOrder, "US7VerifyOrder: ");
-//OutPutResult(US8AmendOrder, "US8AmendOrder: ");
-OutPutResult(US9PrintOrder, "US9PrintOrder: ");
 //OutPutResult(US3PasswordReset, "US3PasswordReset: ");
-OutPutResult(US14ViewDrugs, "US14ViewDrugs: ");
+OutPutResult(US4CreateOrder, "US4CreateOrder: ");
+OutPutResult(US5UploadImage, "US5UploadImage: ");
+OutPutResult(US7RejectOrder, "US7RejectOrder: ");
+OutPutResult(US7VerifyOrder, "US7VerifyOrder: ");
+OutPutResult(US8AmendOrder, "US8AmendOrder: ");
+OutPutResult(US9PrintOrderToPDF, "US9PrintOrderToPDF: ");
+OutPutResult(US9PrintOrderToPrinter, "US9PrintOrderToPrinter: ");
+OutPutResult(US10RePrintOrderToPDF, "US10RePrintOrderToPDF: ");
+OutPutResult(US10RePrintOrderToPrinter, "US10RePrintOrderToPrinter: ");
+//OutPutResult(US12ViewOrders, "US12ViewOrders: ");
+//OutPutResult(US14ViewDrugs, "US14ViewDrugs: ");
 //OutPutResult(US16EditDrug, "US16EditDrug: ");
-OutPutResult(US18ViewPhysician, "US18ViewPhysicians: ");
+//OutPutResult(US18ViewPhysician, "US18ViewPhysicians: ");
 //OutPutResult(US20EditPhysician, "US20EditPhysician: ");
-OutPutResult(US22ViewPatients, "US22ViewPatients: ");
+//OutPutResult(US22ViewPatients, "US22ViewPatients: ");
 //OutPutResult(US24EditPatient, "US24EditPatient: ");
-OutPutResult(US12ViewOrders, "US12ViewOrders: ");
 
 
 //Only run this when needed. Takes 2 minutes to do this test!

@@ -56,7 +56,7 @@ function AllOrders(){
     const [OrderID, setOrderID] = useState("");
 
     const [DisplayPrintQuantity,setDisplayPrintQuantity] = useState(false)
-    const [PrintQuantity, setPrintQuantity] = useState("")
+    const [PrintQuantity, setPrintQuantity] = useState(1)
     
     //PRINT RELATED CODE
     function UpdatePrintQuantity(e){
@@ -122,7 +122,7 @@ function AllOrders(){
         setOrderID("");
 
         setDisplayPrintQuantity(false)
-        setPrintQuantity("")
+        setPrintQuantity(1)
     }
     //handles reloading when table structure is modified
     useEffect(function(){

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,13 +18,13 @@ namespace QATesting.SitePageElements
         {
             return ".scroll-table";
         }
-        public static IWebElement TestOrder(IWebDriver driver)
+        public static ReadOnlyCollection<IWebElement> TestOrders(IWebDriver driver)
         {
-            return driver.FindElement(By.CssSelector(TestOrderSelector()));
+            return driver.FindElements(By.CssSelector(TestOrderSelector()));
         }
         public static string TestOrderSelector()
         {
-            return ".scroll-table > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(1) > input[id='TESTORDER']:nth-child(1)";
+            return ".scroll-table input[id='TESTORDER']";
         }
         public static IWebElement RxNumber(IWebDriver driver)
         {

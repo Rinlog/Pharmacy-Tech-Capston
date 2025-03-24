@@ -30,10 +30,11 @@ namespace QATesting.SiteTests
                         VerificationElements.TestOrderSelector(),
                         driver);
 
-                    var TestOrder = VerificationElements.TestOrder(driver);
-                    js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", TestOrder);
+                    var TestOrder = VerificationElements.TestOrders(driver);
+                    var LastOrder = TestOrder.Count - 1; //using last qa order as that is newest
+                    js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", TestOrder[LastOrder]);
                     Thread.Sleep(500);
-                    TestOrder.Click();
+                    TestOrder[LastOrder].Click();
 
                     if (VerifyImageAssociated == true)
                     {
@@ -144,10 +145,11 @@ namespace QATesting.SiteTests
                         VerificationElements.TestOrderSelector(),
                         driver);
 
-                    var TestOrder = VerificationElements.TestOrder(driver);
-                    js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", TestOrder);
+                    var TestOrder = VerificationElements.TestOrders(driver);
+                    var LastOrder = TestOrder.Count - 1; //using last qa order as that is newest
+                    js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", TestOrder[LastOrder]);
                     Thread.Sleep(500);
-                    TestOrder.Click();
+                    TestOrder[LastOrder].Click();
 
                     //waiting for the second set of elements
                     MultiWait.Wait(

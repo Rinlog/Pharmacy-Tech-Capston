@@ -215,13 +215,13 @@ namespace QATesting.SitePageElements
         {
             return "#ordermy";
         }
-        public static IWebElement AmendOrder(IWebDriver driver)
+        public static ReadOnlyCollection<IWebElement> AmendOrders(IWebDriver driver)
         {
-            return driver.FindElement(By.CssSelector(AmendOrderSelector()));
+            return driver.FindElements(By.CssSelector(AmendOrderSelector()));
         }
         public static string AmendOrderSelector()
         {
-            return "#Rejected > tr:nth-child(1) > td:nth-child(1) > button[id='TESTORDER']:nth-child(1)";
+            return "#Rejected button[id='TESTORDER']";
         }
         public static IWebElement AmendSubmit(IWebDriver driver)
         {
@@ -289,6 +289,30 @@ namespace QATesting.SitePageElements
         public static string ChangePrintOptionSelector()
         {
             return "div.PrintOptionsSection:nth-child(1) > div:nth-child(1) > button:nth-child(1)";
+        }
+        public static IWebElement ChangePrintOptionDropDownItem(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(ChangePrintOptionDropDownItemSelector()));
+        }
+        public static string ChangePrintOptionDropDownItemSelector()
+        {
+            return "a.dropdown-item:nth-child(2)";
+        }
+        public static IWebElement RePrintQuantityTextBox(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(RePrintQuantityTextBoxSelector()));
+        }
+        public static string RePrintQuantityTextBoxSelector()
+        {
+            return ".form-control";
+        }
+        public static IWebElement AlertMessage(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(AlertMessageSelector()));
+        }
+        public static string AlertMessageSelector()
+        {
+            return ".modal-body > h5:nth-child(1)";
         }
         public static IWebElement ConfirmPrint(IWebDriver driver)
         {
