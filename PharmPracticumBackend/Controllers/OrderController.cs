@@ -100,7 +100,7 @@ namespace PharmPracticumBackend.Controllers
             //DL
             bool result = await _pharmDL.AmendOrder(order);
 
-            if (result) return Ok(new { message = "Order successfuly amended." });
+            if (result) return Ok(new { message = "Order successfully amended." });
             else return Ok(new { message = "Order could not be amended." });
 
         }

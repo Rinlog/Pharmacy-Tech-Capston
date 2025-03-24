@@ -34,7 +34,7 @@ namespace QATesting.SiteTests
                 {
                     var result1 = e.FindElements(By.CssSelector(DrugsElements.DrugTableSelector())).Count == 1;
                     return result1;
-                }); //waits for table to appear, or for loading text to appear, if they appear than we know that we can view the drug page
+                }); //waits for table to appear, if it appears than we know that we can view the drug page
                 return true;
                 
 
@@ -57,22 +57,31 @@ namespace QATesting.SiteTests
             Thread.Sleep(250);
             Submit.Click();
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
-            
-            IWebElement DrugButton = HomeElements.DrugsButton(driver);
-            DrugButton.Click();
-            IWebElement EditButton = DrugsElements.CheckboxDrug(driver);
-            EditButton.Click();
-            IWebElement EditDrugButton = DrugsElements.EditDrugButton(driver);
-            EditDrugButton.Click();
-            IWebElement EditDrugName = DrugsElements.EditDrugName(driver);
-            EditDrugName.Clear();
-            EditDrugName.SendKeys("Edit Test Drug");
-            IWebElement EditDrugSubmitButton = DrugsElements.EditDrugSubmitButton(driver);
-            EditDrugSubmitButton.Click();
 
             try
             {
-                wait.Until(e => DrugsElements.EditDrugsAlertMessage(e).Displayed);
+                wait.Until(e => e.FindElements(By.CssSelector(HomeElements.DrugButtonSelector())).Count == 1);
+                IWebElement DrugButton = HomeElements.DrugsButton(driver);
+                DrugButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(DrugsElements.CheckboxDrugSelector())).Count == 1);
+                IWebElement EditButton = DrugsElements.CheckboxDrug(driver);
+                EditButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(DrugsElements.EditDrugButtonSelector())).Count == 1);
+                IWebElement EditDrugButton = DrugsElements.EditDrugButton(driver);
+                EditDrugButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(DrugsElements.EditDrugNameSelector())).Count == 1);
+                IWebElement EditDrugName = DrugsElements.EditDrugName(driver);
+                EditDrugName.Clear();
+                EditDrugName.SendKeys("Edit Test Drug");
+
+                wait.Until(e => e.FindElements(By.CssSelector(DrugsElements.EditDrugSubmitButtonSelector())).Count == 1);
+                IWebElement EditDrugSubmitButton = DrugsElements.EditDrugSubmitButton(driver);
+                EditDrugSubmitButton.Click();
+
+                wait.Until(e => e.FindElements(By.CssSelector(DrugsElements.EditDrugsAlertMessageSelector())).Count == 1);
                 var DrugAlert = DrugsElements.EditDrugsAlertMessage(driver);
                 if (DrugAlert.Text == "Drug edited successfully!")
                 {

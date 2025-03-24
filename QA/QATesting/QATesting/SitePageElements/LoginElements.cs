@@ -48,13 +48,29 @@ namespace QATesting.SitePageElements
         {
             return "button[qa-id='ResetPass']";
         }
-        public static IWebElement LoginAlertResponse(IWebDriver driver)
+        public static IWebElement LoginAlert(IWebDriver driver)
         {
             return driver.FindElement(By.CssSelector(LoginAlertSelector()));
         }
         public static string LoginAlertSelector()
         {
             return ".modal-body > h5:nth-child(1)";
+        }
+        public static IWebElement ResetPassInputBox(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(ResetPassInputBoxSelector()));
+        }
+        public static string ResetPassInputBoxSelector()
+        {
+            return ".form-control";
+        }
+        public static IWebElement ResetPassSubmit(IWebDriver driver)
+        {
+            return driver.FindElement(By.CssSelector(ResetPassSubmitSelector()));
+        }
+        public static string ResetPassSubmitSelector()
+        {
+            return ".ModalbuttonG";
         }
     }
 }
