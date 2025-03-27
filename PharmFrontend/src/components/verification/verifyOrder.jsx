@@ -184,82 +184,82 @@ function VerifyOrder({setDisplay, selectedOrder, setSelectedOrder, GetOrders}) {
                         { /* Uneditable text boxes, just so the verifier (user) can check them against the prescription and checkboxes to check them off if theyre correct */}
                         <label>Rx Number</label>
                         <input type="text" value={rxNum} disabled/>
-                        <input type="checkbox" onChange={(e) => setRxNumChecked(e.target.checked)}/>
+                        <input type="checkbox" id="RxNumber" onChange={(e) => setRxNumChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Patient</label>
                         <input type="text" value={patientName} disabled/>
-                        <input type="checkbox" onChange={(e) => setPatientNameChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Patient" onChange={(e) => setPatientNameChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Drug</label>
                         <input type="text" value={drugName} disabled/>
-                        <input type="checkbox" onChange={(e) => setDrugNameChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Drug" onChange={(e) => setDrugNameChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Physician</label>
                         <input type="text" value={physicianName} disabled/>
-                        <input type="checkbox" onChange={(e) => setPhysicianNameChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Physician" onChange={(e) => setPhysicianNameChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Initiator</label>
                         <input type="text" value={initiator} disabled/>
-                        <input type="checkbox" onChange={(e) => setInitiatorChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Initiator" onChange={(e) => setInitiatorChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>SIG Code</label>
                         <input type="text" value={SIG} disabled/>
-                        <input type="checkbox" onChange={(e) => setSIGChecked(e.target.checked)}/>
+                        <input type="checkbox" id="SIGCode" onChange={(e) => setSIGChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>SIG Description</label>
                         <input type="text" value={SIGDescription} disabled/>
-                        <input type="checkbox" onChange={(e) => setSIGDescriptionChecked(e.target.checked)}/>
+                        <input type="checkbox" id="SIGDescription" onChange={(e) => setSIGDescriptionChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Form</label>
                         <input type="text" value={form} disabled/>
-                        <input type="checkbox" onChange={(e) => setFormChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Form" onChange={(e) => setFormChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Route</label>
                         <input type="text" value={route} disabled/>
-                        <input type="checkbox" onChange={(e) => setRouteChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Route" onChange={(e) => setRouteChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Prescribed Dose</label>
                         <input type="text" value={prescribedDose} disabled/>
-                        <input type="checkbox" onChange={(e) => setPrescribedDoseChecked(e.target.checked)}/>
+                        <input type="checkbox" id="PrescribedDose" onChange={(e) => setPrescribedDoseChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Frequency</label>
                         <input type="text" value={frequency} disabled/>
-                        <input type="checkbox" onChange={(e) => setFrequencyChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Frequency" onChange={(e) => setFrequencyChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Duration</label>
                         <input type="text" value={duration} disabled/>
-                        <input type="checkbox" onChange={(e) => setDurationChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Duration" onChange={(e) => setDurationChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Quantity</label>
                         <input type="text" value={quantity} disabled/>
-                        <input type="checkbox" onChange={(e) => setQuantityChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Quantity" onChange={(e) => setQuantityChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Start Date</label>
                         <input type="text" value={startDate} disabled/>
-                        <input type="checkbox" onChange={(e) => setStartDateChecked(e.target.checked)}/>
+                        <input type="checkbox" id="StartDate" onChange={(e) => setStartDateChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Start Time</label>
                         <input type="text" value={startTime} disabled/>
-                        <input type="checkbox" onChange={(e) => setStartTimeChecked(e.target.checked)}/>
+                        <input type="checkbox" id="StartTime" onChange={(e) => setStartTimeChecked(e.target.checked)}/>
                         <br></br>
 
                         <label>Comments</label>
                         <input type="text" value={comments} disabled/>
-                        <input type="checkbox" onChange={(e) => setCommentsChecked(e.target.checked)}/>
+                        <input type="checkbox" id="Comments" onChange={(e) => setCommentsChecked(e.target.checked)}/>
                         <br></br>
 
                         <button className="button" id="reject" onClick={RejectOrder}>Reject</button>

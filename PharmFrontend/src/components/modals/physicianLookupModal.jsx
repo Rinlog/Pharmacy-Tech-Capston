@@ -81,7 +81,7 @@ function PhysicianLookupModal({visible, setVisible,setPhysician}){
             PhysicianData.forEach(function(Physician){
                 TempPhysician.push(
                     <tr key={Physician.physicianID}>
-                        <td><input type="radio" name="Physicianradio" onClick={function(e){HandleSelect(Physician)}}></input></td>
+                        <td><input type="radio" name="Physicianradio" class="Physicianradio" onClick={function(e){HandleSelect(Physician)}}></input></td>
                         <td>{Physician.physicianID}</td>
                         <td>{Physician.fName}</td>
                         <td>{Physician.lName}</td>
@@ -188,7 +188,7 @@ function PhysicianLookupModal({visible, setVisible,setPhysician}){
                                     </table>
                                 </div>
                                 <div className='d-flex justify-content-center'>
-                                    <Button type="button" onClick={SelectPhysician} className='ModalbuttonG w-100'>Confirm</Button>
+                                    <Button type="button" onClick={SelectPhysician} id="PhysicianConfirm" className='ModalbuttonG w-100'>Confirm</Button>
                                 </div>
                             </div>
                         ) : "Fetching Data..."}

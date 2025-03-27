@@ -1,5 +1,7 @@
-﻿using OpenQA.Selenium;
+﻿using Bogus;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using QATesting.Methods;
 using QATesting.SitePageElements;
 using System;
 using System.Collections.Generic;
@@ -45,6 +47,144 @@ namespace QATesting.SiteTests
                 return false;
             }
         }
+        public static bool TestAddPhysicianSingle(IWebDriver driver, string BaseUrl)
+        {
+            try
+            {
+                if (PhysiciansTests.TestViewPhysician(driver, BaseUrl))
+                {
+                    MultiWait.Wait(PhysiciansElements.AddPhysicianButtonSelector(), driver);
+                    var AddPhysicianButton = PhysiciansElements.AddPhysicianButton(driver);
+                    AddPhysicianButton.Click();
+
+                    MultiWait.Wait(
+                        PhysiciansElements.FirstNameSelector(),
+                        PhysiciansElements.LastNameSelector(),
+                        PhysiciansElements.CitySelector(),
+                        PhysiciansElements.ProvinceSelector(),
+                        PhysiciansElements.SubmitSelector(),
+                        driver
+                        );
+                    var FName = PhysiciansElements.FirstName(driver);
+                    var LName = PhysiciansElements.LastName(driver);
+                    var City = PhysiciansElements.City(driver);
+                    var Province = PhysiciansElements.Province(driver);
+                    var Submit = PhysiciansElements.Submit(driver);
+                    FName.SendKeys("Fake QA Physician");
+                    LName.SendKeys("Blah");
+                    City.SendKeys("Fredericton");
+                    new SelectElement(Province).SelectByText("New Brunswick");
+                    Submit.Click();
+                    MultiWait.Wait(PhysiciansElements.AlertMessageSelector(), driver);
+                    var AlertMessage = PhysiciansElements.AlertMessage(driver);
+                    if (AlertMessage.Text.ToLower().Contains("physician added"))
+                    {
+                        return true;
+                    }
+                    else return false;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                return false;
+            }
+        }
+        public static bool TestAddPhysicianBulk(IWebDriver driver, string BaseUrl)
+        {
+            try
+            {
+                if (PhysiciansTests.TestViewPhysician(driver, BaseUrl))
+                {
+                    MultiWait.Wait(PhysiciansElements.BulkAddPhysicianButtonSelector(), driver);
+                    var BAddPhysicianButton = PhysiciansElements.BulkAddPhysicianButton(driver);
+                    BAddPhysicianButton.Click();
+                    MultiWait.Wait(
+                        PhysiciansElements.ConfirmBulkAddButtonSelector(),
+                        PhysiciansElements.BulkAddFileSelectSelector(),
+                        driver);
+                    var FileSelect = PhysiciansElements.BulkAddFileSelect(driver);
+                    var ConfirmBulkAdd = PhysiciansElements.ConfirmBulkAddButton(driver);
+
+                    //sending bulk add file name, make sure it exists or else test will fail
+                    string Path = System.IO.Path.GetFullPath("../../../../BulkAdd/Physician.xlsx");
+                    FileSelect.SendKeys(Path);
+
+                    ConfirmBulkAdd.Click();
+                    MultiWait.Wait(PhysiciansElements.AlertMessageSelector(), driver);
+                    var AlertMessage = PhysiciansElements.AlertMessage(driver);
+                    if (AlertMessage.Text.ToLower().Contains("all physicians added successfully"))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                return false;
+            }
+        }
+        public static bool TestDeletePhysician(IWebDriver driver, string BaseUrl, bool Multi = false)
+        {
+            try
+            {
+                if (PhysiciansTests.TestViewPhysician(driver, BaseUrl))
+                {
+                    var AllPhysicians = PhysiciansElements.AllPhysicians(driver);
+                    UtilityMethods.SelectTestItem(2, AllPhysicians, "Edit Test Physician", "Fake QA Physician", driver, Multi);
+
+                    var DeletePhysicians = PhysiciansElements.DeletePhysicianButton(driver);
+                    IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                    js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", DeletePhysicians);
+                    Thread.Sleep(500);
+                    DeletePhysicians.Click();
+
+                    MultiWait.Wait(PhysiciansElements.ConfirmDeleteSelector(), driver);
+                    var ConfirmDelete = PhysiciansElements.ConfirmDelete(driver);
+                    ConfirmDelete.Click();
+
+                    MultiWait.Wait(PhysiciansElements.ConfirmConfirmDeleteSelector(), driver);
+                    var ConfirmConfirmDelete = PhysiciansElements.ConfirmConfirmDelete(driver);
+                    ConfirmConfirmDelete.Click();
+
+                    MultiWait.Wait(PhysiciansElements.AlertMessageSelector(), driver);
+                    var AlertMessage = PhysiciansElements.AlertMessage(driver);
+                    if (AlertMessage.Text.ToLower().Contains("physician deleted successfully"))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                return false;
+            }
+        }
         public static bool TestEditPhysician(IWebDriver driver, string BaseUrl)
         {
             IWebElement Email = LoginElements.LoginEmail(driver);
@@ -65,12 +205,14 @@ namespace QATesting.SiteTests
                 IWebElement PhysicianButton = HomeElements.PhysicianButton(driver);
                 PhysicianButton.Click();
 
-                wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.CheckboxPhysicianSelector())).Count == 1);
-                IWebElement EditButton = PhysiciansElements.CheckboxPhysician(driver);
-                EditButton.Click();
+                var AllPhysicians = PhysiciansElements.AllPhysicians(driver);
+                UtilityMethods.SelectTestItem(2, AllPhysicians, "Edit Test Physician", "Fake QA Physician", driver, false);
 
                 wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.EditPhysicianButtonSelector())).Count == 1);
                 IWebElement EditPhysicianButton = PhysiciansElements.EditPhysicianButton(driver);
+                IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", EditPhysicianButton);
+                Thread.Sleep(500);
                 EditPhysicianButton.Click();
 
                 wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.EditPhysicianNameSelector())).Count == 1);
@@ -83,9 +225,9 @@ namespace QATesting.SiteTests
                 EditPhysicianSubmitButton.Click();
 
 
-                wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.EditPhysicianAlertMessageSelector())).Count == 1);
-                var DrugAlert = PhysiciansElements.EditPhysicianAlertMessage(driver);
-                if (DrugAlert.Text == "Physician edited successfully")
+                wait.Until(e => e.FindElements(By.CssSelector(PhysiciansElements.AlertMessageSelector())).Count == 1);
+                var PhysicianAlert = PhysiciansElements.AlertMessage(driver);
+                if (PhysicianAlert.Text == "Physician edited successfully")
                 {
                     return true;
                 }

@@ -243,7 +243,7 @@ namespace PharmPracticumBackend.Controllers
                 }
 
                 //if you change this message change the frontend verification one as well, aka on print order page and all orders page
-                return Ok("Succefully Printed");
+                return Ok("Successfully Printed");
             }
             catch (Exception ex)
             {

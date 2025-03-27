@@ -85,7 +85,7 @@ function DrugLookupModal({visible, setVisible,setDrug}){
             DrugData.forEach(function(Drug){
                 TempDrug.push(
                     <tr key={Drug.din}>
-                        <td><input type="radio" name="Drugradio" onClick={function(e){HandleSelect(Drug)}}></input></td>
+                        <td><input type="radio" name="Drugradio" class="Drugradio" onClick={function(e){HandleSelect(Drug)}}></input></td>
                         <td>{Drug.din}</td>
                         <td>{Drug.name}</td>
                         <td>{Drug.dosage}</td>
@@ -204,7 +204,7 @@ function DrugLookupModal({visible, setVisible,setDrug}){
                                     </table>
                                 </div>
                                 <div className='d-flex justify-content-center'>
-                                    <Button type="button" onClick={SelectDrug} className='ModalbuttonG w-100'>Confirm</Button>
+                                    <Button type="button" onClick={SelectDrug} id="DrugConfirm" className='ModalbuttonG w-100'>Confirm</Button>
                                 </div>
                             </div>
                         ) : "Fetching Data..."}

@@ -77,7 +77,7 @@ function SIGLookupModal({visible, setVisible,setSig, setSigDesc}){
             SIGData.forEach(function(SIG){
                 TempSIG.push(
                     <tr key={SIG.abbreviation}>
-                        <td><input type="radio" name="SIGradio" onClick={function(e){HandleSelect(SIG.abbreviation, SIG.description)}}></input></td>
+                        <td><input type="radio" name="SIGradio" class="SIGradio" onClick={function(e){HandleSelect(SIG.abbreviation, SIG.description)}}></input></td>
                         <td>{SIG.abbreviation}</td>
                         <td>{SIG.description}</td>
                     </tr>
@@ -167,7 +167,7 @@ function SIGLookupModal({visible, setVisible,setSig, setSigDesc}){
                                     </table>
                                 </div>
                                 <div className='d-flex justify-content-center'>
-                                    <Button type="button" onClick={SelectSIG} className='ModalbuttonG w-100'>Confirm</Button>
+                                    <Button type="button" onClick={SelectSIG} id="SIGConfirm" className='ModalbuttonG w-100'>Confirm</Button>
                                 </div>
                             </div>
                         ) : "Fetching Data..."}

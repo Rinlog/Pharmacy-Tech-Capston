@@ -31,7 +31,6 @@ function Navbar() {
 
   const Logout = () => {
     logout(); //uses authcontext logout function
-    setFetchedData(false);
     navigate("/login");
     //window.location.reload(); //commented this out testing to see if i need it still
   };
@@ -64,6 +63,9 @@ function Navbar() {
 
   //will update notifications when we change page location
   useEffect(function(){
+    if (location.pathname == "/home"){
+      GetUserInfo();
+    }
     setOldLocation(location);//will not update until this use effect goes through meaning we will have the old location still
     if((location.pathname != oldLocation.pathname) && (oldLocation.pathname !== undefined && oldLocation.pathname !== '')){
       setNotificationContent([]);

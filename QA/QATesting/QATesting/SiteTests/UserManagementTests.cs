@@ -37,7 +37,6 @@ namespace QATesting.SiteTests
 
             wait.Until(e => e.FindElements(By.CssSelector(UserManagementElements.UserManagementRadioButtonSelector())).Count == 1);
             IWebElement RadioButton = UserManagementElements.RadioButton(driver);
-
             js.ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", RadioButton);
             Thread.Sleep(500);
             RadioButton.Click();

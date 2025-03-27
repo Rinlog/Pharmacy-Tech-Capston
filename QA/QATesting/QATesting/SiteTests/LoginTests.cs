@@ -13,15 +13,14 @@ namespace QATesting.SiteTests
 {
     internal class LoginTests
     {
-        public static bool TestValidLogin(IWebDriver driver, string BaseUrl)
+        public static bool LoginAsUserSpecified(IWebDriver driver, string BaseUrl, string email, string pass)
         {
             IWebElement Email = LoginElements.LoginEmail(driver);
             IWebElement Pass = LoginElements.LoginPass(driver);
             IWebElement Submit = LoginElements.LoginSubmitButton(driver);
-            
-            //account must be valid that we are testing with
-            Email.SendKeys("test@nbcc.ca");
-            Pass.SendKeys("Password1!");
+
+            Email.SendKeys(email);
+            Pass.SendKeys(pass);
             Thread.Sleep(250);
             Submit.Click();
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
@@ -46,6 +45,10 @@ namespace QATesting.SiteTests
             {
                 return false;
             }
+        }
+        public static bool TestValidLogin(IWebDriver driver, string BaseUrl)
+        {
+            return LoginAsUserSpecified(driver, BaseUrl, "test@nbcc.ca", "Password1!");
         }
 
         public static bool TestFailedLogin(IWebDriver driver, string BaseUrl)
